@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="en" style="background-color:#efeeef;">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - DMS</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+
+        <link href="~/Content/kendoUI/kendo.common.core.min.css" rel="stylesheet" />
+        <link href="~/Content/kendoUI/kendo.common.min.css" rel="stylesheet" />
+        <link href="~/Content/kendoUI/kendo.material.min.css" rel="stylesheet" />
+        <link href="~/Content/kendoUI/kendo.material.mobile.min.css" rel="stylesheet" />
+        <link href="~/Content/kendoUI/kendo.rtl.min.css" rel="stylesheet" />
+        <link href="~/Content/kendoUI/kendo.dataviz.metro.min.css" rel="stylesheet" />
+        <link href="~/Content/kendoUI/kendo.dataviz.min.css" rel="stylesheet" />
+
+        <script src="~/Scripts/kendoUI/jquery.min.js"></script>
+        <script src="~/Scripts/kendoUI/angular.min.js"></script>
+        <script src="~/Scripts/kendoUI/kendo.all.min.js"></script>
+        <script src="~/Scripts/kendoUI/console.js"></script>
+
+        <script src="~/Scripts/jquery.validate.min.js"></script>
+        <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+        
+    </head>
+    <body style="background-color:#efeeef;">
+        <div id="body" style="background-color:#efeeef;">
+            @RenderSection("featured", required: false)
+            <section class="content-wrapper main-content clear-fix">
+                @RenderBody()
+            </section>
+        </div>
+        @RenderSection("scripts", required: false)
+    </body>
+</html>

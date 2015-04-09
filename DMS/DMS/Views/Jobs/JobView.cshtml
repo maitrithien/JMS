@@ -1,0 +1,235 @@
+﻿@model DMS.Models.JobModels
+
+@{
+    ViewBag.Title = "Xem chi tiết hồ sơ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $("#btnEdit").kendoButton({
+            icon: "pencil",
+            click: function (e) {
+                console.log("edit");
+            }
+        });
+
+        $("#btnDelete").kendoButton({
+            icon: "close",
+            click: function (e) {
+                console.log("delete");
+            }
+        });
+
+        $("#btnAddNote").kendoButton({
+            icon: "plus",
+            click: function (e) {
+                console.log("edit");
+            }
+        });
+
+        $("#btnDeleteNote").kendoButton({
+            icon: "close",
+            click: function (e) {
+                console.log("delete");
+            }
+        });
+
+        $("#btnAddAttachment").kendoButton({
+            icon: "pencil",
+            click: function (e) {
+                console.log("edit");
+            }
+        });
+
+        $("#btnDeleteAttachment").kendoButton({
+            icon: "close",
+            click: function (e) {
+                console.log("delete");
+            }
+        });
+
+        $("#btnDeleteHistory").kendoButton({
+            icon: "close",
+            click: function (e) {
+                console.log("delete");
+            }
+        });
+    });
+</script>
+<div id="View">
+    <div class="demo-section k-header">
+        <div id="tabstrip">
+            <ul>
+                <li class="k-state-active">Thông tin hồ sơ</li>
+                <li>Ghi chú</li>
+                <li>Đính kèm</li>
+                <li>Lịch sử</li>
+                <li>Thông tin hệ thống</li>
+            </ul>
+            <div class="content-wrapper">
+                <div class="toolbar">
+                    <button id="btnEdit" title="Cập nhật" type="button"></button>
+                    <button id="btnDelete" title="Xóa" type="button"></button>
+                </div>
+                <div class="title-info">
+                    <span>Thông tin mặc định</span>
+                </div>
+                <div class="tab-content">
+                    <div class="content-column">
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.JobID)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.JobID)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.JobName)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.JobName)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.Deadline)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.Deadline)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-column">
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.Status)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.Status)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.StatusName)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.StatusName)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.Recipient)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.Recipient)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content">
+                    <div class="title-info">
+                    <span>Thông tin chi tiết</span>
+                </div>
+                    <div class="content-column-full">
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.Note)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.Note)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-wrapper">
+                <div class="toolbar">
+                    <button id="btnAddNote" title="Thêm mới ghi chú" type="button"></button>
+                    <button id="btnDeleteNote" title="Xóa ghi chú" type="button"></button>
+                </div>
+                <div class="title-info">
+                    <span>Ghi chú công việc</span>
+                </div>
+                @Html.Partial("GridNotes")
+            </div>
+            <div class="content-wrapper">
+                <div class="toolbar">
+                    <button id="btnAddAttachment" title="Cập nhật" type="button"></button>
+                    <button id="btnDeleteAttachment" title="Xóa" type="button"></button>
+                </div>
+                <div class="title-info">
+                    <span>Tệp tin đính kèm</span>
+                </div>
+                @Html.Partial("GridAttachments")
+            </div>
+            <div class="content-wrapper">
+                <div class="toolbar">
+                    <button id="btnDeleteHistory" title="Xóa" type="button"></button>
+                </div>
+                <div class="title-info">
+                    <span>Lịch sử thực hiện</span>
+                </div>
+                @Html.Partial("GridHistories")
+            </div>
+            <div class="content-wrapper">
+                <div class="title-info">
+                    <span>Thông tin hệ thống</span>
+                </div>
+                <div class="tab-content">
+                    <div class="content-column">
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.CreatedDate)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.CreatedDate)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.CreatedUserID)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.CreatedUserID)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-column">
+                        
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.LastModifyDate)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.LastModifyDate)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.LastModifyUserID)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.LastModifyUserID)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#tabstrip").kendoTabStrip({
+                tabPosition: "top",
+                animation: {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                }
+            });
+        });
+    </script>
+</div>
+

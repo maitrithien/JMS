@@ -1,0 +1,146 @@
+﻿.k-grid tbody tr {
+    height: 38px !important;
+}
+#grid tbody tr:hover {
+    background: #b4d5ff;
+    color: #000;
+}
+
+.k-tabstrip-items .k-state-active {
+  background-color: #fff !important;
+  background-image: none;
+  border-color: transparent !important;
+  border-bottom: 2px solid #007ACC !important;
+}
+
+.k-tabstrip-items .k-state-default .k-link, .k-panelbar>li.k-state-default>.k-link {
+  color: #222 !important;
+}
+
+.k-tabstrip-items .k-item {
+    background-color: transparent !important;
+}
+.k-tabstrip-items .k-item.k-state-hover {
+    border-color: #fff !important;
+    background-color: #fff !important;
+}
+.k-header, .k-tabstrip-items .k-item, .k-panelbar .k-tabstrip-items .k-item, .km-pane-wrapper > .km-pane > .km-view > .km-content {
+    background-color: transparent !important;
+}
+
+.toolbar {
+    background: #f9f9f9;
+    margin-left: 1px;
+    border-left: 5px solid #3F51B5;
+}
+    .toolbar .btn-right {
+        float: right;
+        right: 0;
+    }
+.title-info {
+    background: #f9f9f9;
+    margin-left: 1px;
+    margin-top: 5px;
+    border-left: 5px solid #3F51B5;
+    padding: 5px;
+}
+.k-button, .k-button:hover, .k-button.k-state-hover, .k-button.k-state-focused, .k-button:focus, .k-button:focus:not(.k-state-disabled):not([disabled]) {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+#View
+{
+    min-height: 500px;
+    border-width: 0;
+    background-color: #fff;
+}
+
+.bottom-toolbar {
+    bottom: 20px;
+    right: 20px;
+    position: absolute;
+}
+#tabstrip {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+.tab-content {
+    width: 100%;
+    height: auto;
+    display: inline-block;
+}
+
+    .tab-content .content-column-full {
+        width: calc(100% - 20px);
+        float: left;
+        padding: 0 10px;
+    }
+    .tab-content .content-column{
+        width: calc(50% - 20px);
+        float: left;
+        padding: 0 10px;
+    }
+        .tab-content .content-column .content-row,
+        .tab-content .content-column-full .content-row {
+            width:100%;
+            float: left;
+            line-height: 30px;
+            font-weight: normal;
+            border-bottom: 1px solid #d7d7d7;
+            border-bottom-style:dotted;
+        }
+
+            .tab-content .content-column .content-row .editor-label {
+                width: calc(30% - 10px);
+                float: left;
+                font-weight: normal !important;
+                font-style: italic;
+                font-size: small !important;
+                line-height: 40px;
+            }
+            .tab-content .content-column .content-row .editor-field {
+                width: calc(70% - 10px);
+                float: left;
+                font-weight: normal !important;
+                font-size: small !important;
+                line-height: 40px;
+            }
+            /*.tab-content .content-column .content-row:hover,
+            .tab-content .content-column-full .content-row:hover {
+                background-color: #b4d5ff;
+            }*/
+
+        .tab-content .content-column .display-label,
+        .tab-content .content-column-full .display-label {
+            width: calc(30% - 11px);
+            float: left;
+            border-right: 1px solid #fff;
+            padding: 0 5px;     
+            font-style: italic;  
+        }
+        .tab-content .content-column .display-field,
+        .tab-content .content-column-full .display-field {
+            width: calc(70% - 11px);
+            float: left;
+            padding: 0 5px;
+        }
+        
+.k-tabstrip-wrapper .k-header, 
+.k-panelbar .k-tabstrip-items .k-item {
+    background:#fff !important;
+}
+
+.k-window-titlebar .k-header {
+    background-color: #007ACC;
+    -webkit-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+.k-window {
+    border: none !important;
+    -webkit-border-radius: 0 !important;
+    border-radius: 0 !important;
+    background-color: #3F51B5 !important;
+}

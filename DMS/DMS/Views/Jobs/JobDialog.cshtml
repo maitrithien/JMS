@@ -1,0 +1,259 @@
+﻿@model DMS.Models.JobModels
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.APK)
+    <div class="content-wrapper">
+        <div class="title-info">
+            <span>Thông tin mặc định</span>
+        </div>
+        <div class="error">
+            @Html.ValidationMessageFor(model => model.JobID)
+            @Html.ValidationMessageFor(model => model.JobName)
+            @Html.ValidationMessageFor(model => model.Deadline)
+            @Html.ValidationMessageFor(model => model.Note)
+            @Html.ValidationMessageFor(model => model.Status)
+            @Html.ValidationMessageFor(model => model.Recipient)
+        </div>
+        <div class="tab-content">
+            <div class="content-column">
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.JobID, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.JobID, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.JobName, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.JobName, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Deadline, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Deadline, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        
+                    </div>
+                </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Complex, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Complex, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Priority, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Priority, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Rate, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Rate, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                
+            </div>
+            <div class="content-column">
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Status, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Status, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row">
+                     <div class="editor-label">
+                        @Html.LabelFor(model => model.Poster, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Poster, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row">
+                     <div class="editor-label">
+                        @Html.LabelFor(model => model.Recipient, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Recipient, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row">
+                     <div class="editor-label">
+                        @Html.LabelFor(model => model.Confirmer, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Confirmer, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row">
+                     <div class="editor-label">
+                        @Html.LabelFor(model => model.DepartmentID, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.DepartmentID, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Note, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Note, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-wrapper bottom-toolbar">
+        <button id="btnSaveDetails" type="button">Lưu & nhập chi tiết</button>
+        <button id="btnSave" type="button">Lưu</button>
+        <button id="btnCancel" type="button">Đóng</button>
+    </div>
+        
+}
+
+<script type="text/javascript">
+    kendo.init($("input"));
+    
+    $("#Deadline").kendoDatePicker({
+        format: "MM/dd/yyyy"
+    });
+    $("#btnSave").kendoButton({
+        width: 120,
+        icon: "tick"
+    });
+    $("#btnSaveDetails").kendoButton({
+        width: 120,
+        icon: "expand-w"
+    });
+    $("#btnCancel").kendoButton({
+        width: 120,
+        icon: "close",
+        click: function () {
+            var win = $("#window").data("kendoWindow");
+            win.close();
+        }
+    });
+
+    var dataStatus = [
+        { text: "Hồ sơ mới", value: "1" },
+        { text: "Đang xử lý", value: "2" },
+        { text: "Đã hoàn tất", value: "3" },
+        { text: "Đã hủy", value: "4" },
+    ];
+
+    var dataPriority = [
+        { text: "Cấp độ 1", value: "1" },
+        { text: "Cấp độ 2", value: "2" },
+        { text: "Cấp độ 3", value: "3" },
+        { text: "Cấp độ 4", value: "4" },
+        { text: "Cấp độ 5", value: "5" }
+    ];
+
+    var dataComplex = [
+        { text: "Cấp độ A", value: "A" },
+        { text: "Cấp độ B", value: "B" },
+        { text: "Cấp độ C", value: "C" },
+        { text: "Cấp độ D", value: "D" },
+        { text: "Cấp độ E", value: "E" }
+    ];
+
+    var dataRate = [
+        { text: "Loại A", value: "A" },
+        { text: "Loại B", value: "B" },
+        { text: "Loại C", value: "C" },
+        { text: "Loại D", value: "D" },
+        { text: "Loại E", value: "E" }
+    ];
+
+    // create DropDownList from input HTML element
+    $("#Status").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        dataSource: dataStatus,
+        index: 0
+    });
+    $("#Priority").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        dataSource: dataPriority,
+        index: 0
+    });
+    $("#Complex").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        dataSource: dataComplex,
+        index: 0
+    });
+    $("#Rate").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        dataSource: dataRate,
+        index: 0
+    });
+    $("#Poster").kendoDropDownList({
+        filter: "startswith",
+        width: "100%",
+        dataTextField: "UserName",
+        dataValueField: "UserID",
+        dataSource: {
+            transport: {
+                read: {
+                    dataType: "json",
+                    url: "@Url.Action("UserID", "ComboBox")"
+                }
+            }
+        },
+        height: 370
+    });
+
+    $("#Recipient").kendoDropDownList({
+        filter: "startswith",
+        width: "100%",
+        dataTextField: "UserName",
+        dataValueField: "UserID",
+        dataSource: {
+            transport: {
+                read: {
+                    dataType: "json",
+                    url: "@Url.Action("UserID", "ComboBox")"
+                }
+            }
+        },
+        height: 370
+    });
+
+    $("#Confirmer").kendoDropDownList({
+        filter: "startswith",
+        width: "100%",
+        dataTextField: "UserName",
+        dataSource: {
+            transport: {
+                read: {
+                    dataType: "json",
+                    url: "@Url.Action("UserID", "ComboBox")"
+                }
+            }
+        },
+        height: 370
+    });
+
+</script>

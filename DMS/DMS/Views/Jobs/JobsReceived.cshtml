@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Danh sách hồ sơ đã nhận";
+}
+@section featured {
+    @Html.Partial("Filter")
+    <div class="content-wrapper">
+        <div class="toolbar">
+            <button id="btnAddNew" title="Thêm mới" type="button"></button>
+            <button id="btnDelete" title="Xóa" type="button"></button>
+            <button id="btnSearch" title="Tìm kiếm" type="button" class="btn-right">Tìm kiếm</button>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $("#window").kendoWindow({
+                    iframe: false,
+                    modal: true,
+                    height: 500,
+                    width: 900,
+                    title: "Cập nhật thông tin hồ sơ",
+                    visible: false
+                }).data("kendoWindow");
+
+                $("#btnAddNew").kendoButton({
+                    icon: "plus",
+                    click: function (e) {
+                        var win = $("#window").data("kendoWindow");
+                        win.center();
+                        win.open();
+                    }
+                });
+
+                $("#btnDelete").kendoButton({
+                    icon: "close",
+                    click: function (e) {
+                        console.log("delete");
+                    }
+                });
+
+                $("#btnSearch").kendoButton({
+                    icon: "search",
+                    click: function (e) {
+                        console.log("search");
+                    }
+                });
+            });
+        </script>
+    </div>
+}
+
+@Html.Partial("Grid")
+
+<div id="window">
+    @{
+        Html.RenderPartial("JobDialog", new DMS.Models.JobModels());
+    }
+</div>

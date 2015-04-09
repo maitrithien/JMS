@@ -1,0 +1,51 @@
+﻿<div id="example">
+    <div id="gridAttachments"></div>
+    <script>
+        $(document).ready(function () {
+            $("#gridAttachments").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: '@Url.Action("JobsGrid", "Jobs")'
+                    },
+                    pageSize: 20
+                },
+                height: 500,
+                groupable: true,
+                //sortable: true,
+                selectable: true,
+                //filterable: true,
+                pageable: {
+                    refresh: true,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                columns: [
+                    {
+                        field: "JobID",
+                        title: "<input type='checkbox' id='chkAll' />",
+                        width: 30,
+                        template: "<input type='checkbox' />"
+                    }, {
+                        field: "JobName",
+                        title: "Job name",
+                        width: 200,
+                        template: "<a href='/Jobs/JobView/#: data.JobID #'>#: data.JobName #</a>"
+                    }, {
+                        field: "StatusName",
+                        title: "Status name"
+                    }, {
+                        field: "Deadline",
+                        title: "Deadline",
+                        type: "date",
+                        template: '#= kendo.toString(data.Deadline, "dd/MM/yyyy") #'
+                    }, {
+                        field: "Note",
+                        width: 150
+                    }
+                ]
+            });
+        });
+    </script>
+
+</div>
