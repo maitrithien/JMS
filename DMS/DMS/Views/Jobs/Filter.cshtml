@@ -18,10 +18,10 @@
                 </div>
                 <div class="content-row-filter">
                     <div class="editor-label">
-                        @Html.LabelFor(model => model.JobNameFilter, new { style = "font-weight: normal; font-size: small;" })
+                        @Html.LabelFor(model => model.PosterFilter, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.JobNameFilter, new { style = "width: calc(calc(100% - 10px) - 10px); font-weight: normal; font-size: small;" })
+                        @Html.EditorFor(model => model.PosterFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
                     </div>
                 </div>
                 <div class="content-row-filter">
@@ -32,14 +32,23 @@
                         @Html.EditorFor(model => model.DeadlineFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
                     </div>
                 </div>
+                <div class="content-row-filter">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DepartmentIDFilter, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.DepartmentIDFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                
             </div>
             <div class="content-column-filter-3">
                 <div class="content-row-filter">
                     <div class="editor-label">
-                        @Html.LabelFor(model => model.StatusFilter, new { style = "font-weight: normal; font-size: small;" })
+                        @Html.LabelFor(model => model.JobNameFilter, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.StatusFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
+                        @Html.EditorFor(model => model.JobNameFilter, new { style = "width: calc(calc(100% - 10px) - 10px); font-weight: normal; font-size: small;" })
                     </div>
                 </div>
                 <div class="content-row-filter">
@@ -48,32 +57,6 @@
                     </div>
                     <div class="editor-field">
                         @Html.EditorFor(model => model.RecipientFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
-                    </div>
-                </div>
-                <div class="content-row-filter">
-                     <div class="editor-label">
-                        @Html.LabelFor(model => model.IsOverDateFiler, new { style = "font-weight: normal; font-size: small;" })
-                    </div>
-                    <div class="editor-field">
-                        @Html.CheckBoxFor(model => model.IsOverDateFiler, new { style = "font-weight: normal; font-size: small;" })
-                    </div>
-                </div>
-            </div>
-            <div class="content-column-filter-3">
-                <div class="content-row-filter">
-                    <div class="editor-label">
-                        @Html.LabelFor(model => model.PosterFilter, new { style = "font-weight: normal; font-size: small;" })
-                    </div>
-                    <div class="editor-field">
-                        @Html.EditorFor(model => model.PosterFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
-                    </div>
-                </div>
-                <div class="content-row-filter">
-                     <div class="editor-label">
-                        @Html.LabelFor(model => model.ConfirmerFilter, new { style = "font-weight: normal; font-size: small;" })
-                    </div>
-                    <div class="editor-field">
-                        @Html.EditorFor(model => model.ConfirmerFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
                     </div>
                 </div>
                 <div class="content-row-filter">
@@ -92,6 +75,33 @@
                         @Html.EditorFor(model => model.ComplexFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
                     </div>
                 </div>
+            </div>
+            <div class="content-column-filter-3">
+                <div class="content-row-filter">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.StatusFilter, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.StatusFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row-filter">
+                     <div class="editor-label">
+                        @Html.LabelFor(model => model.ConfirmerFilter, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.ConfirmerFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row-filter">
+                     <div class="editor-label">
+                        @Html.LabelFor(model => model.RateFilter, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.RateFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>

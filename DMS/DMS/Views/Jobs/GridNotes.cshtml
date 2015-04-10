@@ -6,7 +6,7 @@
                 dataSource: {
                     type: "json",
                     transport: {
-                        read: '@Url.Action("JobsGrid", "Jobs")'
+                        read: '@Url.Action("NotesGrid", "Jobs")'
                     },
                     pageSize: 20
                 },
@@ -14,6 +14,7 @@
                 groupable: true,
                 //sortable: true,
                 selectable: true,
+                resizable: true,
                 //filterable: true,
                 pageable: {
                     refresh: true,
@@ -22,26 +23,33 @@
                 },
                 columns: [
                     {
-                        field: "JobID",
+                        field: "APK",
                         title: "<input type='checkbox' id='chkAll' />",
                         width: 30,
                         template: "<input type='checkbox' />"
                     }, {
-                        field: "JobName",
-                        title: "Job name",
-                        width: 200,
-                        template: "<a href='/Jobs/JobView/#: data.JobID #'>#: data.JobName #</a>"
-                    }, {
-                        field: "StatusName",
-                        title: "Status name"
-                    }, {
-                        field: "Deadline",
-                        title: "Deadline",
+                        field: "Description",
+                        title: "Ghi chú"
+                    },  {
+                        field: "CreatedDate",
+                        title: "Ngày tạo",
                         type: "date",
-                        template: '#= kendo.toString(data.Deadline, "dd/MM/yyyy") #'
+                        width: 120,
+                        template: '#= kendo.toString(data.CreatedDate, "dd/MM/yyyy") #'
                     }, {
-                        field: "Note",
-                        width: 150
+                        field: "CreatedUserID",
+                        title: "Người tạo",
+                        width: 120
+                    }, {
+                        field: "LastModifyDate",
+                        title: "Ngày cập nhật",
+                        type: "date",
+                        width: 120,
+                        template: '#= kendo.toString(data.LastModifyDate, "dd/MM/yyyy") #'
+                    }, {
+                        field: "LastModifyUserID",
+                        title: "Người cập nhật",
+                        width: 120
                     }]
             });
         });

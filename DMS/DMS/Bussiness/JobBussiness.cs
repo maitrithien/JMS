@@ -33,5 +33,69 @@ namespace DMS.Bussiness
 
             return _lst;
         }
+
+        public List<NoteModels> GetNotes(Guid apk)
+        {
+            List<NoteModels> _lst = new List<NoteModels>();
+            var rand = new Random();
+            for (int i = 0; i < 10; i++)
+            {
+                _lst.Add(new NoteModels
+                {
+                    APK = Guid.NewGuid(),
+                    Description = string.Format("Ghi chú {0:000}", i),
+                    CreatedDate = DateTime.Now,
+                    CreatedUserID = "NHANVIEN",
+                    LastModifyDate = DateTime.Now,
+                    LastModifyUserID = "NHANVIEN",
+                });
+            }
+
+            return _lst;
+        }
+
+        public List<AttachmentModels> GetAttachments(Guid apk)
+        {
+            List<AttachmentModels> _lst = new List<AttachmentModels>();
+            var rand = new Random();
+            for (int i = 0; i < 10; i++)
+            {
+                _lst.Add(new AttachmentModels
+                {
+                    APK = Guid.NewGuid(),
+                    AttachmentFileName = string.Format("File{0:000}.txt", i),
+                    AttachmentFileSize = string.Format("{0}kb", i*100),
+                    AttachmentFileType = "Text",
+                    AttachmentFilePath = Guid.NewGuid().ToString(),
+                    AttachmentOwner = "NHANVIEN",
+                    AttachmentComment = string.Format("Ghi chú cho đính kèm {0:000}", i),
+                    CreatedDate = DateTime.Now,
+                    CreatedUserID = "NHANVIEN",
+                    LastModifyDate = DateTime.Now,
+                    LastModifyUserID = "NHANVIEN",
+                });
+            }
+
+            return _lst;
+        }
+
+        public List<HistoryModels> GetHistories(Guid apk)
+        {
+            List<HistoryModels> _lst = new List<HistoryModels>();
+            var rand = new Random();
+            for (int i = 0; i < 10; i++)
+            {
+                _lst.Add(new HistoryModels
+                {
+                    APK = Guid.NewGuid(),
+                    ActionType = rand.Next(2),
+                    Description = string.Format("Ghi chú cho đính kèm {0:000}", i),
+                    CreatedDate = DateTime.Now,
+                    CreatedUserID = "NHANVIEN"
+                });
+            }
+
+            return _lst;
+        }
     }
 }

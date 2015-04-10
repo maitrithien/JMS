@@ -1,0 +1,140 @@
+﻿@model DMS.Models.AttachmentModels
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.APK)
+    <div class="content-wrapper">
+        <div class="title-info">
+            <span>Chọn các tập tin tải lên</span>
+        </div>
+        <div>
+            <div class="k-header">
+                <input name="files" id="files" type="file" />
+            </div>
+        </div>
+        @*<div class="error">
+            @Html.ValidationMessageFor(model => model.AttachmentFileName)
+            @Html.ValidationMessageFor(model => model.AttachmentComment)
+        </div>
+        <div class="tab-content">
+            <div class="content-column-full">
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.AttachmentFileName, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.AttachmentFileName, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.AttachmentComment, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.AttachmentComment, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.AttachmentOwner, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.AttachmentOwner, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        
+                    </div>
+                </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.AttachmentFilePath, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.AttachmentFilePath, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    </div>
+    @*<div class="content-wrapper bottom-toolbar">
+        <button id="btnAttachmentSaveDetails" type="button">Lưu & nhập chi tiết</button>
+        <button id="btnAttachmentSave" type="button">Lưu</button>
+        <button id="btnAttachmentCancel" type="button">Đóng</button>
+    </div>*@
+        
+}
+
+<script type="text/javascript">
+    //kendo.init($("input"));
+    
+   @* $("#btnAttachmentSave").kendoButton({
+        width: 120,
+        icon: "tick"
+    });
+    $("#btnAttachmentSaveDetails").kendoButton({
+        width: 120,
+        icon: "expand-w"
+    });
+    $("#btnAttachmentCancel").kendoButton({
+        width: 120,
+        icon: "close",
+        click: function () {
+            var win = $("#AttachmentDialog").data("kendoWindow");
+            win.close();
+        }
+    });
+
+    $("#AttachmentOwner").kendoDropDownList({
+        filter: "startswith",
+        width: "100%",
+        dataTextField: "UserName",
+        dataValueField: "UserID",
+        dataSource: {
+            transport: {
+                read: {
+                    dataType: "json",
+                    url: "@Url.Action("UserID", "ComboBox")"
+                }
+            }
+        },
+        height: 370
+    });*@
+
+    $(document).ready(function () {
+        if (sessionStorage.initialFiles === undefined) {
+            sessionStorage.initialFiles = "[]";
+        }
+
+        var initialFiles = JSON.parse(sessionStorage.initialFiles);
+
+        $("#files").kendoUpload({
+            multiple: true,
+            async: {
+                saveUrl: "save",
+                removeUrl: "remove",
+                autoUpload: true
+            },
+            files: initialFiles,
+            success: onSuccess
+        });
+
+        function onSuccess(e) {
+            var currentInitialFiles = JSON.parse(sessionStorage.initialFiles);
+            for (var i = 0; i < e.files.length; i++) {
+                var current = {
+                    name: e.files[i].name,
+                    extension: e.files[i].extension,
+                    size: e.files[i].size
+                }
+
+                if (e.operation == "upload") {
+                    currentInitialFiles.push(current);
+                } else {
+                    var indexOfFile = currentInitialFiles.indexOf(current);
+                    currentInitialFiles.splice(indexOfFile, 1);
+                }
+            }
+            sessionStorage.initialFiles = JSON.stringify(currentInitialFiles);
+        }
+    });
+</script>

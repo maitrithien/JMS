@@ -1,0 +1,50 @@
+﻿@model DMS.Models.NoteModels
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.APK)
+    <div class="content-wrapper">
+        <div class="title-info">
+            <span>Thông tin ghi chú</span>
+        </div>
+        <div class="error">
+            @Html.ValidationMessageFor(model => model.Description)
+        </div>
+        <div class="tab-content">
+            <div class="content-column-full">
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Description, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Description, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-wrapper bottom-toolbar">
+        <button id="btnNoteSave" type="button">Lưu</button>
+        <button id="btnNoteCancel" type="button">Đóng</button>
+    </div>
+}
+
+<script type="text/javascript">
+    kendo.init($("input"));
+    
+    $("#btnNoteSave").kendoButton({
+        width: 120,
+        icon: "tick"
+    });
+    $("#btnNoteCancel").kendoButton({
+        width: 120,
+        icon: "close",
+        click: function () {
+            var win = $("#NoteDialog").data("kendoWindow");
+            win.close();
+        }
+    });
+
+</script>

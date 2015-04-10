@@ -11,8 +11,8 @@ namespace DMS.Bussiness
         public List<UserProfile> GetAll()
         {
             List<UserProfile> _lst = new List<UserProfile>();
-            UsersContext dbContext = new UsersContext();
-            _lst = dbContext.UserProfiles.Select(x => x).ToList();
+            //UsersContext dbContext = new UsersContext();
+            //_lst = dbContext.UserProfiles.Select(x => x).ToList();
 
             return _lst;
         }

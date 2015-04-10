@@ -6,7 +6,7 @@
                 dataSource: {
                     type: "json",
                     transport: {
-                        read: '@Url.Action("JobsGrid", "Jobs")'
+                        read: '@Url.Action("HistoriesGrid", "Jobs")'
                     },
                     pageSize: 20
                 },
@@ -20,29 +20,29 @@
                     pageSizes: true,
                     buttonCount: 5
                 },
-                columns: [
-                    {
-                        field: "JobID",
-                        title: "<input type='checkbox' id='chkAll' />",
-                        width: 30,
-                        template: "<input type='checkbox' />"
-                    }, {
-                        field: "JobName",
-                        title: "Job name",
-                        width: 200,
-                        template: "<a href='/Jobs/JobView/#: data.JobID #'>#: data.JobName #</a>"
-                    }, {
-                        field: "StatusName",
-                        title: "Status name"
-                    }, {
-                        field: "Deadline",
-                        title: "Deadline",
-                        type: "date",
-                        template: '#= kendo.toString(data.Deadline, "dd/MM/yyyy") #'
-                    }, {
-                        field: "Note",
-                        width: 150
-                    }]
+                columns: [{
+                    field: "APK",
+                    title: "<input type='checkbox' id='chkAll' />",
+                    width: 30,
+                    template: "<input type='checkbox' />"
+                }, {
+                    field: "CreatedDate",
+                    title: "CreatedDate",
+                    type: "date",
+                    width: 200,
+                    template: '#= kendo.toString(data.CreatedDate, "dd/MM/yyyy HH.mm.ss") #'
+                }, {
+                    field: "CreatedUserID",
+                    title: "Người thực hiện",
+                    width: 200
+                }, {
+                    field: "ActionName",
+                    title: "Hành động",
+                    width: 200
+                }, {
+                    field: "Description",
+                    title: "Mô tả"
+                }]
             });
         });
     </script>

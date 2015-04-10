@@ -66,10 +66,19 @@ namespace DMS.Models
         public string ComplexFilter { get; set; }
 
         /// <summary>
+        /// Độ phức tạp
+        /// </summary>
+        [Display(Name = "Đánh giá")]
+        public string RateFilter { get; set; }
+
+        /// <summary>
         /// Hồ sơ quá hạn
         /// </summary>
         [Display(Name="Hồ sơ quá hạn")]
         public bool IsOverDateFiler { get; set; }
+
+        [Display(Name = "Phòng ban")]
+        public string DepartmentIDFilter { get; set; }
 
         #endregion ---- Filter ----
 
@@ -82,6 +91,8 @@ namespace DMS.Models
         public string JobName { get; set; }
 
         [Display(Name = "Ngày hết hạn")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Deadline { get; set; }
 
         [Display(Name = "Tình trạng")]
@@ -121,7 +132,7 @@ namespace DMS.Models
 
         [Display(Name = "Độ ưu tiên")]
         public int Priority { get; set; }
-
+        
         [Display(Name = "Độ phức tạp")]
         public int Complex { get; set; }
 

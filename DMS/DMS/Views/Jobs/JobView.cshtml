@@ -23,10 +23,21 @@
         $("#btnAddNote").kendoButton({
             icon: "plus",
             click: function (e) {
-                console.log("edit");
+                var win = $("#NoteDialog").data("kendoWindow");
+                win.center();
+                win.open();
             }
         });
 
+        $("#btnEditNote").kendoButton({
+            icon: "pencil",
+            click: function (e) {
+                var win = $("#NoteDialog").data("kendoWindow");
+                win.center();
+                win.open();
+            }
+        });
+        
         $("#btnDeleteNote").kendoButton({
             icon: "close",
             click: function (e) {
@@ -35,9 +46,20 @@
         });
 
         $("#btnAddAttachment").kendoButton({
+            icon: "plus",
+            click: function (e) {
+                var win = $("#AttachmentDialog").data("kendoWindow");
+                win.center();
+                win.open();
+            }
+        });
+
+        $("#btnEditAttachment").kendoButton({
             icon: "pencil",
             click: function (e) {
-                console.log("edit");
+                var win = $("#UpdateAttachmentDialog").data("kendoWindow");
+                win.center();
+                win.open();
             }
         });
 
@@ -94,20 +116,36 @@
                         </div>
                         <div class="content-row">
                             <div class="display-label">
-                                @Html.DisplayNameFor(model => model.Deadline)
+                                @Html.DisplayNameFor(model => model.Priority)
                             </div>
                             <div class="display-field">
-                                @Html.DisplayFor(model => model.Deadline)
+                                @Html.DisplayFor(model => model.Priority)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.Complex)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.Complex)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.Rate)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.Rate)
                             </div>
                         </div>
                     </div>
                     <div class="content-column">
                         <div class="content-row">
                             <div class="display-label">
-                                @Html.DisplayNameFor(model => model.Status)
+                                @Html.DisplayNameFor(model => model.Deadline)
                             </div>
                             <div class="display-field">
-                                @Html.DisplayFor(model => model.Status)
+                                @Html.DisplayFor(model => model.Deadline)
                             </div>
                         </div>
                         <div class="content-row">
@@ -120,10 +158,26 @@
                         </div>
                         <div class="content-row">
                             <div class="display-label">
+                                @Html.DisplayNameFor(model => model.Poster)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.Poster)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
                                 @Html.DisplayNameFor(model => model.Recipient)
                             </div>
                             <div class="display-field">
                                 @Html.DisplayFor(model => model.Recipient)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.Confirmer)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.Confirmer)
                             </div>
                         </div>
                     </div>
@@ -147,6 +201,7 @@
             <div class="content-wrapper">
                 <div class="toolbar">
                     <button id="btnAddNote" title="Thêm mới ghi chú" type="button"></button>
+                    <button id="btnEditNote" title="Cập nhật ghi chú" type="button"></button>
                     <button id="btnDeleteNote" title="Xóa ghi chú" type="button"></button>
                 </div>
                 <div class="title-info">
@@ -156,8 +211,9 @@
             </div>
             <div class="content-wrapper">
                 <div class="toolbar">
-                    <button id="btnAddAttachment" title="Cập nhật" type="button"></button>
-                    <button id="btnDeleteAttachment" title="Xóa" type="button"></button>
+                    <button id="btnAddAttachment" title="Tải lên đính kèm" type="button"></button>
+                    <button id="btnEditAttachment" title="Cập nhật đính kèm" type="button"></button>
+                    <button id="btnDeleteAttachment" title="Xóa đính kèm" type="button"></button>
                 </div>
                 <div class="title-info">
                     <span>Tệp tin đính kèm</span>
@@ -229,7 +285,52 @@
                     }
                 }
             });
+
+            $("#NoteDialog").kendoWindow({
+                iframe: false,
+                modal: true,
+                height: 200,
+                width: 500,
+                title: "Cập nhật ghi chú",
+                visible: false
+            }).data("kendoWindow");
+
+            $("#AttachmentDialog").kendoWindow({
+                iframe: false,
+                modal: true,
+                height: 350,
+                width: 500,
+                title: "Đính kèm tập tin",
+                visible: false
+            }).data("kendoWindow");
+
+            $("#UpdateAttachmentDialog").kendoWindow({
+                iframe: false,
+                modal: true,
+                height: 350,
+                width: 500,
+                title: "Cập nhật thông tin đính kèm",
+                visible: false
+            }).data("kendoWindow");
         });
+
     </script>
 </div>
 
+<div id="NoteDialog">
+    @{
+        Html.RenderPartial("NoteDialog", new DMS.Models.NoteModels());
+    }
+</div>
+
+<div id="AttachmentDialog">
+    @{
+        Html.RenderPartial("AttachmentDialog", new DMS.Models.AttachmentModels());
+    }
+</div>
+
+<div id="UpdateAttachmentDialog">
+    @{
+        Html.RenderPartial("UpdateAttachmentDialog", new DMS.Models.AttachmentModels());
+    }
+</div>

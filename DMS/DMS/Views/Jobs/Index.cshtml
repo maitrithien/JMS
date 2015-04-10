@@ -25,7 +25,14 @@
                     click: function (e) {
                         var win = $("#window").data("kendoWindow");
                         win.center();
+                        //win.open();
+                        win.refresh({
+                            url: "@Url.Action("JobDialog", "Jobs")",
+                            data: {},
+                            type: 'POST'
+                        });
                         win.open();
+                        console.log("JobDialog");
                     }
                 });
 
@@ -39,7 +46,14 @@
                 $("#btnSearch").kendoButton({
                     icon: "search",
                     click: function (e) {
-                        console.log("search");
+                        //console.log("search");
+                        var grid = $("#grid").data("kendoGrid");
+                        var data = {
+                            JobIDFilter: "0",
+                            JobNameFilter: "0",
+                            PosterFilter: "0"
+                        };
+                        grid.dataSource.read(data);
                     }
                 });
             });

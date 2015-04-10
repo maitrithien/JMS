@@ -48,6 +48,30 @@ namespace DMS.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult NotesGrid()
+        {
+            JobBussiness _jobBuzz = new JobBussiness();
+            List<NoteModels> model = _jobBuzz.GetNotes(Guid.NewGuid());
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AttachmentsGrid()
+        {
+            JobBussiness _jobBuzz = new JobBussiness();
+            List<AttachmentModels> model = _jobBuzz.GetAttachments(Guid.NewGuid());
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult HistoriesGrid()
+        {
+            JobBussiness _jobBuzz = new JobBussiness();
+            List<HistoryModels> model = _jobBuzz.GetHistories(Guid.NewGuid());
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult JobDelete()
         {
              return new JsonResult();
@@ -71,9 +95,32 @@ namespace DMS.Controllers
         }
 
         [Authorize]
+        public ActionResult NoteDialog()
+        {
+            NoteModels model = new NoteModels();
+            return PartialView(model);
+        }
+
+        [Authorize]
+        public ActionResult AttactmentDialog()
+        {
+            AttachmentModels model = new AttachmentModels();
+            return PartialView(model);
+        }
+
+        [Authorize]
+        public ActionResult UpdateAttactmentDialog()
+        {
+            AttachmentModels model = new AttachmentModels();
+            return PartialView(model);
+        }
+
+        [Authorize]
         public ActionResult JobView(string id)
         {
             JobModels model = new JobModels();
+            JobBussiness _jobBuzz = new JobBussiness();
+            model = _jobBuzz.GetAll().FirstOrDefault();
 
             return View(model);
         }
