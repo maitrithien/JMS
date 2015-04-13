@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
 
 namespace DMS.Controllers
 {
@@ -102,14 +103,14 @@ namespace DMS.Controllers
         }
 
         [Authorize]
-        public ActionResult AttactmentDialog()
+        public ActionResult AttachmentDialog()
         {
             AttachmentModels model = new AttachmentModels();
             return PartialView(model);
         }
 
         [Authorize]
-        public ActionResult UpdateAttactmentDialog()
+        public ActionResult UpdateAttachmentDialog()
         {
             AttachmentModels model = new AttachmentModels();
             return PartialView(model);

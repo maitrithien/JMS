@@ -171,6 +171,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ComboBoxController.cs" />
     <Compile Include="Controllers\JobsController.cs" />
+    <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="DataAccess\Entities.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

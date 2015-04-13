@@ -34,6 +34,11 @@
             click: function (e) {
                 var win = $("#NoteDialog").data("kendoWindow");
                 win.center();
+                win.refresh({
+                    url: "@Url.Action("NoteDialog", "Jobs")",
+                    data: {},
+                    type: 'POST'
+                });
                 win.open();
             }
         });
@@ -50,6 +55,11 @@
             click: function (e) {
                 var win = $("#AttachmentDialog").data("kendoWindow");
                 win.center();
+                win.refresh({
+                    url: "@Url.Action("AttachmentDialog", "Jobs")",
+                     data: {},
+                     type: 'POST'
+                 });
                 win.open();
             }
         });
@@ -59,6 +69,11 @@
             click: function (e) {
                 var win = $("#UpdateAttachmentDialog").data("kendoWindow");
                 win.center();
+                win.refresh({
+                    url: "@Url.Action("UpdateAttachmentDialog", "Jobs")",
+                    data: {},
+                    type: 'POST'
+                });
                 win.open();
             }
         });

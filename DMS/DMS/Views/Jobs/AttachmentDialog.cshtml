@@ -110,8 +110,8 @@
         $("#files").kendoUpload({
             multiple: true,
             async: {
-                saveUrl: "save",
-                removeUrl: "remove",
+                saveUrl: "@Url.Action("SaveAndPersist", "Upload")",
+                removeUrl: "@Url.Action("RemoveAndPersist", "Upload")",
                 autoUpload: true
             },
             files: initialFiles,
