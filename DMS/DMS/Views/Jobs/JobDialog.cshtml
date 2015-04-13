@@ -49,7 +49,7 @@
                         @Html.LabelFor(model => model.Complex, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.Complex, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        @Html.TextBoxFor(model => model.Complex, new { style = "width: 100%; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
                 <div class="content-row">
@@ -57,7 +57,7 @@
                         @Html.LabelFor(model => model.Priority, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.Priority, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        @Html.TextBoxFor(model => model.Priority, new { style = "width: 100%; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
                 <div class="content-row">
@@ -65,7 +65,7 @@
                         @Html.LabelFor(model => model.Rate, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.Rate, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        @Html.TextBoxFor(model => model.Rate, new { style = "width: 100%; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
                 
@@ -76,7 +76,7 @@
                         @Html.LabelFor(model => model.Status, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.Status, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        @Html.TextBoxFor(model => model.Status, new { style = "width: 100%; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
                 <div class="content-row">
@@ -84,7 +84,7 @@
                         @Html.LabelFor(model => model.Poster, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.Poster, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        @Html.TextBoxFor(model => model.Poster, new { style = "width: 100%; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
                 <div class="content-row">
@@ -92,7 +92,7 @@
                         @Html.LabelFor(model => model.Recipient, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.Recipient, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        @Html.TextBoxFor(model => model.Recipient, new { style = "width: 100%; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
                 <div class="content-row">
@@ -100,7 +100,7 @@
                         @Html.LabelFor(model => model.Confirmer, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.Confirmer, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        @Html.TextBoxFor(model => model.Confirmer, new { style = "width: 100%; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
                 <div class="content-row">
@@ -108,7 +108,7 @@
                         @Html.LabelFor(model => model.DepartmentID, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.DepartmentID, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        @Html.TextBoxFor(model => model.DepartmentID, new { style = "width: 100%; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
                 <div class="content-row">
@@ -124,7 +124,6 @@
     </div>
     <div class="content-wrapper bottom-toolbar">
         <button id="btnSaveDetails" type="button">Lưu & nhập chi tiết</button>
-        <button id="btnSave" type="button">Lưu</button>
         <button id="btnCancel" type="button">Đóng</button>
     </div>
         
@@ -133,17 +132,31 @@
 <script type="text/javascript">
     kendo.init($("input"));
     
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+
+    today = mm + '/' + dd + '/' + yyyy;
+
+    $("#Deadline").val(today);
     $("#Deadline").kendoDatePicker({
         format: "MM/dd/yyyy"
     });
-    $("#btnSave").kendoButton({
-        width: 120,
-        icon: "tick"
-    });
+
     $("#btnSaveDetails").kendoButton({
         width: 120,
         icon: "expand-w"
     });
+
     $("#btnCancel").kendoButton({
         width: 120,
         icon: "close",
@@ -157,7 +170,7 @@
         { text: "Hồ sơ mới", value: "1" },
         { text: "Đang xử lý", value: "2" },
         { text: "Đã hoàn tất", value: "3" },
-        { text: "Đã hủy", value: "4" },
+        { text: "Đã đóng", value: "4" },
     ];
 
     var dataPriority = [
@@ -185,75 +198,37 @@
     ];
 
     // create DropDownList from input HTML element
-    $("#Status").kendoDropDownList({
-        dataTextField: "text",
-        dataValueField: "value",
+    $("#Status").dropdownlist({
         dataSource: dataStatus,
-        index: 0
+        selectedIndex: 0
     });
-    $("#Priority").kendoDropDownList({
-        dataTextField: "text",
-        dataValueField: "value",
-        dataSource: dataPriority,
-        index: 0
+    $("#Priority").dropdownlist({
+        dataSource: dataPriority
     });
-    $("#Complex").kendoDropDownList({
-        dataTextField: "text",
-        dataValueField: "value",
+
+    $("#Complex").dropdownlist({
         dataSource: dataComplex,
-        index: 0
+        selectedIndex: 0
     });
-    $("#Rate").kendoDropDownList({
-        dataTextField: "text",
-        dataValueField: "value",
+    $("#Rate").dropdownlist({
         dataSource: dataRate,
-        index: 0
-    });
-    $("#Poster").kendoDropDownList({
-        filter: "startswith",
-        width: "100%",
-        dataTextField: "UserName",
-        dataValueField: "UserID",
-        dataSource: {
-            transport: {
-                read: {
-                    dataType: "json",
-                    url: "@Url.Action("UserID", "ComboBox")"
-                }
-            }
-        },
-        height: 370
+        selectedIndex: 1
     });
 
-    $("#Recipient").kendoDropDownList({
-        filter: "startswith",
-        width: "100%",
-        dataTextField: "UserName",
-        dataValueField: "UserID",
-        dataSource: {
-            transport: {
-                read: {
-                    dataType: "json",
-                    url: "@Url.Action("UserID", "ComboBox")"
-                }
-            }
-        },
-        height: 370
+    $("#Poster").dropdownlist({
+        url: '@Url.Action("UserID", "ComboBox")'
     });
 
-    $("#Confirmer").kendoDropDownList({
-        filter: "startswith",
-        width: "100%",
-        dataTextField: "UserName",
-        dataSource: {
-            transport: {
-                read: {
-                    dataType: "json",
-                    url: "@Url.Action("UserID", "ComboBox")"
-                }
-            }
-        },
-        height: 370
+    $("#Recipient").dropdownlist({
+        url: '@Url.Action("UserID", "ComboBox")'
+    });
+
+    $("#Confirmer").dropdownlist({
+        url: '@Url.Action("UserID", "ComboBox")'
+    });
+
+    $("#DepartmentID").dropdownlist({
+        url: '@Url.Action("UserID", "ComboBox")'
     });
 
 </script>

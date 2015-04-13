@@ -4,7 +4,9 @@
     ViewBag.Title = "Xem chi tiết hồ sơ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<script>
+
+@section scripts{
+    <script>
     $(document).ready(function () {
         $("#btnEdit").kendoButton({
             icon: "pencil",
@@ -91,10 +93,49 @@
                 console.log("delete");
             }
         });
+
+        $("#tabstrip").kendoTabStrip({
+            tabPosition: "top",
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            }
+        });
+
+        $("#NoteDialog").kendoWindow({
+            iframe: false,
+            modal: true,
+            height: 200,
+            width: 500,
+            title: "Cập nhật ghi chú",
+            visible: false
+        }).data("kendoWindow");
+
+        $("#AttachmentDialog").kendoWindow({
+            iframe: false,
+            modal: true,
+            height: 350,
+            width: 500,
+            title: "Đính kèm tập tin",
+            visible: false
+        }).data("kendoWindow");
+
+        $("#UpdateAttachmentDialog").kendoWindow({
+            iframe: false,
+            modal: true,
+            height: 350,
+            width: 500,
+            title: "Cập nhật thông tin đính kèm",
+            visible: false
+        }).data("kendoWindow");
     });
+
 </script>
+}
+
 <div id="View">
-    <div class="demo-section k-header">
+    <div class="k-header">
         <div id="tabstrip">
             <ul>
                 <li class="k-state-active">Thông tin hồ sơ</li>
@@ -290,46 +331,6 @@
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function () {
-            $("#tabstrip").kendoTabStrip({
-                tabPosition: "top",
-                animation: {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                }
-            });
-
-            $("#NoteDialog").kendoWindow({
-                iframe: false,
-                modal: true,
-                height: 200,
-                width: 500,
-                title: "Cập nhật ghi chú",
-                visible: false
-            }).data("kendoWindow");
-
-            $("#AttachmentDialog").kendoWindow({
-                iframe: false,
-                modal: true,
-                height: 350,
-                width: 500,
-                title: "Đính kèm tập tin",
-                visible: false
-            }).data("kendoWindow");
-
-            $("#UpdateAttachmentDialog").kendoWindow({
-                iframe: false,
-                modal: true,
-                height: 350,
-                width: 500,
-                title: "Cập nhật thông tin đính kèm",
-                visible: false
-            }).data("kendoWindow");
-        });
-
-    </script>
 </div>
 
 <div id="NoteDialog">

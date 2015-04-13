@@ -1,0 +1,3 @@
+﻿var Jobs = new function () {
+
+}

@@ -31,10 +31,14 @@
                         field: "AttachmentFileName",
                         title: "Tên tập tin",
                         width: 200,
-                        template: "<a href='/Jobs/Download/#: data.AttachmentFilePath #'>#: data.AttachmentFileName #</a>"
+                        template: "<a href='/Jobs/Download/#: data.APK #'>#: data.AttachmentFileName #</a>"
                     }, {
                         field: "AttachmentFileSize",
                         title: "Kích thước",
+                        width: 100
+                    }, {
+                        field: "AttachmentFileExtension",
+                        title: "Phần mở rộng",
                         width: 100
                     }, {
                         field: "AttachmentFileType",

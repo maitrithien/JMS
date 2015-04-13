@@ -9,7 +9,7 @@ namespace DMS.Controllers
 {
     public class UploadController : Controller
     {
-        public ActionResult SaveAndPersist(IEnumerable<HttpPostedFileBase> files)
+        public ActionResult Save(IEnumerable<HttpPostedFileBase> files)
         {
             // The Name of the Upload component is "files"
             if (files != null)
@@ -33,7 +33,7 @@ namespace DMS.Controllers
             return Content("");
         }
 
-        public ActionResult RemoveAndPersist(string[] fileNames)
+        public ActionResult Remove(string[] fileNames)
         {
             // The parameter of the Remove action must be called "fileNames"
             if (fileNames != null)

@@ -109,6 +109,12 @@ namespace DMS.Controllers
             return PartialView(model);
         }
 
+        public ActionResult SaveAttachments(IEnumerable<AttachmentModels> models)
+        {
+            var attachments = models;
+            return Json(attachments);
+        }
+
         [Authorize]
         public ActionResult UpdateAttachmentDialog()
         {

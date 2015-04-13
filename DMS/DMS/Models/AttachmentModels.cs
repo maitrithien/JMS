@@ -26,8 +26,8 @@ namespace DMS.Models
         [Display(Name = "Người đăng")]
         public string AttachmentOwner { get; set; }
 
-        [Display(Name = "Đường dẫn")]
-        public string AttachmentFilePath { get; set; }
+        [Display(Name = "Phần mở rộng")]
+        public string AttachmentFileExtension { get; set; }
 
         [Display(Name = "Ngày tạo")]
         public DateTime CreatedDate { get; set; }

@@ -4,10 +4,14 @@
 @section featured {
     @Html.Partial("Filter")
     <div class="content-wrapper">
+        <div class="toolbar-search">
+            <button id="btnSearch" title="Tìm kiếm" type="button" class="btn-right">Tìm kiếm</button>
+        </div>
+    </div>
+    <div class="content-wrapper">
         <div class="toolbar">
             <button id="btnAddNew" title="Thêm mới" type="button"></button>
             <button id="btnDelete" title="Xóa" type="button"></button>
-            <button id="btnSearch" title="Tìm kiếm" type="button" class="btn-right">Tìm kiếm</button>
         </div>
         <script>
             $(document).ready(function () {

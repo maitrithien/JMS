@@ -66,7 +66,7 @@ namespace DMS.Bussiness
                     AttachmentFileName = string.Format("File{0:000}.txt", i),
                     AttachmentFileSize = string.Format("{0}kb", i*100),
                     AttachmentFileType = "Text",
-                    AttachmentFilePath = Guid.NewGuid().ToString(),
+                    AttachmentFileExtension = ".txt",
                     AttachmentOwner = "NHANVIEN",
                     AttachmentComment = string.Format("Ghi chú cho đính kèm {0:000}", i),
                     CreatedDate = DateTime.Now,
