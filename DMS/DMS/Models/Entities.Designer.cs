@@ -17,7 +17,7 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
-namespace DMS.DataAccess
+namespace DMS.Models
 {
     #region Contexts
     
@@ -380,30 +380,6 @@ namespace DMS.DataAccess
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String AttachmentFilePath
-        {
-            get
-            {
-                return _AttachmentFilePath;
-            }
-            set
-            {
-                OnAttachmentFilePathChanging(value);
-                ReportPropertyChanging("AttachmentFilePath");
-                _AttachmentFilePath = StructuralObject.SetValidValue(value, true, "AttachmentFilePath");
-                ReportPropertyChanged("AttachmentFilePath");
-                OnAttachmentFilePathChanged();
-            }
-        }
-        private global::System.String _AttachmentFilePath;
-        partial void OnAttachmentFilePathChanging(global::System.String value);
-        partial void OnAttachmentFilePathChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.DateTime CreatedDate
@@ -496,6 +472,30 @@ namespace DMS.DataAccess
         private global::System.String _LastModifyUserID;
         partial void OnLastModifyUserIDChanging(global::System.String value);
         partial void OnLastModifyUserIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String AttachmentFileExtension
+        {
+            get
+            {
+                return _AttachmentFileExtension;
+            }
+            set
+            {
+                OnAttachmentFileExtensionChanging(value);
+                ReportPropertyChanging("AttachmentFileExtension");
+                _AttachmentFileExtension = StructuralObject.SetValidValue(value, true, "AttachmentFileExtension");
+                ReportPropertyChanged("AttachmentFileExtension");
+                OnAttachmentFileExtensionChanged();
+            }
+        }
+        private global::System.String _AttachmentFileExtension;
+        partial void OnAttachmentFileExtensionChanging(global::System.String value);
+        partial void OnAttachmentFileExtensionChanged();
 
         #endregion
 

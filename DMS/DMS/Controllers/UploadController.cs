@@ -19,10 +19,15 @@ namespace DMS.Controllers
                     // Some browsers send file names with full path.
                     // We are only interested in the file name.
                     var fileName = Path.GetFileName(file.FileName);
-                    var physicalPath = Path.Combine(Server.MapPath("~/App_Data"), fileName);
                     var fileExtension = Path.GetExtension(file.FileName);
+                    var directory = Server.MapPath("~/App_Data/" + User.Identity.Name);
 
-                    // SessionUploadInitialFilesRepository.Add(new UploadInitialFile(fileName, file.ContentLength, fileExtension));
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+
+                    var physicalPath = Path.Combine(directory, fileName);
 
                     // The files are not actually saved in this demo
                     file.SaveAs(physicalPath);
@@ -30,7 +35,7 @@ namespace DMS.Controllers
             }
 
             // Return an empty string to signify success
-            return Content("");
+            return Content("0");
         }
 
         public ActionResult Remove(string[] fileNames)
@@ -41,9 +46,7 @@ namespace DMS.Controllers
                 foreach (var fullName in fileNames)
                 {
                     var fileName = Path.GetFileName(fullName);
-                    var physicalPath = Path.Combine(Server.MapPath("~/App_Data"), fileName);
-
-                    // SessionUploadInitialFilesRepository.Remove(fileName);
+                    var physicalPath = Path.Combine(Server.MapPath("~/App_Data/" + User.Identity.Name), fileName);
 
                     if (System.IO.File.Exists(physicalPath))
                     {
@@ -54,7 +57,7 @@ namespace DMS.Controllers
             }
 
             // Return an empty string to signify success
-            return Content("");
+            return Content("1");
         }
 
 

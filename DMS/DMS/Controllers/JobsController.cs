@@ -11,6 +11,11 @@ namespace DMS.Controllers
 {
     public class JobsController : Controller
     {
+        /// <summary>
+        /// JMS entities
+        /// </summary>
+        JMSEntities _EntityModel = new JMSEntities();
+
         [Authorize]
         public ActionResult Index()
         {
@@ -57,10 +62,15 @@ namespace DMS.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult AttachmentsGrid()
+        public JsonResult AttachmentsGrid(string apk)
         {
-            JobBussiness _jobBuzz = new JobBussiness();
-            List<AttachmentModels> model = _jobBuzz.GetAttachments(Guid.NewGuid());
+            Guid id = Guid.Empty;
+            if(!string.IsNullOrEmpty(apk))
+            {
+                Guid.TryParse(apk, out id);
+            }
+
+            List<Attachment> model = _EntityModel.Attachments.ToList();
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -109,10 +119,86 @@ namespace DMS.Controllers
             return PartialView(model);
         }
 
-        public ActionResult SaveAttachments(IEnumerable<AttachmentModels> models)
+        /// <summary>
+        /// Save all attachments
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
+        public ActionResult AddAttachments(List<AttachmentModels> models)
         {
-            var attachments = models;
-            return Json(attachments);
+            var attachments = models ?? new List<AttachmentModels>();
+
+            foreach (var item in attachments)
+            {
+                Attachment att = new Attachment
+                {
+                    APK = Guid.NewGuid(),
+                    AttachmentComment = item.AttachmentComment,
+                    AttachmentFileName = item.AttachmentFileName,
+                    AttachmentFileExtension = item.AttachmentFileExtension,
+                    AttachmentFileSize = item.AttachmentFileSize,
+                    AttachmentFileType = item.AttachmentFileType,
+                    AttachmentOwner = User.Identity.Name,
+                    JobAPK = item.JobAPK ?? Guid.Empty,
+                    CreatedDate = DateTime.Now,
+                    CreatedUserID = User.Identity.Name,
+                    LastModifyDate = DateTime.Now,
+                    LastModifyUserID = User.Identity.Name
+                };
+
+                _EntityModel.Attachments.AddObject(att);
+                _EntityModel.SaveChanges();
+            }
+
+            return Json(new { result = true });
+        }
+
+        /// <summary>
+        /// Save all attachments
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
+        public ActionResult RemoveAttachments(List<AttachmentModels> models)
+        {
+            var attachments = models ?? new List<AttachmentModels>();
+
+            foreach (var item in attachments)
+            {
+                var finder = _EntityModel.Attachments.Where(x => 
+                    x.AttachmentFileName == item.AttachmentFileName &&
+                    x.AttachmentFileType == item.AttachmentFileType &&
+                    x.AttachmentOwner == User.Identity.Name &&
+                    x.AttachmentFileSize == item.AttachmentFileSize).FirstOrDefault();
+
+                if (finder != null)
+                {
+                    _EntityModel.Attachments.DeleteObject(finder);
+                    _EntityModel.SaveChanges();
+                }
+            }
+
+            return Json(new { result = true });
+        }
+
+        /// <summary>
+        /// Save all attachments
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
+        public ActionResult RemoveAttachment(AttachmentModels model)
+        {
+            var item = model ?? new AttachmentModels();
+
+            var finder = _EntityModel.Attachments.Where(x =>
+                    x.APK == item.APK).FirstOrDefault();
+
+            if (finder != null)
+            {
+                _EntityModel.Attachments.DeleteObject(finder);
+                _EntityModel.SaveChanges();
+            }
+
+            return Json(new { result = true });
         }
 
         [Authorize]

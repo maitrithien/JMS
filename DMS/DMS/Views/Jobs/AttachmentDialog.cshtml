@@ -16,7 +16,8 @@
                 <input name="files" id="files" type="file" />
                 @Html.Hidden("saveUrl", Url.Action("Save", "Upload"))
                 @Html.Hidden("removeUrl", Url.Action("Remove", "Upload"))
-                @Html.Hidden("attachmentUrl", Url.Action("SaveAttachments", "Jobs"))
+                @Html.Hidden("addAttachmentsUrl", Url.Action("AddAttachments", "Jobs"))
+                @Html.Hidden("removeAttachmentsUrl", Url.Action("RemoveAttachments", "Jobs"))
             </div>
         </div>
     </div>

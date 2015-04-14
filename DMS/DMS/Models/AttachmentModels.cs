@@ -11,6 +11,8 @@ namespace DMS.Models
     {
         public Guid? APK { get; set; }
 
+        public Guid? JobAPK { get; set; }
+
         [Display(Name = "Tên tập tin")]
         public string AttachmentFileName { get; set; }
 

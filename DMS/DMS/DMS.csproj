@@ -172,7 +172,7 @@
     <Compile Include="Controllers\ComboBoxController.cs" />
     <Compile Include="Controllers\JobsController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
-    <Compile Include="DataAccess\Entities.Designer.cs">
+    <Compile Include="Models\Entities.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Entities.edmx</DependentUpon>
@@ -313,11 +313,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </Content>
-    <EntityDeploy Include="DataAccess\Entities.edmx">
+    <EntityDeploy Include="Models\Entities.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Entities.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="DataAccess\Entities.edmx.diagram">
+    <Content Include="Models\Entities.edmx.diagram">
       <DependentUpon>Entities.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />

@@ -20,27 +20,34 @@ var attachment = new function () {
     var success = function (e) {
         data = [];
         if (e.files) {
+            console.log(e.files);
             $.each(e.files, function (i, val) {
                 data.push({
                     AttachmentFileName: e.files[i].name,
                     AttachmentFileSize: e.files[i].size,
                     AttachmentFileType: e.files[i].rawFile.type,
+                    AttachmentFilePath: e.files[i].rawFile.name,
                     AttachmentFileExtension: e.files[i].extension
                 });
             });
         }
+        var isUpload = e.response == 0;
 
         $.ajax({
             type: 'POST',
-            url: $('#attachmentUrl').val(),
-            data: data,
-            dataType: 'json',
+            url: isUpload ? $('#addAttachmentsUrl').val() : $('#removeAttachmentsUrl').val(),
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
             success: onSuccess
         });
     };
 
     var onSuccess = function (data) {
-        console.log(data);
+        var gridAttachment = $("#gridAttachments").data("kendoGrid");
+        if (gridAttachment) {
+            data = { apk: $("#JobAPK").val() };
+            gridAttachment.dataSource.read(data);
+        }
     }
 
     this.init = function () {
@@ -48,6 +55,7 @@ var attachment = new function () {
             saveUrl: attachment.saveUrl,
             removeUrl: attachment.removeUrl,
             autoUpload: attachment.autoUpload,
+            multiple: true,
             success: success
         });
     };

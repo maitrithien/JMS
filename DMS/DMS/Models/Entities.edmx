@@ -22,7 +22,7 @@
           <Property Name="AttachmentFileType" Type="nvarchar" MaxLength="50" />
           <Property Name="AttachmentComment" Type="nvarchar" MaxLength="500" />
           <Property Name="AttachmentOwner" Type="nvarchar" MaxLength="50" />
-          <Property Name="AttachmentFilePath" Type="nvarchar" MaxLength="250" />
+          <Property Name="AttachmentFileExtension" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="LastModifyDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedUserID" Type="nvarchar" MaxLength="50" />
@@ -94,11 +94,11 @@
           <Property Type="String" Name="AttachmentFileType" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="AttachmentComment" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="AttachmentOwner" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="AttachmentFilePath" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
           <Property Type="DateTime" Name="LastModifyDate" Nullable="false" Precision="3" />
           <Property Type="String" Name="CreatedUserID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="LastModifyUserID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AttachmentFileExtension" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="History">
           <Key>
@@ -154,11 +154,11 @@
           <EntitySetMapping Name="Attachments">
             <EntityTypeMapping TypeName="JMSModel.Attachment">
               <MappingFragment StoreEntitySet="Attachments">
+                <ScalarProperty Name="AttachmentFileExtension" ColumnName="AttachmentFileExtension" />
                 <ScalarProperty Name="LastModifyUserID" ColumnName="LastModifyUserID" />
                 <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
                 <ScalarProperty Name="LastModifyDate" ColumnName="LastModifyDate" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="AttachmentFilePath" ColumnName="AttachmentFilePath" />
                 <ScalarProperty Name="AttachmentOwner" ColumnName="AttachmentOwner" />
                 <ScalarProperty Name="AttachmentComment" ColumnName="AttachmentComment" />
                 <ScalarProperty Name="AttachmentFileType" ColumnName="AttachmentFileType" />

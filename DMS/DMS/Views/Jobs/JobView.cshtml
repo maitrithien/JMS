@@ -37,7 +37,7 @@
                 var win = $("#NoteDialog").data("kendoWindow");
                 win.center();
                 win.refresh({
-                    url: "@Url.Action("NoteDialog", "Jobs")",
+                    url: '@Url.Action("NoteDialog", "Jobs")',
                     data: {},
                     type: 'POST'
                 });
@@ -63,27 +63,6 @@
                      type: 'POST'
                  });
                 win.open();
-            }
-        });
-
-        $("#btnEditAttachment").kendoButton({
-            icon: "pencil",
-            click: function (e) {
-                var win = $("#UpdateAttachmentDialog").data("kendoWindow");
-                win.center();
-                win.refresh({
-                    url: "@Url.Action("UpdateAttachmentDialog", "Jobs")",
-                    data: {},
-                    type: 'POST'
-                });
-                win.open();
-            }
-        });
-
-        $("#btnDeleteAttachment").kendoButton({
-            icon: "close",
-            click: function (e) {
-                console.log("delete");
             }
         });
 
@@ -157,6 +136,7 @@
                         <div class="content-row">
                             <div class="display-label">
                                 @Html.DisplayNameFor(model => model.JobID)
+                                @Html.Hidden("JobAPK", Model.APK)
                             </div>
                             <div class="display-field">
                                 @Html.DisplayFor(model => model.JobID)
@@ -268,8 +248,6 @@
             <div class="content-wrapper">
                 <div class="toolbar">
                     <button id="btnAddAttachment" title="Tải lên đính kèm" type="button"></button>
-                    <button id="btnEditAttachment" title="Cập nhật đính kèm" type="button"></button>
-                    <button id="btnDeleteAttachment" title="Xóa đính kèm" type="button"></button>
                 </div>
                 <div class="title-info">
                     <span>Tệp tin đính kèm</span>
