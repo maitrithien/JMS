@@ -4,6 +4,7 @@
 *****************************************************************/
 
 $(document).ready(function () {
+    $("#files").closest(".k-upload").find("span").text("Chọn tập tin hoặc kéo thả vào đây");
     attachment.saveUrl = $('#saveUrl').val();
     attachment.removeUrl = $('#removeUrl').val();
     attachment.init();

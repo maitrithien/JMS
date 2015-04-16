@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DMS.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,11 @@ namespace DMS.Controllers
 {
     public class UploadController : Controller
     {
+        /// <summary>
+        /// JMS entities
+        /// </summary>
+        JMSEntities _EntityModel = new JMSEntities();
+
         public ActionResult Save(IEnumerable<HttpPostedFileBase> files)
         {
             // The Name of the Upload component is "files"
@@ -60,6 +66,31 @@ namespace DMS.Controllers
             return Content("1");
         }
 
+        /// <summary>
+        /// Download file
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public FileStreamResult Download(string id)
+        {
+            Guid apk = Guid.Empty;
+            if(!string.IsNullOrEmpty(id))
+            {
+                Guid.TryParse(id, out apk);
+            }
 
+            var currentFile = _EntityModel.Attachments
+                .FirstOrDefault(x => x.APK == apk);
+
+            var physicalPath = Path.Combine(Server.MapPath("~/App_Data/" + User.Identity.Name), currentFile.AttachmentFileName);
+            MemoryStream streamFile = new MemoryStream();
+
+            if (System.IO.File.Exists(physicalPath))
+            {
+                streamFile = new MemoryStream(System.IO.File.ReadAllBytes(physicalPath));
+            }
+
+            return File(streamFile, "application/force-download", currentFile.AttachmentFileName); 
+        }
     }
 }

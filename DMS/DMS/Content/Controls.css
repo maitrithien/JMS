@@ -1,9 +1,22 @@
 ﻿.k-grid tbody tr {
     height: 38px !important;
 }
-#grid tbody tr:hover {
+.k-grid.k-widget tbody tr:hover {
     background: #b4d5ff;
     color: #000;
+}
+
+.k-grid table {
+   table-layout: fixed;
+}
+
+.k-grid tbody tr{
+    height: 50px;
+}
+
+.k-grid td{
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .k-tabstrip-items .k-state-active {
@@ -24,7 +37,8 @@
     border-color: #fff !important;
     background-color: #fff !important;
 }
-.k-header, .k-tabstrip-items .k-item, .k-panelbar .k-tabstrip-items .k-item, .km-pane-wrapper > .km-pane > .km-view > .km-content {
+#View .k-header,
+.k-tabstrip-items .k-item, .k-panelbar .k-tabstrip-items .k-item, .km-pane-wrapper > .km-pane > .km-view > .km-content {
     background-color: transparent !important;
 }
 
@@ -89,6 +103,10 @@
         float: left;
         padding: 0 10px;
     }
+
+    .tab-content .content-row .editor-label {
+        font-style: italic;
+    }
         .tab-content .content-column .content-row,
         .tab-content .content-column-full .content-row {
             width:100%;
@@ -108,7 +126,7 @@
                 line-height: 40px;
             }
             .tab-content .content-column .content-row .editor-field {
-                width: calc(70% - 10px);
+                width: calc(70% + 10px);
                 float: left;
                 font-weight: normal !important;
                 font-size: small !important;
@@ -150,3 +168,11 @@
     border-radius: 0 !important;
     background-color: #3F51B5 !important;
 }
+
+.k-widget.k-upload.k-header {
+    margin-top: 10px !important;
+}
+
+    .k-dropzone {
+        background-color: #EBF2FC !important;
+    }

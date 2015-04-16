@@ -1,10 +1,9 @@
 ﻿@model DMS.Models.AttachmentModels
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-update-attachment" }))
 {
     @Html.ValidationSummary(true)
 
-    @Html.HiddenFor(model => model.APK)
     <div class="content-wrapper">
         <div class="title-info">
             <span>Thông tin bổ sung đính kèm</span>
@@ -20,7 +19,14 @@
                         @Html.LabelFor(model => model.AttachmentFileName, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.AttachmentFileName, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        @Html.TextBoxFor(model => model.AttachmentFileName, new { @readonly = true, style = "width: 100%; font-weight: normal; font-size: small;" })
+                        @Html.HiddenFor(model => model.APK)
+                        @Html.HiddenFor(model => model.AttachmentFileExtension)
+                        @Html.HiddenFor(model => model.AttachmentFileSize)
+                        @Html.HiddenFor(model => model.AttachmentFileType)
+                        @Html.HiddenFor(model => model.AttachmentOwner)
+                        @Html.HiddenFor(model => model.CreatedDate)
+                        @Html.HiddenFor(model => model.CreatedUserID)
                     </div>
                 </div>
                 <div class="content-row">
@@ -28,16 +34,7 @@
                         @Html.LabelFor(model => model.AttachmentComment, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.AttachmentComment, new { style = "width: 100%; font-weight: normal; font-size: small;" })
-                    </div>
-                </div>
-                <div class="content-row">
-                    <div class="editor-label">
-                        @Html.LabelFor(model => model.AttachmentOwner, new { style = "font-weight: normal; font-size: small;" })
-                    </div>
-                    <div class="editor-field">
-                        @Html.TextBoxFor(model => model.AttachmentOwner, new { style = "width: 100%; font-weight: normal; font-size: small;" })
-                        
+                        @Html.TextAreaFor(model => model.AttachmentComment, new { style = "width: 100%; height: 120px; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
             </div>
@@ -50,19 +47,30 @@
         
 }
 
+@Html.Hidden("updateAttachmentUrl", Url.Action("UpdateAttachment", "Jobs"))
 <script type="text/javascript">
     kendo.init($("input"));
     
     $("#btnAttachmentSave").kendoButton({
         width: 120,
-        icon: "tick"
+        icon: "tick",
+        click: function () {
+            var data = common.getFormDataTypeJson('frm-update-attachment');
+            $.ajax({
+                type: 'POST',
+                url: $('#updateAttachmentUrl').val(),
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                success: function () {
+                    jobs.viewer.refreshAttachmentGrid();
+                    jobs.viewer.closeUpdateAttachmentDialog();
+                }
+            });
+        }
     });
     $("#btnAttachmentCancel").kendoButton({
         width: 120,
         icon: "close",
-        click: function () {
-            var win = $("#AttachmentDialog").data("kendoWindow");
-            win.close();
-        }
+        click: jobs.viewer.closeUpdateAttachmentDialog
     });
 </script>

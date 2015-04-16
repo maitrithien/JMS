@@ -6,9 +6,6 @@
 
     @Html.HiddenFor(model => model.APK)
     <div class="content-wrapper">
-        <div class="title-info">
-            <span>Thông tin mặc định</span>
-        </div>
         <div class="error">
             @Html.ValidationMessageFor(model => model.JobID)
             @Html.ValidationMessageFor(model => model.JobName)
@@ -17,6 +14,10 @@
             @Html.ValidationMessageFor(model => model.Status)
             @Html.ValidationMessageFor(model => model.Recipient)
         </div>
+        <div class="title-info">
+            <span>Thông tin mặc định</span>
+        </div>
+
         <div class="tab-content">
             <div class="content-column">
                 <div class="content-row">
@@ -41,7 +42,7 @@
                     </div>
                     <div class="editor-field">
                         @Html.TextBoxFor(model => model.Deadline, new { style = "width: 100%; font-weight: normal; font-size: small;" })
-                        
+
                     </div>
                 </div>
                 <div class="content-row">
@@ -68,7 +69,6 @@
                         @Html.TextBoxFor(model => model.Rate, new { style = "width: 100%; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
-                
             </div>
             <div class="content-column">
                 <div class="content-row">
@@ -80,7 +80,7 @@
                     </div>
                 </div>
                 <div class="content-row">
-                     <div class="editor-label">
+                    <div class="editor-label">
                         @Html.LabelFor(model => model.Poster, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
@@ -88,7 +88,7 @@
                     </div>
                 </div>
                 <div class="content-row">
-                     <div class="editor-label">
+                    <div class="editor-label">
                         @Html.LabelFor(model => model.Recipient, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
@@ -96,7 +96,7 @@
                     </div>
                 </div>
                 <div class="content-row">
-                     <div class="editor-label">
+                    <div class="editor-label">
                         @Html.LabelFor(model => model.Confirmer, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
@@ -104,24 +104,33 @@
                     </div>
                 </div>
                 <div class="content-row">
-                     <div class="editor-label">
+                    <div class="editor-label">
                         @Html.LabelFor(model => model.DepartmentID, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
                         @Html.TextBoxFor(model => model.DepartmentID, new { style = "width: 100%; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
+
+            </div>
+        </div>
+        <div class="title-info">
+            <span>Ghi chú</span>
+        </div>
+        <div class="tab-content">
+            <div class="content-column-full">
                 <div class="content-row">
                     <div class="editor-label">
                         @Html.LabelFor(model => model.Note, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.EditorFor(model => model.Note, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        @Html.TextAreaFor(model => model.Note, new { style = "width: 100%; height: 120px; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
     <div class="content-wrapper bottom-toolbar">
         <button id="btnSaveDetails" type="button">Lưu & nhập chi tiết</button>
         <button id="btnCancel" type="button">Đóng</button>
@@ -131,7 +140,7 @@
 
 <script type="text/javascript">
     kendo.init($("input"));
-    
+
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!

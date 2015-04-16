@@ -82,6 +82,16 @@
                     removeUrl: settings.removeUrl,
                     autoUpload: settings.autoUpload
                 },
+                localization: {
+                    select: 'Chọn tập tin',
+                    remove: 'Xóa',
+                    cancel: 'Hủy',
+                    dropFilesHere: 'Kéo thả tập tin vào đây',
+                    headerStatusUploading: 'Đang tải lên...',
+                    headerStatusUploaded: 'Hoàn tất',
+                    retry: 'Thử lại',
+                    statusUploaded: 'Đã tải lên thành công'
+                },
                 //files: initialFiles,
                 success: settings.success
             });
@@ -107,3 +117,16 @@
     };
 
 })(jQuery);
+
+var common = new function () {
+    this.getFormDataTypeJson = function (formId) {
+        var elems = $('#' + formId).find('input, textarea, checkbox');
+        
+        var data = {};
+        $.each(elems, function (i, obj) {
+            data[obj.id] = obj.value;
+        });
+
+        return data;
+    };
+};

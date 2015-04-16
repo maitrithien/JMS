@@ -166,9 +166,7 @@ namespace DMS.Controllers
             {
                 var finder = _EntityModel.Attachments.Where(x => 
                     x.AttachmentFileName == item.AttachmentFileName &&
-                    x.AttachmentFileType == item.AttachmentFileType &&
-                    x.AttachmentOwner == User.Identity.Name &&
-                    x.AttachmentFileSize == item.AttachmentFileSize).FirstOrDefault();
+                    x.AttachmentOwner == User.Identity.Name).FirstOrDefault();
 
                 if (finder != null)
                 {
@@ -196,15 +194,66 @@ namespace DMS.Controllers
             {
                 _EntityModel.Attachments.DeleteObject(finder);
                 _EntityModel.SaveChanges();
+
+                var physicalPath = Path.Combine(Server.MapPath("~/App_Data/" + User.Identity.Name), finder.AttachmentFileName);
+
+                if (System.IO.File.Exists(physicalPath))
+                {
+                    // The files are not actually removed 
+                    System.IO.File.Delete(physicalPath);
+                }
+            }
+
+            return Json(new { result = true });
+        }
+
+        /// <summary>
+        /// Save all attachments
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
+        public ActionResult UpdateAttachment(AttachmentModels model)
+        {
+            var item = model ?? new AttachmentModels();
+
+            var finder = _EntityModel.Attachments.Where(x =>
+                    x.APK == item.APK).FirstOrDefault();
+
+            if (finder != null)
+            {
+                finder.AttachmentFileName = item.AttachmentFileName;
+                finder.AttachmentComment = item.AttachmentComment;
+
+                _EntityModel.SaveChanges();
             }
 
             return Json(new { result = true });
         }
 
         [Authorize]
-        public ActionResult UpdateAttachmentDialog()
+        public ActionResult UpdateAttachmentDialog(string apk)
         {
-            AttachmentModels model = new AttachmentModels();
+            Guid id = Guid.Empty;
+            if (!string.IsNullOrEmpty(apk))
+            {
+                Guid.TryParse(apk, out id);
+            }
+
+            Attachment att = _EntityModel.Attachments.FirstOrDefault(x => x.APK == id);
+
+            AttachmentModels model = new AttachmentModels
+            {
+                APK = att.APK,
+                AttachmentComment = att.AttachmentComment,
+                AttachmentFileExtension = att.AttachmentFileExtension,
+                AttachmentFileName = att.AttachmentFileName,
+                AttachmentFileSize = att.AttachmentFileSize,
+                AttachmentFileType = att.AttachmentFileType,
+                AttachmentOwner = att.AttachmentOwner,
+                CreatedDate = att.CreatedDate,
+                CreatedUserID = att.CreatedUserID
+            };
+
             return PartialView(model);
         }
 

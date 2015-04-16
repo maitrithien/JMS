@@ -18,7 +18,7 @@
                 $("#window").kendoWindow({
                     iframe: false,
                     modal: true,
-                    height: 350,
+                    height: 560,
                     width: 900,
                     title: "Cập nhật thông tin hồ sơ",
                     visible: false
@@ -29,7 +29,6 @@
                     click: function (e) {
                         var win = $("#window").data("kendoWindow");
                         win.center();
-                        //win.open();
                         win.refresh({
                             url: "@Url.Action("JobDialog", "Jobs")",
                             data: {},

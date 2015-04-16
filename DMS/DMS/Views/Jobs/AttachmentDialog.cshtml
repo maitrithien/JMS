@@ -1,7 +1,12 @@
 ﻿@model DMS.Models.AttachmentModels
 
 <script src="~/Scripts/attachments.js"></script>
-
+<script>
+    $(document).ready(function () {
+        //$("#files").closest(".k-upload").find("span").text("Chọn tập tin tải lên");
+        //$('.k-dropzone').find('em').text("Hoặc kéo thả tập tin vào đây")
+    });
+</script>
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)

@@ -1,153 +1,18 @@
 ﻿<div id="example">
     <div id="gridAttachments"></div>
     <div id="confirmDialog"></div>
-    <script type="text/x-kendo-template" id="windowTemplate">
-        Bạn có muốn xóa <strong>#= AttachmentFileName #</strong> ?
-        <button class="k-button" id="yesButton">Đồng ý</button>
-        <button class="k-button" id="noButton">Hủy</button>
+    <script type="text/x-kendo-template" id="attachmentConfirmTemplate">
+        <div class="content-wrapper">
+            <p>Bạn có muốn xóa <strong>#= AttachmentFileName #</strong> ?</p>
+            <div class="content-wrapper bottom-toolbar">
+                <button class="k-button" id="yesButton">Đồng ý</button>
+                <button class="k-button" id="noButton">Hủy</button>
+            </div>
+        </div>
     </script>
-    <script>
-        $(document).ready(function () {
-            $("#gridAttachments").kendoGrid({
-                toolbar: ['excel', 'pdf'],
-                excel: 'attachments.xlsx',
-                pdf: 'attachments.pdf',
-                dataSource: {
-                    type: "json",
-                    transport: {
-                        read: '@Url.Action("AttachmentsGrid", "Jobs")' + '?apk=' + $('#JobAPK').val(),
-                    },
-                    pageSize: 20
-                },
-                height: 500,
-                groupable: true,
-                //sortable: true,
-                resizable: true,
-                selectable: true,
-                //filterable: true,
-                pageable: {
-                    refresh: true,
-                    pageSizes: true,
-                    buttonCount: 5
-                },
-                columns: [
-                    {
-                        field: "APK",
-                        title: "",
-                        visible: false,
-                        width: 0
-                    }, {
-                        field: "AttachmentFileName",
-                        title: "Tên tập tin",
-                        width: 200,
-                        template: "<a href='/Jobs/Download/#: data.APK #'>#: data.AttachmentFileName #</a>"
-                    }, {
-                        field: "AttachmentFileSize",
-                        title: "Kích thước",
-                        width: 100
-                    }, {
-                        field: "AttachmentFileExtension",
-                        title: "Phần mở rộng",
-                        width: 100
-                    }, {
-                        field: "AttachmentFileType",
-                        title: "Loại tập tin",
-                        width: 100
-                    }, {
-                        field: "AttachmentOwner",
-                        title: "Người đăng",
-                        width: 100
-                    }, {
-                        field: "AttachmentComment",
-                        title: "Mô tả"
-                    }, {
-                        field: "CreatedDate",
-                        title: "Ngày tạo",
-                        type: "date",
-                        width: 120,
-                        template: '#= kendo.toString(data.CreatedDate, "dd/MM/yyyy") #'
-                    }, {
-                        field: "CreatedUserID",
-                        title: "Người tạo",
-                        width: 120
-                    }, {
-                        field: "LastModifyDate",
-                        title: "Ngày cập nhật",
-                        type: "date",
-                        width: 120,
-                        template: '#= kendo.toString(data.LastModifyDate, "dd/MM/yyyy") #'
-                    }, {
-                        field: "LastModifyUserID",
-                        title: "Người cập nhật",
-                        width: 120
-                    }, {
-                        command: [
-                            {
-                                text: 'Sửa',
-                                icon: 'pencil',
-                                title: 'Sửa',
-                                click: updateAttachment_Click
-                            }, {
-                                text: 'Xóa',
-                                icon: 'close',
-                                title: 'Xóa',
-                                click: deleteAttachment_Click
-                            }
-                        ]
-                    }
-                ]
-            });
-
-            var windowTemplate = kendo.template($("#windowTemplate").html());
-            var window = $("#confirmDialog").kendoWindow({
-                title: "Thông báo",
-                visible: false, //the window will not appear before its .open method is called
-                width: "400px",
-                height: "200px",
-            }).data("kendoWindow");
-
-
-            function updateAttachment_Click(e) {
-                e.preventDefault();
-
-                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-
-                console.log('update');
-                console.log(dataItem);
-            }
-
-            function deleteAttachment_Click(e) {
-                e.preventDefault();
-
-                var tr = $(e.target).closest("tr"); //get the row for deletion
-                var data = this.dataItem(tr); //get the row data so it can be referred later
-                window.content(windowTemplate(data)); //send the row data object to the template and render it
-                window.open().center();
-
-                $("#yesButton").click(function () {
-                    $.ajax({
-                        type: 'POST',
-                        url: $('#removeAttachmentUrl').val(),
-                        data: JSON.stringify(data),
-                        contentType: 'application/json; charset=utf-8',
-                        success: function () {
-                            var gridAttachment = $("#gridAttachments").data("kendoGrid");
-                            if (gridAttachment) {
-                                data = { apk: $("#JobAPK").val() };
-                                gridAttachment.dataSource.read(data);
-                            }
-                            window.close();
-                        }
-                    });
-                });
-
-                $("#noButton").click(function () {
-                    window.close();
-                });
-            }
-        });
-    </script>
-    
 </div>
 
+@Html.Hidden("gridAttachmentsUrl", Url.Action("AttachmentsGrid", "Jobs"))
 @Html.Hidden("removeAttachmentUrl", Url.Action("RemoveAttachment", "Jobs"))
+@Html.Hidden("updateAttachmentUrl", Url.Action("UpdateAttachment", "Jobs"))
+@Html.Hidden("updateAttachmentDialogUrl", Url.Action("UpdateAttachmentDialog", "Jobs"))
