@@ -7,7 +7,7 @@ using System.Web;
 
 namespace DMS.Models
 {
-    public class AttachmentModels
+    public class AttachmentModels : BaseModels
     {
         public Guid? APK { get; set; }
 
@@ -30,18 +30,6 @@ namespace DMS.Models
 
         [Display(Name = "Phần mở rộng")]
         public string AttachmentFileExtension { get; set; }
-
-        [Display(Name = "Ngày tạo")]
-        public DateTime CreatedDate { get; set; }
-
-        [Display(Name = "Người tạo")]
-        public string CreatedUserID { get; set; }
-
-        [Display(Name = "Ngày cập nhật")]
-        public DateTime LastModifyDate { get; set; }
-
-        [Display(Name = "Người cập nhật")]
-        public string LastModifyUserID { get; set; }
 
     }
 }

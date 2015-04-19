@@ -3,6 +3,10 @@
     <script>
         $(document).ready(function () {
             $("#gridHistories").kendoGrid({
+                toolbar: ['excel'],
+                excel: {
+                    fileName: 'histories.xlsx'
+                },
                 dataSource: {
                     type: "json",
                     transport: {

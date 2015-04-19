@@ -1,6 +1,6 @@
 ﻿@model DMS.Models.JobModels
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-update-job" }))
 {
     @Html.ValidationSummary(true)
 
@@ -13,9 +13,6 @@
             @Html.ValidationMessageFor(model => model.Note)
             @Html.ValidationMessageFor(model => model.Status)
             @Html.ValidationMessageFor(model => model.Recipient)
-        </div>
-        <div class="title-info">
-            <span>Thông tin mặc định</span>
         </div>
 
         <div class="tab-content">
@@ -42,7 +39,11 @@
                     </div>
                     <div class="editor-field">
                         @Html.TextBoxFor(model => model.Deadline, new { style = "width: 100%; font-weight: normal; font-size: small;" })
-
+                        <script type="text/javascript">
+                            $("#Deadline").kendoDatePicker({
+                                format: "dd/MM/yyyy"
+                            });
+                        </script>
                     </div>
                 </div>
                 <div class="content-row">
@@ -51,6 +52,13 @@
                     </div>
                     <div class="editor-field">
                         @Html.TextBoxFor(model => model.Complex, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            $("#Complex").dropdownlist({
+                                url: '@Url.Action("ComplexID", "ComboBox")',
+                                dataTextField: 'CodeName',
+                                dataValueField: 'CodeID'
+                            });
+                        </script>
                     </div>
                 </div>
                 <div class="content-row">
@@ -59,16 +67,33 @@
                     </div>
                     <div class="editor-field">
                         @Html.TextBoxFor(model => model.Priority, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            $("#Priority").dropdownlist({
+                                url: '@Url.Action("PriorityID", "ComboBox")',
+                                dataTextField: 'CodeName',
+                                dataValueField: 'CodeID'
+                            });
+                        </script>
                     </div>
                 </div>
-                <div class="content-row">
-                    <div class="editor-label">
-                        @Html.LabelFor(model => model.Rate, new { style = "font-weight: normal; font-size: small;" })
+                @if (Model.Action == DMS.Models.FormAction.Edit && Model.Status.Equals("2"))
+                {
+                    <div class="content-row">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.Rate, new { style = "font-weight: normal; font-size: small;" })
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.Rate, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                            <script type="text/javascript">
+                                $("#Rate").dropdownlist({
+                                    url: '@Url.Action("RateID", "ComboBox")',
+                                    dataTextField: 'CodeName',
+                                    dataValueField: 'CodeID'
+                                });
+                            </script>
+                        </div>
                     </div>
-                    <div class="editor-field">
-                        @Html.TextBoxFor(model => model.Rate, new { style = "width: 100%; font-weight: normal; font-size: small;" })
-                    </div>
-                </div>
+                }
             </div>
             <div class="content-column">
                 <div class="content-row">
@@ -77,6 +102,14 @@
                     </div>
                     <div class="editor-field">
                         @Html.TextBoxFor(model => model.Status, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        
+                        <script type="text/javascript">
+                            $("#Status").dropdownlist({
+                                url: '@Url.Action("StatusID", "ComboBox")',
+                                dataTextField: 'CodeName',
+                                dataValueField: 'CodeID'
+                            });
+                        </script>
                     </div>
                 </div>
                 <div class="content-row">
@@ -85,6 +118,14 @@
                     </div>
                     <div class="editor-field">
                         @Html.TextBoxFor(model => model.Poster, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        
+                        <script type="text/javascript">
+                            $("#Poster").dropdownlist({
+                                url: '@Url.Action("EmployeeID", "ComboBox")',
+                                dataTextField: 'FullName',
+                                dataValueField: 'EmployeeID'
+                            });
+                        </script>
                     </div>
                 </div>
                 <div class="content-row">
@@ -93,6 +134,13 @@
                     </div>
                     <div class="editor-field">
                         @Html.TextBoxFor(model => model.Recipient, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            $("#Recipient").dropdownlist({
+                                url: '@Url.Action("EmployeeID", "ComboBox")',
+                                dataTextField: 'FullName',
+                                dataValueField: 'EmployeeID'
+                            });
+                        </script>
                     </div>
                 </div>
                 <div class="content-row">
@@ -101,6 +149,13 @@
                     </div>
                     <div class="editor-field">
                         @Html.TextBoxFor(model => model.Confirmer, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            $("#Confirmer").dropdownlist({
+                                url: '@Url.Action("EmployeeID", "ComboBox")',
+                                dataTextField: 'FullName',
+                                dataValueField: 'EmployeeID'
+                            });
+                        </script>
                     </div>
                 </div>
                 <div class="content-row">
@@ -109,13 +164,53 @@
                     </div>
                     <div class="editor-field">
                         @Html.TextBoxFor(model => model.DepartmentID, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            $("#DepartmentID").dropdownlist({
+                                url: '@Url.Action("DepartmentID", "ComboBox")',
+                                dataTextField: 'DepartmentName',
+                                dataValueField: 'DepartmentID'
+                            });
+                        </script>
                     </div>
                 </div>
-
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.StatusConfirm, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.StatusConfirm, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            $("#StatusConfirm").dropdownlist({
+                                url: '@Url.Action("StatusConfirmID", "ComboBox")',
+                                dataTextField: 'CodeName',
+                                dataValueField: 'CodeID'
+                            });
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
+        @if (Model.Action == DMS.Models.FormAction.Edit && Model.Status.Equals("2"))
+        {
+            <!-- Hồ sơ hoàn tất -->
+            <div class="title-info">
+                <span>Nhận xét/Tự đánh giá</span>
+            </div>
+            <div class="tab-content">
+                <div class="content-column-full">
+                    <div class="content-row">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.RateComment, new { style = "font-weight: normal; font-size: small;" })
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.RateComment, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
         <div class="title-info">
-            <span>Ghi chú</span>
+            <span>Thông tin bổ sung</span>
         </div>
         <div class="tab-content">
             <div class="content-column-full">
@@ -132,112 +227,92 @@
     </div>
     
     <div class="content-wrapper bottom-toolbar">
-        <button id="btnSaveDetails" type="button">Lưu & nhập chi tiết</button>
+        @{
+            if(Model.Action == DMS.Models.FormAction.Edit)
+            {
+                <button id="btnSave" type="button">Lưu & đóng</button>
+                <script type="text/javascript">
+                    $("#btnSave").kendoButton({
+                        width: 120,
+                        icon: "tick",
+                        click: function () {
+                            var data = common.getFormDataTypeJson('frm-update-job');
+                            $.ajax({
+                                type: 'POST',
+                                url: $('#updateJobUrl').val(),
+                                data: JSON.stringify(data),
+                                contentType: 'application/json; charset=utf-8',
+                                success: function (data) {
+                                    jobs.job.closeJobDialog();
+                                    if (data.result) {
+                                        $.ajax({
+                                            type: 'GET',
+                                            url: $('#viewJobPartialUrl').val(),
+                                            data: {
+                                                id: data.id
+                                            },
+                                            contentType: 'application/json; charset=utf-8',
+                                            success: function (result) {
+                                                $('#main-content').empty();
+                                                $('#main-content').html(result);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    });
+                </script>
+            }
+            else
+            {
+                <button id="btnSaveDetails" type="button">Lưu & nhập chi tiết</button>
+                <script type="text/javascript">
+                    $("#btnSaveDetails").kendoButton({
+                        width: 120,
+                        icon: "expand-w",
+                        click: function () {
+                            var data = common.getFormDataTypeJson('frm-update-job');
+                            $.ajax({
+                                type: 'POST',
+                                url: $('#updateJobUrl').val(),
+                                data: JSON.stringify(data),
+                                contentType: 'application/json; charset=utf-8',
+                                success: function (data) {
+                                    jobs.job.refreshJobGrid();
+                                    jobs.job.closeJobDialog();
+
+                                    window.open($('#viewJobUrl').val() + '/' + data.id, '_blank');
+                                }
+                            });
+                        }
+                    });
+                </script>
+            }
+        }
         <button id="btnCancel" type="button">Đóng</button>
+        <script type="text/javascript">
+            $("#btnCancel").kendoButton({
+                width: 120,
+                icon: "close",
+                click: function () {
+                    var win = $("#jobDialog").data("kendoWindow");
+                    if (win) {
+                        win.close();
+                    }
+                }
+            });
+        </script>
     </div>
         
 }
 
-<script type="text/javascript">
-    kendo.init($("input"));
+@Html.Hidden("updateJobUrl", Url.Action("Update", "Jobs"))
+@Html.Hidden("viewJobUrl", Url.Action("JobView", "Jobs"))
+@Html.Hidden("viewJobPartialUrl", Url.Action("JobViewPartial", "Jobs"))
 
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
 
-    if (dd < 10) {
-        dd = '0' + dd
-    }
 
-    if (mm < 10) {
-        mm = '0' + mm
-    }
 
-    today = mm + '/' + dd + '/' + yyyy;
 
-    $("#Deadline").val(today);
-    $("#Deadline").kendoDatePicker({
-        format: "MM/dd/yyyy"
-    });
 
-    $("#btnSaveDetails").kendoButton({
-        width: 120,
-        icon: "expand-w"
-    });
-
-    $("#btnCancel").kendoButton({
-        width: 120,
-        icon: "close",
-        click: function () {
-            var win = $("#window").data("kendoWindow");
-            win.close();
-        }
-    });
-
-    var dataStatus = [
-        { text: "Hồ sơ mới", value: "1" },
-        { text: "Đang xử lý", value: "2" },
-        { text: "Đã hoàn tất", value: "3" },
-        { text: "Đã đóng", value: "4" },
-    ];
-
-    var dataPriority = [
-        { text: "Cấp độ 1", value: "1" },
-        { text: "Cấp độ 2", value: "2" },
-        { text: "Cấp độ 3", value: "3" },
-        { text: "Cấp độ 4", value: "4" },
-        { text: "Cấp độ 5", value: "5" }
-    ];
-
-    var dataComplex = [
-        { text: "Cấp độ A", value: "A" },
-        { text: "Cấp độ B", value: "B" },
-        { text: "Cấp độ C", value: "C" },
-        { text: "Cấp độ D", value: "D" },
-        { text: "Cấp độ E", value: "E" }
-    ];
-
-    var dataRate = [
-        { text: "Loại A", value: "A" },
-        { text: "Loại B", value: "B" },
-        { text: "Loại C", value: "C" },
-        { text: "Loại D", value: "D" },
-        { text: "Loại E", value: "E" }
-    ];
-
-    // create DropDownList from input HTML element
-    $("#Status").dropdownlist({
-        dataSource: dataStatus,
-        selectedIndex: 0
-    });
-    $("#Priority").dropdownlist({
-        dataSource: dataPriority
-    });
-
-    $("#Complex").dropdownlist({
-        dataSource: dataComplex,
-        selectedIndex: 0
-    });
-    $("#Rate").dropdownlist({
-        dataSource: dataRate,
-        selectedIndex: 1
-    });
-
-    $("#Poster").dropdownlist({
-        url: '@Url.Action("UserID", "ComboBox")'
-    });
-
-    $("#Recipient").dropdownlist({
-        url: '@Url.Action("UserID", "ComboBox")'
-    });
-
-    $("#Confirmer").dropdownlist({
-        url: '@Url.Action("UserID", "ComboBox")'
-    });
-
-    $("#DepartmentID").dropdownlist({
-        url: '@Url.Action("UserID", "ComboBox")'
-    });
-
-</script>

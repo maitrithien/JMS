@@ -62,8 +62,8 @@
                 data: JSON.stringify(data),
                 contentType: 'application/json; charset=utf-8',
                 success: function () {
-                    jobs.viewer.refreshAttachmentGrid();
-                    jobs.viewer.closeUpdateAttachmentDialog();
+                    jobs.attachment.refreshAttachmentGrid();
+                    jobs.attachment.closeUpdateAttachmentDialog();
                 }
             });
         }
@@ -71,6 +71,8 @@
     $("#btnAttachmentCancel").kendoButton({
         width: 120,
         icon: "close",
-        click: jobs.viewer.closeUpdateAttachmentDialog
+        click: function () {
+            jobs.attachment.closeUpdateAttachmentDialog();
+        }
     });
 </script>

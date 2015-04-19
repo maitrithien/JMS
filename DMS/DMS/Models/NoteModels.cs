@@ -7,24 +7,17 @@ using System.Web;
 
 namespace DMS.Models
 {
-    public class NoteModels
+    public class NoteModels : BaseModels
     {
         public Guid? APK { get; set; }
 
-        [Display(Name = "Ghi chú")]
+        public Guid? JobAPK { get; set; }
+
+        [Display(Name = "Tiêu đề")]
+        public string Title { get; set; }
+
+        [Display(Name = "Nội dung")]
         public string Description { get; set; }
-
-        [Display(Name = "Ngày tạo")]
-        public DateTime CreatedDate { get; set; }
-
-        [Display(Name = "Người tạo")]
-        public string CreatedUserID { get; set; }
-
-        [Display(Name = "Ngày cập nhật")]
-        public DateTime LastModifyDate { get; set; }
-
-        [Display(Name = "Người cập nhật")]
-        public string LastModifyUserID { get; set; }
 
     }
 }

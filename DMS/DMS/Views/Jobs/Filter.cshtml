@@ -1,6 +1,6 @@
 ﻿@model DMS.Models.JobModels
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-main-filter" }))
 {
 <div class="content-wrapper filter">
         <div class="title-info">

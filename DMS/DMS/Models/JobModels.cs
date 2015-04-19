@@ -7,8 +7,19 @@ using System.Web;
 
 namespace DMS.Models
 {
-    public class JobModels
+    public class JobModels : BaseModels
     {
+        #region ---- Constants & Member variables ----
+
+        public const string STATUS_CODE = "STATUS";
+        public const string STATUS_CONFIRM_CODE = "CONFIRM_STATUS";
+        public const string COMPLEX_CODE = "COMPLEX";
+        public const string PRIORITY_CODE = "PRIORITY";
+        public const string RATE_CODE = "RATE";
+        public const string EMPLOYEE_LEVEL_CODE = "EMPLOYEE_LEVEL";
+
+        #endregion ---- Constants & Member variables ----
+
         #region ---- Filter ----
 
         /// <summary>
@@ -27,7 +38,7 @@ namespace DMS.Models
         /// Tình trạng hồ sơ
         /// </summary>
         [Display(Name = "Tình trạng hồ sơ")]
-        public int StatusFilter { get; set; }
+        public string StatusFilter { get; set; }
 
         /// <summary>
         /// Người thực hiện
@@ -82,6 +93,11 @@ namespace DMS.Models
 
         #endregion ---- Filter ----
 
+        /// <summary>
+        /// Có sử dụng filter hay không
+        /// </summary>
+        public byte IsFilter { get; set; }
+
         public Guid? APK { get; set; }
 
         [Display(Name = "Mã hồ sơ")]
@@ -93,69 +109,69 @@ namespace DMS.Models
         [Display(Name = "Ngày hết hạn")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime Deadline { get; set; }
-
-        [Display(Name = "Tình trạng")]
-        public int Status { get; set; }
-
-        [Display(Name = "Tình trạng")]
-        public string StatusName
-        {
-            get
-            {
-                string name = string.Empty;
-                switch (this.Status)
-                {
-                    case 1:
-                        name = "Hồ sơ mới";
-                        break;
-                    case 2:
-                        name = "Đang xử lý";
-                        break;
-                    case 3:
-                        name = "Đã hoàn tất";
-                        break;
-                    default:
-                        name = "Đã hủy";
-                        break;
-                }
-
-                return name;
-            }
+        public DateTime Deadline { 
+            get { return _deadline; }
+            set { _deadline = value; }
         }
+
+        private DateTime _deadline = DateTime.Now;
+
+        [Display(Name = "Tình trạng")]
+        public string Status { get; set; }
+
+        [Display(Name = "Tình trạng")]
+        public string StatusName { get; set; }
+
+        [Display(Name = "Duyệt hồ sơ")]
+        public string StatusConfirm { get; set; }
+
+        [Display(Name = "Duyệt hồ sơ")]
+        public string StatusConfirmName { get; set; }
 
         [Display(Name = "Người lập")]
         public string Poster { get; set; }
 
+        [Display(Name = "Người lập")]
+        public string PosterName { get; set; }
+
         [Display(Name = "Phòng ban")]
         public string DepartmentID { get; set; }
 
+        [Display(Name = "Phòng ban")]
+        public string DepartmentName { get; set; }
+
         [Display(Name = "Độ ưu tiên")]
-        public int Priority { get; set; }
-        
+        public string Priority { get; set; }
+
+        [Display(Name = "Độ ưu tiên")]
+        public string PriorityName { get; set; }
+
         [Display(Name = "Độ phức tạp")]
-        public int Complex { get; set; }
+        public string Complex { get; set; }
+
+        [Display(Name = "Độ phức tạp")]
+        public string ComplexName { get; set; }
 
         [Display(Name = "Đánh giá")]
-        public int Rate { get; set; }
+        public string Rate { get; set; }
 
-        [Display(Name = "Ngày tạo")]
-        public DateTime CreatedDate { get; set; }
-
-        [Display(Name = "Người tạo")]
-        public string CreatedUserID { get; set; }
-
-        [Display(Name = "Ngày cập nhật")]
-        public DateTime LastModifyDate { get; set; }
-
-        [Display(Name = "Người cập nhật")]
-        public string LastModifyUserID { get; set; }
+        [Display(Name = "Đánh giá")]
+        public string RateName { get; set; }
 
         [Display(Name = "Người thực hiện")]
         public string Recipient { get; set; }
 
+        [Display(Name = "Người thực hiện")]
+        public string RecipientName { get; set; }
+
         [Display(Name = "Người duyệt")]
         public string Confirmer { get; set; }
+
+        [Display(Name = "Người duyệt")]
+        public string ConfirmerName { get; set; }
+
+        [Display(Name = "Tự đánh giá")]
+        public string RateComment { get; set; }
 
         [Display(Name = "Ghi chú")]
         public string Note { get; set; }

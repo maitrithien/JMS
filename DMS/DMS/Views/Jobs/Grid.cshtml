@@ -1,76 +1,11 @@
-﻿<div id="example">
-    <div id="grid"></div>
+﻿<div id="main-grid">
     <script>
         $(document).ready(function () {
-            $("#grid").kendoGrid({
-                dataSource: {
-                    type: "json",
-                    transport: {
-                        read: '@Url.Action("JobsGrid", "Jobs")'
-                    },
-                    pageSize: 20
-                },
-                height: 500,
-                groupable: true,
-                resizable: true,
-                //sortable: true,
-                selectable: true,
-                //filterable: true,
-                pageable: {
-                    refresh: true,
-                    pageSizes: true,
-                    buttonCount: 5
-                },
-                columns: [
-                    {
-                        field: "APK",
-                        title: "<input type='checkbox' id='chkAll' />",
-                        width: 30,
-                        template: "<input type='checkbox' />"
-                    }, {
-                        field: "JobID",
-                        title: "Mã hồ sơ",
-                        width: 120
-                    }, {
-                        field: "JobName",
-                        title: "Tên hồ sơ",
-                        width: 200,
-                        template: "<a href='/Jobs/JobView/#: data.APK #'>#: data.JobName #</a>"
-                    }, {
-                        field: "StatusName",
-                        title: "Tình trạng",
-                        width: 100
-                    }, {
-                        field: "CreatedUserID",
-                        title: "Người lập",
-                        width: 150
-                    }, {
-                        field: "Recipient",
-                        title: "Người thực hiện",
-                        width: 150
-                    }, {
-                        field: "Confirmer",
-                        title: "Người duyệt",
-                        width: 150
-                    }, {
-                        field: "CreatedDate",
-                        title: "Ngày tạo",
-                        width: 120,
-                        type: "date",
-                        template: '#= kendo.toString(data.Deadline, "dd/MM/yyyy") #'
-                    }, {
-                        field: "Deadline",
-                        title: "Ngày hết hạn",
-                        width: 120,
-                        type: "date",
-                        template: '#= kendo.toString(data.Deadline, "dd/MM/yyyy") #'
-                    }, {
-                        field: "Note",
-                        title: "Ghi chú",
-                        width: 200
-                    }
-                ]
-            });
+            jobs.job.initJobGrid();
+            jobs.job.initJobConfirmDialog();
         });
     </script>
+
+    <div id="grid"></div>
+    @Html.Hidden("gridJobsUrl", Url.Action("JobsGrid", "Jobs"))
 </div>

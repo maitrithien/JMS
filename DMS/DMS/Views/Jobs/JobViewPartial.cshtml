@@ -1,0 +1,142 @@
+﻿@model DMS.Models.JobModels
+
+<div class="tab-content">
+    <div class="content-column">
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.JobID)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.JobID)
+            </div>
+        </div>
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.JobName)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.JobName)
+            </div>
+        </div>
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.Priority)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.Priority)
+            </div>
+        </div>
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.Complex)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.Complex)
+            </div>
+        </div>
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.Status)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.StatusName)
+            </div>
+        </div>
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.StatusConfirm)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.StatusConfirmName)
+            </div>
+        </div>
+    </div>
+    <div class="content-column">
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.Deadline)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.Deadline)
+            </div>
+        </div>
+        @*<div class="content-row">
+                <div class="display-label">
+                    @Html.DisplayNameFor(model => model.StatusName)
+                </div>
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.StatusName)
+                </div>
+            </div>*@
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.Poster)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.PosterName)
+            </div>
+        </div>
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.Recipient)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.RecipientName)
+            </div>
+        </div>
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.Confirmer)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.ConfirmerName)
+            </div>
+        </div>
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.DepartmentID)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.DepartmentName)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="tab-content">
+    <div class="title-info">
+        <span>Nhận xét/Tự đánh giá</span>
+    </div>
+    <div class="content-column-full">
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.Rate)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.RateName)
+            </div>
+        </div>
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.RateComment)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.RateComment)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="tab-content">
+    <div class="title-info">
+        <span>Thông tin chi tiết</span>
+    </div>
+    <div class="content-column-full">
+        <div class="content-row">
+            <div class="display-label">
+                @Html.DisplayNameFor(model => model.Note)
+            </div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.Note)
+            </div>
+        </div>
+    </div>
+</div>

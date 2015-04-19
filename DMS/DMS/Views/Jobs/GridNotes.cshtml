@@ -1,12 +1,95 @@
-﻿<div id="example">
+﻿<div id="note-grid">
     <div id="gridNotes"></div>
+    <div id="noteConfirmDialog"></div>
+    <script type="text/x-kendo-template" id="noteConfirmTemplate">
+        <div class="content-wrapper">
+            <p>Bạn có muốn xóa ghi chú này ?</p>
+            <div class="content-wrapper bottom-toolbar">
+                <button class="k-button" id="yesButton">Đồng ý</button>
+                <button class="k-button" id="noButton">Hủy</button>
+            </div>
+        </div>
+    </script>
     <script>
         $(document).ready(function () {
+            var noteConfirmTemplate = kendo.template($("#noteConfirmTemplate").html());
+            var noteConfirmWindow = $("#noteConfirmDialog").kendoWindow({
+                title: "Thông báo",
+                visible: false,
+                modal: true,
+                width: "400px",
+                height: "100px",
+            }).data("kendoWindow");
+
+            function updateNote_Click(e) {
+                e.preventDefault();
+
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+                var win = $("#NoteDialog").data("kendoWindow");
+                win.center();
+                win.refresh({
+                    url: $('#NoteDialogUrl').val(),
+                    data: { APK: dataItem.APK,  Action: 2 },
+                    type: 'POST'
+                });
+                win.open();
+            }
+
+            function viewNote_Click(e) {
+                e.preventDefault();
+
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+                var win = $("#NoteDialog").data("kendoWindow");
+                win.center();
+                win.refresh({
+                    url: $('#NoteDialogUrl').val(),
+                    data: { APK: dataItem.APK, Action: 3 },
+                    type: 'POST'
+                });
+                win.open();
+            }
+
+            function deleteNote_Click(e) {
+                e.preventDefault();
+
+                var tr = $(e.target).closest("tr"); //get the row for deletion
+                var data = this.dataItem(tr); //get the row data so it can be referred later
+
+                noteConfirmWindow.content(noteConfirmTemplate(data)); //send the row data object to the template and render it
+                noteConfirmWindow.open().center();
+
+                $("#yesButton").click(function () {
+                    $.ajax({
+                        type: 'POST',
+                        url: $('#removeNoteUrl').val(),
+                        data: JSON.stringify(data),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function () {
+                            var noteGrid = $('#gridNotes').data('kendoGrid');
+                            if (noteGrid) {
+                                noteGrid.dataSource.read();
+                            }
+                            noteConfirmWindow.close();
+                        }
+                    });
+                });
+
+                $("#noButton").click(function () {
+                    noteConfirmWindow.close();
+                });
+            }
+
             $("#gridNotes").kendoGrid({
+                toolbar: ['excel'],
+                excel: {
+                    fileName: 'notes.xlsx'
+                },
                 dataSource: {
                     type: "json",
                     transport: {
-                        read: '@Url.Action("NotesGrid", "Jobs")'
+                        read: '@Url.Action("NotesGrid", "Jobs")' + '?apk=' + $('#JobAPK').val()
                     },
                     pageSize: 20
                 },
@@ -24,13 +107,17 @@
                 columns: [
                     {
                         field: "APK",
-                        title: "<input type='checkbox' id='chkAll' />",
-                        width: 30,
-                        template: "<input type='checkbox' />"
+                        title: "",
+                        hidden: true,
+                        width: 30
+                    }, {
+                        field: "Title",
+                        title: "Tiêu đề",
+                        width: 200
                     }, {
                         field: "Description",
-                        title: "Ghi chú"
-                    },  {
+                        title: "Nội dung"
+                    }, {
                         field: "CreatedDate",
                         title: "Ngày tạo",
                         type: "date",
@@ -50,9 +137,33 @@
                         field: "LastModifyUserID",
                         title: "Người cập nhật",
                         width: 120
-                    }]
+                    }, {
+                        command: [
+                            {
+                                text: 'Xem',
+                                imageClass: 'k-icon k-i-restore ob-icon-only',
+                                title: 'Xem',
+                                click: viewNote_Click
+                            }, {
+                                text: 'Sửa',
+                                imageClass: 'k-icon k-i-pencil ob-icon-only',
+                                title: 'Sửa',
+                                click: updateNote_Click
+                            }, {
+                                text: 'Xóa',
+                                imageClass: 'k-icon k-i-close ob-icon-only',
+                                title: 'Xóa',
+                                click: deleteNote_Click
+                            }
+                        ],
+                        width: 220
+                    }
+                ]
             });
         });
     </script>
 
 </div>
+@Html.Hidden("NoteDialogUrl", Url.Action("NoteDialog", "Jobs"))
+@Html.Hidden("removeNoteUrl", Url.Action("RemoveNote", "Jobs"))
+@Html.Hidden("updateNoteUrl", Url.Action("UpdateNote", "Jobs"))

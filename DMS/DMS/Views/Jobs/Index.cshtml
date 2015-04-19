@@ -11,11 +11,20 @@
     <div class="content-wrapper">
         <div class="toolbar">
             <button id="btnAddNew" title="Thêm mới" type="button"></button>
-            <button id="btnDelete" title="Xóa" type="button"></button>
         </div>
+        <div id="jobConfirmDialog"></div>
+        <script type="text/x-kendo-template" id="jobConfirmTemplate">
+            <div class="content-wrapper">
+                <p>Bạn có muốn xóa hồ sơ <strong>#= JobID #</strong> ?</p>
+                <div class="content-wrapper bottom-toolbar">
+                    <button class="k-button" id="yesButton">Đồng ý</button>
+                    <button class="k-button" id="noButton">Hủy</button>
+                </div>
+            </div>
+        </script>
         <script>
             $(document).ready(function () {
-                $("#window").kendoWindow({
+                $("#jobDialog").kendoWindow({
                     iframe: false,
                     modal: true,
                     height: 560,
@@ -27,46 +36,48 @@
                 $("#btnAddNew").kendoButton({
                     icon: "plus",
                     click: function (e) {
-                        var win = $("#window").data("kendoWindow");
-                        win.center();
-                        win.refresh({
-                            url: "@Url.Action("JobDialog", "Jobs")",
-                            data: {},
-                            type: 'POST'
-                        });
-                        win.open();
-                        console.log("JobDialog");
+                        var win = $("#jobDialog").data("kendoWindow");
+                        if (win) {
+                            win.center();
+                            win.refresh({
+                                url: $('#jobDialogUrl').val(),
+                                data: {
+                                    APK: null,
+                                    Action: 1
+                                },
+                                type: 'POST'
+                            });
+                            win.open();
+                        }
                     }
                 });
-
-                $("#btnDelete").kendoButton({
-                    icon: "close",
-                    click: function (e) {
-                        console.log("delete");
-                    }
-                });
-
+                
                 $("#btnSearch").kendoButton({
                     icon: "search",
                     click: function (e) {
                         //console.log("search");
                         var grid = $("#grid").data("kendoGrid");
-                        var data = {
-                            JobIDFilter: "0",
-                            JobNameFilter: "0",
-                            PosterFilter: "0"
-                        };
+                        var data = common.getFormDataTypeJson("frm-main-filter");
+                        data['IsFilter'] = 1;
+
                         grid.dataSource.read(data);
                     }
                 });
+
+                
             });
         </script>
     </div>
 }
 
-@Html.Partial("Grid")
+@section scripts{
+    <script src="~/Scripts/Jobs.js"></script>
+}
 
-<div id="window">
+@Html.Partial("Grid")
+@Html.Hidden("jobDialogUrl", Url.Action("JobDialog", "Jobs"))
+@Html.Hidden("removeJobUrl", Url.Action("Delete", "Jobs"))
+<div id="jobDialog">
     @{
         Html.RenderPartial("JobDialog", new DMS.Models.JobModels());
     }

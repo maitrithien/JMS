@@ -1,6 +1,6 @@
 ﻿@model DMS.Models.NoteModels
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-update-note" }))
 {
     @Html.ValidationSummary(true)
 
@@ -9,42 +9,153 @@
         <div class="title-info">
             <span>Thông tin ghi chú</span>
         </div>
-        <div class="error">
-            @Html.ValidationMessageFor(model => model.Description)
-        </div>
-        <div class="tab-content">
-            <div class="content-column-full">
-                <div class="content-row">
-                    <div class="editor-label">
-                        @Html.LabelFor(model => model.Description, new { style = "font-weight: normal; font-size: small;" })
-                    </div>
-                    <div class="editor-field">
-                        @Html.EditorFor(model => model.Description, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+        @{
+    if (Model.Action == DMS.Models.FormAction.View)
+    {
+                <div class="tab-content">
+                    <div class="content-column-full">
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.Title)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.Title)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.Description)
+                            </div>
+                            <div class="display-field" style="max-height: 300px; overflow: auto">
+                                @Html.DisplayFor(model => model.Description)
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+                <div class="title-info">
+                    <span>Thông tin hệ thống</span>
+                </div>
+                <div class="tab-content">
+                    <div class="content-column">
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.CreatedDate)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.CreatedDate)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.CreatedUserID)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.CreatedUserID)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-column">
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.LastModifyDate)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.LastModifyDate)
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="display-label">
+                                @Html.DisplayNameFor(model => model.LastModifyUserID)
+                            </div>
+                            <div class="display-field">
+                                @Html.DisplayFor(model => model.LastModifyUserID)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            }
+            else
+            {
+                <div class="error">
+                    @Html.ValidationMessageFor(model => model.Description)
+                </div>
+                <div class="tab-content">
+                    <div class="content-column-full">
+                        <div class="content-row">
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.Title, new { style = "font-weight: normal; font-size: small;" })
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.Title, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.Description, new { style = "font-weight: normal; font-size: small;" })
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextAreaFor(model => model.Description, new { style = "width: 100%; height: 200px; font-weight: normal; font-size: small;" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
     </div>
     <div class="content-wrapper bottom-toolbar">
-        <button id="btnNoteSave" type="button">Lưu</button>
+        @{
+    if (Model.Action != DMS.Models.FormAction.View)
+    {
+                <button id="btnNoteSave" type="button">Lưu</button>
+                <script>
+                    $("#btnNoteSave").kendoButton({
+                        width: 120,
+                        icon: "tick",
+                        click: function () {
+                            var data = common.getFormDataTypeJson('frm-update-note');
+                            data['JobAPK'] = $('#JobAPK').val();
+
+                            $.ajax({
+                                type: 'POST',
+                                url: $('#updateNoteUrl').val(),
+                                data: JSON.stringify(data),
+                                contentType: 'application/json; charset=utf-8',
+                                success: function () {
+                                    refreshGrid();
+                                    var win = $("#NoteDialog").data("kendoWindow");
+                                    if (win) {
+                                        win.close();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                </script>
+    }
+        }
         <button id="btnNoteCancel" type="button">Đóng</button>
+        <script>
+            $("#btnNoteCancel").kendoButton({
+                width: 120,
+                icon: "close",
+                click: function () {
+                    var win = $("#NoteDialog").data("kendoWindow");
+                    if (win) {
+                        win.close();
+                    }
+                }
+            });
+        </script>
     </div>
 }
 
 <script type="text/javascript">
     kendo.init($("input"));
-    
-    $("#btnNoteSave").kendoButton({
-        width: 120,
-        icon: "tick"
-    });
-    $("#btnNoteCancel").kendoButton({
-        width: 120,
-        icon: "close",
-        click: function () {
-            var win = $("#NoteDialog").data("kendoWindow");
-            win.close();
+    refreshGrid = function () {
+        var noteGrid = $('#gridNotes').data('kendoGrid');
+        if (noteGrid) {
+            noteGrid.dataSource.read({ apk: $('#JobAPK').val() });
         }
-    });
-
+    }
 </script>

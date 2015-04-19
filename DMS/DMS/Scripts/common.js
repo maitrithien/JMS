@@ -34,7 +34,7 @@
                 height: settings.height,
                 dataTextField: settings.dataTextField,
                 dataValueField: settings.dataValueField,
-                dataSource: settings.dataSource,
+                dataSource: dataSource,
                 index: settings.selectedIndex
             });
 
@@ -129,4 +129,15 @@ var common = new function () {
 
         return data;
     };
+
+    this.checkAll = function () {
+        var checked = $('#chkAll').prop('checked');
+        var chkList = $('#chkAll')
+            .closest('.k-grid.k-widget')
+            .find('.k-grid-content tr input[type=checkbox]');
+
+        $.each(chkList, function (i, val) {
+            $(val).prop('checked', checked);
+        });
+    }
 };

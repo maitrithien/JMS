@@ -1,10 +1,11 @@
 ﻿$(document).ready(function () {
-    jobs.viewer.initAttachmentGrid();
-    jobs.viewer.initAttachmentDeleteConfirmDialog();
+    jobs.attachment.initAttachmentGrid();
+    jobs.attachment.initAttachmentDeleteConfirmDialog();
+    $('#chkAll').bind('click', common.checkAll)
 });
 
 var jobs = new function () {
-    this.viewer = new function () {
+    this.attachment = new function () {
         var attachmentConfirmTemplate = null;
         var attachmentConfirmWindow = null;
 
@@ -53,21 +54,23 @@ var jobs = new function () {
                     data: JSON.stringify(data),
                     contentType: 'application/json; charset=utf-8',
                     success: function () {
-                        jobs.viewer.refreshAttachmentGrid();
+                        jobs.attachment.refreshAttachmentGrid();
                         attachmentConfirmWindow.close();
                     }
                 });
             });
 
             $("#noButton").click(function () {
-                window.close();
+                attachmentConfirmWindow.close();
             });
         }
 
         this.initAttachmentGrid = function () {
             $("#gridAttachments").kendoGrid({
                 toolbar: ['excel'],
-                excel: 'attachments.xlsx',
+                excel: {
+                    fileName: 'attachments.xlsx'
+                },
                 dataSource: {
                     type: "json",
                     transport: {
@@ -113,7 +116,8 @@ var jobs = new function () {
                         width: 100
                     }, {
                         field: "AttachmentComment",
-                        title: "Mô tả"
+                        title: "Mô tả",
+                        width: 200,
                     }, {
                         field: "CreatedDate",
                         title: "Ngày tạo",
@@ -163,6 +167,156 @@ var jobs = new function () {
                 width: "400px",
                 height: "100px",
             }).data("kendoWindow");
+        };
+    };
+
+    this.job = new function () {
+        var jobConfirmTemplate = null;
+        var jobConfirmWindow = null;
+
+        this.refreshJobGrid = function () {
+            var grid = $("#gridJobs").data("kendoGrid");
+            if (grid) {
+                data = { };
+                grid.dataSource.read(data);
+            }
+        };
+
+        function deleteJob_Click(e) {
+            e.preventDefault();
+
+            var tr = $(e.target).closest("tr"); //get the row for deletion
+            var data = this.dataItem(tr); //get the row data so it can be referred later
+
+            jobConfirmWindow.content(jobConfirmTemplate(data)); //send the row data object to the template and render it
+            jobConfirmWindow.open().center();
+
+            $("#yesButton").click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: $('#removeJobUrl').val(),
+                    data: JSON.stringify(data),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function () {
+                        var grid = $('#grid').data('kendoGrid');
+                        if (grid) {
+                            var data = common.getFormDataTypeJson("frm-main-filter");
+                            data['IsFilter'] = 1;
+
+                            grid.dataSource.read(data);
+                        }
+                        jobConfirmWindow.close();
+                    }
+                });
+            });
+
+            $("#noButton").click(function () {
+                jobConfirmWindow.close();
+            });
+        }
+
+        this.initJobConfirmDialog = function () {
+            jobConfirmTemplate = kendo.template($("#jobConfirmTemplate").html());
+            jobConfirmWindow = $("#jobConfirmDialog").kendoWindow({
+                title: "Thông báo",
+                visible: false,
+                modal: true,
+                width: "400px",
+                height: "100px",
+            }).data("kendoWindow");
+        };
+
+        this.initJobGrid = function () {
+            $("#grid").kendoGrid({
+                toolbar: ['excel'],
+                excel: {
+                    fileName: 'jobs.xlsx'
+                },
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: $('#gridJobsUrl').val()
+                    },
+                    pageSize: 20
+                },
+                height: 500,
+                groupable: true,
+                resizable: true,
+                //sortable: true,
+                selectable: true,
+                //filterable: true,
+                pageable: {
+                    refresh: true,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                columns: [
+                    {
+                        field: "APK",
+                        title: "",
+                        width: 0,
+                        hidden: true
+                    }, {
+                        field: "JobID",
+                        title: "Mã hồ sơ",
+                        width: 120,
+                        template: "<a href='/Jobs/JobView/#: data.APK #' target='_blank'>#: data.JobID #</a>"
+                    }, {
+                        field: "JobName",
+                        title: "Tên hồ sơ",
+                        width: 200
+                    }, {
+                        field: "StatusName",
+                        title: "Tình trạng",
+                        width: 100
+                    }, {
+                        field: "CreatedUserID",
+                        title: "Người lập",
+                        width: 150
+                    }, {
+                        field: "Recipient",
+                        title: "Người thực hiện",
+                        width: 150
+                    }, {
+                        field: "Confirmer",
+                        title: "Người duyệt",
+                        width: 150
+                    }, {
+                        field: "CreatedDate",
+                        title: "Ngày tạo",
+                        width: 120,
+                        type: "date",
+                        template: '#= kendo.toString(data.Deadline, "dd/MM/yyyy") #'
+                    }, {
+                        field: "Deadline",
+                        title: "Ngày hết hạn",
+                        width: 120,
+                        type: "date",
+                        template: '#= kendo.toString(data.Deadline, "dd/MM/yyyy") #'
+                    }, {
+                        field: "Note",
+                        title: "Ghi chú",
+                        width: 200
+                    }, {
+                        command: [
+                            {
+                                text: 'Xóa',
+                                imageClass: 'k-icon k-i-close ob-icon-only',
+                                title: 'Xóa',
+                                click: deleteJob_Click
+                            }
+                        ],
+                        width: 160
+                    }
+                ]
+            });
+        };
+
+        this.closeJobDialog = function () {
+            var win = $("#jobDialog").data("kendoWindow");
+            if (win) {
+                win.close();
+            }
         };
     };
 }

@@ -7,7 +7,7 @@ using System.Web;
 
 namespace DMS.Models
 {
-    public class HistoryModels
+    public class HistoryModels : BaseModels
     {
         public Guid? APK { get; set; }
 
@@ -41,12 +41,6 @@ namespace DMS.Models
 
         [Display(Name = "Ghi chú")]
         public string Description { get; set; }
-
-        [Display(Name = "Ngày tạo")]
-        public DateTime CreatedDate { get; set; }
-
-        [Display(Name = "Người tạo")]
-        public string CreatedUserID { get; set; }
 
     }
 }

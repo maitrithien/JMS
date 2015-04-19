@@ -4,7 +4,6 @@
 *****************************************************************/
 
 $(document).ready(function () {
-    $("#files").closest(".k-upload").find("span").text("Chọn tập tin hoặc kéo thả vào đây");
     attachment.saveUrl = $('#saveUrl').val();
     attachment.removeUrl = $('#removeUrl').val();
     attachment.init();
@@ -28,7 +27,8 @@ var attachment = new function () {
                     AttachmentFileSize: e.files[i].size,
                     AttachmentFileType: e.files[i].rawFile.type,
                     AttachmentFilePath: e.files[i].rawFile.name,
-                    AttachmentFileExtension: e.files[i].extension
+                    AttachmentFileExtension: e.files[i].extension,
+                    JobAPK: $('#JobAPK').val()
                 });
             });
         }
@@ -46,7 +46,7 @@ var attachment = new function () {
     var onSuccess = function (data) {
         var gridAttachment = $("#gridAttachments").data("kendoGrid");
         if (gridAttachment) {
-            data = { apk: $("#JobAPK").val() };
+            data = { JobAPK: $("#JobAPK").val() };
             gridAttachment.dataSource.read(data);
         }
     }

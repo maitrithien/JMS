@@ -166,12 +166,11 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Bussiness\ComboBoxBussiness.cs" />
-    <Compile Include="Bussiness\JobBussiness.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ComboBoxController.cs" />
     <Compile Include="Controllers\JobsController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
+    <Compile Include="Models\BaseModels.cs" />
     <Compile Include="Models\Entities.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -433,6 +432,7 @@
     <Content Include="Views\Jobs\AttachmentDialog.cshtml" />
     <Content Include="Views\Jobs\NoteDialog.cshtml" />
     <Content Include="Views\Jobs\UpdateAttachmentDialog.cshtml" />
+    <Content Include="Views\Jobs\JobViewPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -11,8 +11,18 @@
     $(document).ready(function () {
         $("#btnEdit").kendoButton({
             icon: "pencil",
-            click: function (e) {
-                console.log("edit");
+            click: function () {
+                var win = $("#jobDialog").data("kendoWindow");
+                win.center();
+                win.refresh({
+                    url: $('#jobDialogUrl').val(),
+                    data: {
+                        APK: $('#JobAPK').val(),
+                        Action: 2
+                    },
+                    type: 'POST'
+                });
+                win.open();
             }
         });
 
@@ -28,11 +38,16 @@
             click: function (e) {
                 var win = $("#NoteDialog").data("kendoWindow");
                 win.center();
+                win.refresh({
+                    url: '@Url.Action("NoteDialog", "Jobs")',
+                    data: {},
+                    type: 'POST'
+                });
                 win.open();
             }
         });
 
-        $("#btnEditNote").kendoButton({
+       @* $("#btnEditNote").kendoButton({
             icon: "pencil",
             click: function (e) {
                 var win = $("#NoteDialog").data("kendoWindow");
@@ -44,14 +59,14 @@
                 });
                 win.open();
             }
-        });
+        });*@
         
-        $("#btnDeleteNote").kendoButton({
-            icon: "close",
-            click: function (e) {
-                console.log("delete");
-            }
-        });
+        //$("#btnDeleteNote").kendoButton({
+        //    icon: "close",
+        //    click: function (e) {
+        //        console.log("delete");
+        //    }
+        //});
 
         $("#btnAddAttachment").kendoButton({
             icon: "plus",
@@ -83,11 +98,20 @@
             }
         });
 
+        $("#jobDialog").kendoWindow({
+            iframe: false,
+            modal: true,
+            height: 650,
+            width: 900,
+            title: "Cập nhật thông tin hồ sơ",
+            visible: false
+        }).data("kendoWindow");
+
         $("#NoteDialog").kendoWindow({
             iframe: false,
             modal: true,
-            height: 200,
-            width: 500,
+            height: 530,
+            width: 800,
             title: "Cập nhật ghi chú",
             visible: false
         }).data("kendoWindow");
@@ -133,114 +157,14 @@
                 <div class="title-info">
                     <span>Thông tin mặc định</span>
                 </div>
-                <div class="tab-content">
-                    <div class="content-column">
-                        <div class="content-row">
-                            <div class="display-label">
-                                @Html.DisplayNameFor(model => model.JobID)
-                                @Html.Hidden("JobAPK", Model.APK)
-                            </div>
-                            <div class="display-field">
-                                @Html.DisplayFor(model => model.JobID)
-                            </div>
-                        </div>
-                        <div class="content-row">
-                            <div class="display-label">
-                                @Html.DisplayNameFor(model => model.JobName)
-                            </div>
-                            <div class="display-field">
-                                @Html.DisplayFor(model => model.JobName)
-                            </div>
-                        </div>
-                        <div class="content-row">
-                            <div class="display-label">
-                                @Html.DisplayNameFor(model => model.Priority)
-                            </div>
-                            <div class="display-field">
-                                @Html.DisplayFor(model => model.Priority)
-                            </div>
-                        </div>
-                        <div class="content-row">
-                            <div class="display-label">
-                                @Html.DisplayNameFor(model => model.Complex)
-                            </div>
-                            <div class="display-field">
-                                @Html.DisplayFor(model => model.Complex)
-                            </div>
-                        </div>
-                        <div class="content-row">
-                            <div class="display-label">
-                                @Html.DisplayNameFor(model => model.Rate)
-                            </div>
-                            <div class="display-field">
-                                @Html.DisplayFor(model => model.Rate)
-                            </div>
-                        </div>
-                    </div>
-                    <div class="content-column">
-                        <div class="content-row">
-                            <div class="display-label">
-                                @Html.DisplayNameFor(model => model.Deadline)
-                            </div>
-                            <div class="display-field">
-                                @Html.DisplayFor(model => model.Deadline)
-                            </div>
-                        </div>
-                        <div class="content-row">
-                            <div class="display-label">
-                                @Html.DisplayNameFor(model => model.StatusName)
-                            </div>
-                            <div class="display-field">
-                                @Html.DisplayFor(model => model.StatusName)
-                            </div>
-                        </div>
-                        <div class="content-row">
-                            <div class="display-label">
-                                @Html.DisplayNameFor(model => model.Poster)
-                            </div>
-                            <div class="display-field">
-                                @Html.DisplayFor(model => model.Poster)
-                            </div>
-                        </div>
-                        <div class="content-row">
-                            <div class="display-label">
-                                @Html.DisplayNameFor(model => model.Recipient)
-                            </div>
-                            <div class="display-field">
-                                @Html.DisplayFor(model => model.Recipient)
-                            </div>
-                        </div>
-                        <div class="content-row">
-                            <div class="display-label">
-                                @Html.DisplayNameFor(model => model.Confirmer)
-                            </div>
-                            <div class="display-field">
-                                @Html.DisplayFor(model => model.Confirmer)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-content">
-                    <div class="title-info">
-                    <span>Thông tin chi tiết</span>
-                </div>
-                    <div class="content-column-full">
-                        <div class="content-row">
-                            <div class="display-label">
-                                @Html.DisplayNameFor(model => model.Note)
-                            </div>
-                            <div class="display-field">
-                                @Html.DisplayFor(model => model.Note)
-                            </div>
-                        </div>
-                    </div>
+                <div id="main-content">
+                    @Html.Partial("JobViewPartial")
                 </div>
             </div>
+                
             <div class="content-wrapper">
                 <div class="toolbar">
                     <button id="btnAddNote" title="Thêm mới ghi chú" type="button"></button>
-                    <button id="btnEditNote" title="Cập nhật ghi chú" type="button"></button>
-                    <button id="btnDeleteNote" title="Xóa ghi chú" type="button"></button>
                 </div>
                 <div class="title-info">
                     <span>Ghi chú công việc</span>
@@ -313,10 +237,18 @@
     </div>
 </div>
 
+@Html.Hidden("JobAPK", Model.APK)
+@Html.Hidden("jobDialogUrl", Url.Action("JobDialog", "Jobs"))
+<div id="jobDialog">
+    @*@{
+        Html.RenderPartial("JobDialog");
+    }*@
+</div>
+
 <div id="NoteDialog">
-    @{
+    @*@{
         Html.RenderPartial("NoteDialog", new DMS.Models.NoteModels());
-    }
+    }*@
 </div>
 
 <div id="AttachmentDialog">
