@@ -77,7 +77,7 @@ namespace DMS.Models
         public string ComplexFilter { get; set; }
 
         /// <summary>
-        /// Độ phức tạp
+        /// Đánh giá
         /// </summary>
         [Display(Name = "Đánh giá")]
         public string RateFilter { get; set; }

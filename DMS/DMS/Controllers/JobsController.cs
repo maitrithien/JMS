@@ -63,14 +63,14 @@ namespace DMS.Controllers
                        && x.Confirmer.Contains(string.IsNullOrEmpty(item.ConfirmerFilter) ? x.Confirmer : item.ConfirmerFilter)
                        && x.Deadline == (item.DeadlineFilter == null ? x.Deadline : item.DeadlineFilter)
                        && x.Priority == (string.IsNullOrEmpty(item.PriorityFilter) ? x.Priority : item.PriorityFilter)
-                       && x.Rate == (string.IsNullOrEmpty(item.RateFilter) ? x.Rate : item.RateFilter)
+                       && (x.Rate == (string.IsNullOrEmpty(item.RateFilter) ? x.Rate : item.RateFilter) || x.Rate == null)
                        && x.Complex == (string.IsNullOrEmpty(item.ComplexFilter) ? x.Complex : item.ComplexFilter)
                        && x.DepartmentID.Contains(string.IsNullOrEmpty(item.DepartmentIDFilter) ? x.DepartmentID : item.DepartmentIDFilter)
                    ) && (
                        x.CreatedUserID == User.Identity.Name
                        || x.Poster == User.Identity.Name
                        || x.Confirmer == User.Identity.Name
-                       || (x.Recipient == User.Identity.Name && x.StatusConfirm.Equals("1"))
+                       || (x.Recipient == User.Identity.Name && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1")))
                    )).ToList() ?? new List<Job>();
             }
             else
@@ -80,7 +80,7 @@ namespace DMS.Controllers
                        x.CreatedUserID == User.Identity.Name
                        || x.Poster == User.Identity.Name
                        || x.Confirmer == User.Identity.Name
-                       || (x.Recipient == User.Identity.Name && x.StatusConfirm.Equals("1"))
+                       || (x.Recipient == User.Identity.Name && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1")))
                    )).ToList() ?? new List<Job>();
             }
 
