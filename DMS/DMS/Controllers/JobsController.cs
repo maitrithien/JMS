@@ -271,7 +271,7 @@ namespace DMS.Controllers
                        && (x.Rate == (string.IsNullOrEmpty(item.RateFilter) ? x.Rate : item.RateFilter) || x.Rate == null)
                        && x.Complex == (string.IsNullOrEmpty(item.ComplexFilter) ? x.Complex : item.ComplexFilter)
                        && x.DepartmentID.Contains(string.IsNullOrEmpty(item.DepartmentIDFilter) ? x.DepartmentID : item.DepartmentIDFilter)
-                       && x.Status != "2" && x.Status != "9"
+                       //&& x.Status != "2" && x.Status != "9"
                    ) && (
                        x.CreatedUserID == User.Identity.Name
                        || x.Poster == User.Identity.Name
@@ -304,16 +304,16 @@ namespace DMS.Controllers
             {
                 lst = _EntityModel.Jobs.Where(x =>
                    (
-                       x.Status != "2" && x.Status != "9"
-                       && (x.CreatedUserID == User.Identity.Name
-                           || x.Poster == User.Identity.Name
-                           || (x.Confirmer == User.Identity.Name && x.StatusConfirm != "1")
-                           || (
-                                    x.Recipient == User.Identity.Name
-                                    && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
-                                    && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
-                              )
-                          )
+                       //x.Status != "2" && x.Status != "9" &&
+                       (x.CreatedUserID == User.Identity.Name
+                        || x.Poster == User.Identity.Name
+                        || (x.Confirmer == User.Identity.Name && x.StatusConfirm != "1")
+                        || (
+                                x.Recipient == User.Identity.Name
+                                && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
+                                && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
+                            )
+                        )
                    )
                    ).Select(x => new JobModels()
                    {
