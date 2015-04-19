@@ -26,16 +26,28 @@
             }
             : dataSource;
 
+        open = function (e) {
+            
+        }
+
+        change = function (e) {
+            
+        }
+
         // Init object
         this.init = function () {
             // Init dropdownlist
             $(elem).kendoDropDownList({
+                filter: "contains",
                 width: settings.width,
                 height: settings.height,
                 dataTextField: settings.dataTextField,
                 dataValueField: settings.dataValueField,
                 dataSource: dataSource,
-                index: settings.selectedIndex
+                change: (typeof settings.change == 'function') ? settings.change : change,
+                open: (typeof settings.open == 'function') ? settings.open : open,
+                index: settings.selectedIndex,
+
             });
 
             return this;
@@ -141,3 +153,7 @@ var common = new function () {
         });
     }
 };
+
+$(document).ready(function () {
+    
+});

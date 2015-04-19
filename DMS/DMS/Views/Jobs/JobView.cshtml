@@ -101,7 +101,7 @@
         $("#jobDialog").kendoWindow({
             iframe: false,
             modal: true,
-            height: 650,
+            height: 600,
             width: 900,
             title: "Cập nhật thông tin hồ sơ",
             visible: false
@@ -152,7 +152,7 @@
             <div class="content-wrapper">
                 <div class="toolbar">
                     <button id="btnEdit" title="Cập nhật" type="button"></button>
-                    <button id="btnDelete" title="Xóa" type="button"></button>
+                    <button id="btnDelete" style="visibility:hidden" title="Xóa" type="button"></button>
                 </div>
                 <div class="title-info">
                     <span>Thông tin mặc định</span>
@@ -239,6 +239,7 @@
 
 @Html.Hidden("JobAPK", Model.APK)
 @Html.Hidden("jobDialogUrl", Url.Action("JobDialog", "Jobs"))
+@Html.Hidden("checkEditNoteUrl", Url.Action("CheckEditNote", "Jobs"))
 <div id="jobDialog">
     @*@{
         Html.RenderPartial("JobDialog");

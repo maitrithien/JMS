@@ -138,6 +138,9 @@
           <Property Name="CreatedUserID" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifyUserID" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <Function Name="GetEmployeeByManager" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ManagerID" Type="nvarchar" Mode="In" />
+        </Function>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -150,6 +153,9 @@
           <EntitySet Name="Jobs" EntityType="JMSModel.Job" />
           <EntitySet Name="Departments" EntityType="JMSModel.Department" />
           <EntitySet Name="Employees" EntityType="JMSModel.Employee" />
+          <FunctionImport Name="GetEmployeeByManager" ReturnType="Collection(JMSModel.GetEmployeeByManager_Result)">
+            <Parameter Name="ManagerID" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Attachment">
           <Key>
@@ -263,6 +269,10 @@
           <Property Type="String" Name="CreatedUserID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="LastModifyUserID" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
+        <ComplexType Name="GetEmployeeByManager_Result">
+          <Property Type="String" Name="EmployeeID" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ManagerID" Nullable="true" MaxLength="50" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -384,6 +394,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetEmployeeByManager" FunctionName="JMSModel.Store.GetEmployeeByManager">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JMSModel.GetEmployeeByManager_Result">
+                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+                <ScalarProperty Name="ManagerID" ColumnName="ManagerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

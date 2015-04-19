@@ -10,10 +10,27 @@
             </div>
         </div>
     </script>
+    <div id="noteMessageDialog"></div>
+    <script type="text/x-kendo-template" id="noteMessageTemplate">
+        <div class="content-wrapper">
+            <p>#= message #</p>
+            <div class="content-wrapper bottom-toolbar">
+                <button class="k-button" id="okButton">Đồng ý</button>
+            </div>
+        </div>
+    </script>
     <script>
         $(document).ready(function () {
             var noteConfirmTemplate = kendo.template($("#noteConfirmTemplate").html());
             var noteConfirmWindow = $("#noteConfirmDialog").kendoWindow({
+                title: "Thông báo",
+                visible: false,
+                modal: true,
+                width: "400px",
+                height: "100px",
+            }).data("kendoWindow");
+            var noteMessageTemplate = kendo.template($("#noteMessageTemplate").html());
+            var noteMessageWindow = $("#noteMessageDialog").kendoWindow({
                 title: "Thông báo",
                 visible: false,
                 modal: true,
@@ -26,14 +43,7 @@
 
                 var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
 
-                var win = $("#NoteDialog").data("kendoWindow");
-                win.center();
-                win.refresh({
-                    url: $('#NoteDialogUrl').val(),
-                    data: { APK: dataItem.APK,  Action: 2 },
-                    type: 'POST'
-                });
-                win.open();
+                checkEditNote(dataItem);
             }
 
             function viewNote_Click(e) {
@@ -51,6 +61,73 @@
                 win.open();
             }
 
+            function checkEditNote(data) {
+                $.ajax({
+                    type: 'POST',
+                    url: $('#checkEditNoteUrl').val(),
+                    data: JSON.stringify(data),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (dataResult) {
+                        if (!dataResult.result) {
+                            noteConfirmWindow.close();
+
+                            noteMessageWindow.content(noteMessageTemplate(dataResult)); //send the row data object to the template and render it
+                            noteMessageWindow.open().center();
+
+                            $("#okButton").click(function () {
+                                noteMessageWindow.close();
+                            });
+                        }
+                        else {
+                            var win = $("#NoteDialog").data("kendoWindow");
+                            win.center();
+                            win.refresh({
+                                url: $('#NoteDialogUrl').val(),
+                                data: { APK: data.APK, Action: 2 },
+                                type: 'POST'
+                            });
+                            win.open();
+                        }
+                    }
+                });
+            }
+
+            function checkDeleteNote(data) {
+                $.ajax({
+                    type: 'POST',
+                    url: $('#checkEditNoteUrl').val(),
+                    data: JSON.stringify(data),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (dataResult) {
+                        if (!dataResult.result) {
+                            noteConfirmWindow.close();
+
+                            noteMessageWindow.content(noteMessageTemplate(dataResult)); //send the row data object to the template and render it
+                            noteMessageWindow.open().center();
+
+                            $("#okButton").click(function () {
+                                noteMessageWindow.close();
+                            });
+                        }
+                        else {
+                            $.ajax({
+                                type: 'POST',
+                                url: $('#removeNoteUrl').val(),
+                                data: JSON.stringify(data),
+                                contentType: 'application/json; charset=utf-8',
+                                success: function () {
+                                    var noteGrid = $('#gridNotes').data('kendoGrid');
+                                    if (noteGrid) {
+                                        noteGrid.dataSource.read();
+                                    }
+                                    noteConfirmWindow.close();
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+
             function deleteNote_Click(e) {
                 e.preventDefault();
 
@@ -61,19 +138,7 @@
                 noteConfirmWindow.open().center();
 
                 $("#yesButton").click(function () {
-                    $.ajax({
-                        type: 'POST',
-                        url: $('#removeNoteUrl').val(),
-                        data: JSON.stringify(data),
-                        contentType: 'application/json; charset=utf-8',
-                        success: function () {
-                            var noteGrid = $('#gridNotes').data('kendoGrid');
-                            if (noteGrid) {
-                                noteGrid.dataSource.read();
-                            }
-                            noteConfirmWindow.close();
-                        }
-                    });
+                    checkDeleteNote(data);
                 });
 
                 $("#noButton").click(function () {
@@ -156,7 +221,7 @@
                                 click: deleteNote_Click
                             }
                         ],
-                        width: 220
+                        width: 250
                     }
                 ]
             });

@@ -249,14 +249,20 @@ ul#menu {
         ul#menu li a {
             background: none;
             color: #999;
+            padding: 3px;
             text-decoration: none;
         }
 
         ul#menu li a:hover {
             color: #333;
+            background-color: #a6dbed;
             text-decoration: none;
         }
 
+        ul#menu li.selected a{
+            border-bottom: 2px solid #000;
+            color: #000;
+        }
 
 /* page elements
 ----------------------------------------------------------*/
@@ -828,6 +834,7 @@ tr.pager td {
         .filter-content .content-column-filter-3 .content-row-filter {
             width: 100%;
             float: left;
+            margin-bottom: 5px;
         }
             .filter-content .content-column-filter-3 .content-row-filter .editor-label {
                 float: left;

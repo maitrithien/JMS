@@ -22,6 +22,15 @@
                 </div>
             </div>
         </script>
+        <div id="jobMessageDialog"></div>
+        <script type="text/x-kendo-template" id="jobMessageTemplate">
+            <div class="content-wrapper">
+                <p>#= message #</p>
+                <div class="content-wrapper bottom-toolbar">
+                    <button class="k-button" id="okButton">Đồng ý</button>
+                </div>
+            </div>
+        </script>
         <script>
             $(document).ready(function () {
                 $("#jobDialog").kendoWindow({
@@ -77,6 +86,7 @@
 @Html.Partial("Grid")
 @Html.Hidden("jobDialogUrl", Url.Action("JobDialog", "Jobs"))
 @Html.Hidden("removeJobUrl", Url.Action("Delete", "Jobs"))
+@Html.Hidden("checkEditJobUrl", Url.Action("CheckEdit", "Jobs"))
 <div id="jobDialog">
     @{
         Html.RenderPartial("JobDialog", new DMS.Models.JobModels());

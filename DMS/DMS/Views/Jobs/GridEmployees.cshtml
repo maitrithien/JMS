@@ -1,0 +1,11 @@
+﻿<div id="main-grid">
+    <script>
+        $(document).ready(function () {
+            jobs.job.initJobGridOther();
+            jobs.job.initJobConfirmDialog();
+        });
+    </script>
+
+    <div id="grid"></div>
+    @Html.Hidden("gridJobsUrl", Url.Action("JobsGridEmployee", "Jobs"))
+</div>

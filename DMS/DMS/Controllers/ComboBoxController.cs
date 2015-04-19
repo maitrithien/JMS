@@ -17,42 +17,72 @@ namespace DMS.Controllers
         public JsonResult EmployeeID()
         {
             List<Employee> model = _EntityModel.Employees.ToList();
+            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "< Không >", UserName = string.Empty });
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult RecipientID(string DepartmentID)
+        {
+            List<Employee> model = _EntityModel.Employees.Where(x => x.DepartmentID == DepartmentID).ToList();
+            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "< Không >", UserName = string.Empty });
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ConfirmerID()
+        {
+            List<Employee> model = _EntityModel.Employees.Where(x => x.GroupID != "0").ToList();
+            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "< Không >", UserName = string.Empty });
+
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult StatusID()
         {
-            List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == "STATUS").ToList();
+            List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.STATUS_CODE).ToList();
+            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.STATUS_CODE, CodeName = "< Không >"});
+
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult StatusConfirmID()
         {
-            List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == "CONFIRM_STATUS").ToList();
+            List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.STATUS_CONFIRM_CODE).ToList();
+            //model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.STATUS_CODE, CodeName = "< Không >" });
+
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult ComplexID()
         {
-            List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == "COMPLEX").ToList();
+            List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.COMPLEX_CODE).ToList();
+            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.COMPLEX_CODE, CodeName = "< Không >" });
+
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult PriorityID()
         {
-            List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == "PRIORITY").ToList();
+            List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.PRIORITY_CODE).ToList();
+            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.PRIORITY_CODE, CodeName = "< Không >" });
+
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult RateID()
         {
-            List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == "RATE").ToList();
+            List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.RATE_CODE).ToList();
+            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.RATE_CODE, CodeName = "< Không >" });
+
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult DepartmentID()
         {
             List<Department> model = _EntityModel.Departments.ToList();
+            model.Insert(0, new Department() { DepartmentID = string.Empty, DepartmentName = "< Không >" });
+
             return Json(model, JsonRequestBehavior.AllowGet);
         }
     }

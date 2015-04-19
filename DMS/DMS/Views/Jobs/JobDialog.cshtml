@@ -76,7 +76,7 @@
                         </script>
                     </div>
                 </div>
-                @if (Model.Action == DMS.Models.FormAction.Edit && Model.Status.Equals("2"))
+                @if (Model.Action == DMS.Models.FormAction.Edit && Model.Status == "2")
                 {
                     <div class="content-row">
                         <div class="editor-label">
@@ -130,36 +130,6 @@
                 </div>
                 <div class="content-row">
                     <div class="editor-label">
-                        @Html.LabelFor(model => model.Recipient, new { style = "font-weight: normal; font-size: small;" })
-                    </div>
-                    <div class="editor-field">
-                        @Html.TextBoxFor(model => model.Recipient, new { style = "width: 100%; font-weight: normal; font-size: small;" })
-                        <script type="text/javascript">
-                            $("#Recipient").dropdownlist({
-                                url: '@Url.Action("EmployeeID", "ComboBox")',
-                                dataTextField: 'FullName',
-                                dataValueField: 'EmployeeID'
-                            });
-                        </script>
-                    </div>
-                </div>
-                <div class="content-row">
-                    <div class="editor-label">
-                        @Html.LabelFor(model => model.Confirmer, new { style = "font-weight: normal; font-size: small;" })
-                    </div>
-                    <div class="editor-field">
-                        @Html.TextBoxFor(model => model.Confirmer, new { style = "width: 100%; font-weight: normal; font-size: small;" })
-                        <script type="text/javascript">
-                            $("#Confirmer").dropdownlist({
-                                url: '@Url.Action("EmployeeID", "ComboBox")',
-                                dataTextField: 'FullName',
-                                dataValueField: 'EmployeeID'
-                            });
-                        </script>
-                    </div>
-                </div>
-                <div class="content-row">
-                    <div class="editor-label">
                         @Html.LabelFor(model => model.DepartmentID, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
@@ -175,22 +145,74 @@
                 </div>
                 <div class="content-row">
                     <div class="editor-label">
-                        @Html.LabelFor(model => model.StatusConfirm, new { style = "font-weight: normal; font-size: small;" })
+                        @Html.LabelFor(model => model.Recipient, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.TextBoxFor(model => model.StatusConfirm, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        @Html.TextBoxFor(model => model.Recipient, new { style = "width: 100%; font-weight: normal; font-size: small;" })
                         <script type="text/javascript">
-                            $("#StatusConfirm").dropdownlist({
-                                url: '@Url.Action("StatusConfirmID", "ComboBox")',
-                                dataTextField: 'CodeName',
-                                dataValueField: 'CodeID'
+                            @{ 
+                                string param = !string.IsNullOrEmpty(Model.DepartmentID) 
+                                    ? "?DepartmentID=" + Model.DepartmentID 
+                                    : "";
+                            }
+                            $("#Recipient").dropdownlist({
+
+                                url: '@Url.Action("RecipientID", "ComboBox")' + '@param',
+                                dataTextField: 'FullName',
+                                dataValueField: 'EmployeeID',
+                                open: function () {
+                                    var data = {};
+                                    var departmentId = $("#DepartmentID").val();
+                                    data["DepartmentID"] = departmentId == undefined ? '' : departmentId;
+
+                                    var complex = $("#Recipient").data("kendoDropDownList");
+                                    if (complex) {
+                                        complex.dataSource.read(data);
+                                    }
+                                }
                             });
                         </script>
                     </div>
                 </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Confirmer, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Confirmer, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            $("#Confirmer").dropdownlist({
+                                url: '@Url.Action("ConfirmerID", "ComboBox")',
+                                dataTextField: 'FullName',
+                                dataValueField: 'EmployeeID'
+                            });
+                        </script>
+                    </div>
+                </div>
+                
+                @{
+                    if(!string.IsNullOrEmpty(Model.Confirmer) && Model.Confirmer.Equals(User.Identity.Name))
+                    {
+                        <div class="content-row">
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.StatusConfirm, new { style = "font-weight: normal; font-size: small;" })
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.StatusConfirm, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                                <script type="text/javascript">
+                                    $("#StatusConfirm").dropdownlist({
+                                        url: '@Url.Action("StatusConfirmID", "ComboBox")',
+                                        dataTextField: 'CodeName',
+                                        dataValueField: 'CodeID'
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
-        @if (Model.Action == DMS.Models.FormAction.Edit && Model.Status.Equals("2"))
+        @if (Model.Action == DMS.Models.FormAction.Edit && Model.Status == "2")
         {
             <!-- Hồ sơ hoàn tất -->
             <div class="title-info">
@@ -281,8 +303,9 @@
                                 success: function (data) {
                                     jobs.job.refreshJobGrid();
                                     jobs.job.closeJobDialog();
-
-                                    window.open($('#viewJobUrl').val() + '/' + data.id, '_blank');
+                                    var url = $('#viewJobUrl').val() + '/' + data.id;
+                                    window.location.href = url;
+                                    //window.open(url, '_blank');
                                 }
                             });
                         }

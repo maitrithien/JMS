@@ -24,11 +24,17 @@ namespace DMS.Models
         [Display(Name = "Người tạo")]
         public string CreatedUserID { get; set; }
 
+        [Display(Name = "Người tạo")]
+        public string CreatedUserName { get; set; }
+
         [Display(Name = "Ngày cập nhật")]
         public DateTime LastModifyDate { get; set; }
 
         [Display(Name = "Người cập nhật")]
         public string LastModifyUserID { get; set; }
+
+        [Display(Name = "Người cập nhật")]
+        public string LastModifyUserName { get; set; }
 
         public FormAction Action { get; set; }
     }

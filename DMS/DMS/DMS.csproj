@@ -425,14 +425,19 @@
     <Content Include="Views\Jobs\GridHistories.cshtml" />
     <Content Include="Views\Jobs\Filter.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
-    <Content Include="Views\Jobs\JobsOverdue.cshtml" />
-    <Content Include="Views\Jobs\JobsSent.cshtml" />
-    <Content Include="Views\Jobs\JobsReceived.cshtml" />
     <Content Include="Views\Jobs\JobsStatc.cshtml" />
     <Content Include="Views\Jobs\AttachmentDialog.cshtml" />
     <Content Include="Views\Jobs\NoteDialog.cshtml" />
     <Content Include="Views\Jobs\UpdateAttachmentDialog.cshtml" />
     <Content Include="Views\Jobs\JobViewPartial.cshtml" />
+    <Content Include="Views\Jobs\JobsEmployee.cshtml" />
+    <Content Include="Views\Jobs\GridEmployees.cshtml" />
+    <Content Include="Views\Jobs\JobsReceived.cshtml" />
+    <Content Include="Views\Jobs\JobsSent.cshtml" />
+    <Content Include="Views\Jobs\JobsOverdue.cshtml" />
+    <Content Include="Views\Jobs\GridJobsReceived.cshtml" />
+    <Content Include="Views\Jobs\GridJobsSent.cshtml" />
+    <Content Include="Views\Jobs\GridJobsOverdue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

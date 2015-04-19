@@ -1,0 +1,11 @@
+﻿<div id="main-grid">
+    <script>
+        $(document).ready(function () {
+            jobs.job.initJobGridOver();
+            jobs.job.initJobConfirmDialog();
+        });
+    </script>
+
+    <div id="grid"></div>
+    @Html.Hidden("gridJobsUrl", Url.Action("JobsGridOverdue", "Jobs"))
+</div>

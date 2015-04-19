@@ -239,6 +239,29 @@ namespace DMS.Models
 
         #endregion
 
+        #region Function Imports
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        /// <param name="managerID">No Metadata Documentation available.</param>
+        public ObjectResult<GetEmployeeByManager_Result> GetEmployeeByManager(global::System.String managerID)
+        {
+            ObjectParameter managerIDParameter;
+            if (managerID != null)
+            {
+                managerIDParameter = new ObjectParameter("ManagerID", managerID);
+            }
+            else
+            {
+                managerIDParameter = new ObjectParameter("ManagerID", typeof(global::System.String));
+            }
+    
+            return base.ExecuteFunction<GetEmployeeByManager_Result>("GetEmployeeByManager", managerIDParameter);
+        }
+
+        #endregion
+
     }
 
     #endregion
@@ -2278,6 +2301,87 @@ namespace DMS.Models
         private global::System.String _Title;
         partial void OnTitleChanging(global::System.String value);
         partial void OnTitleChanged();
+
+        #endregion
+
+    }
+
+    #endregion
+
+    #region ComplexTypes
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmComplexTypeAttribute(NamespaceName="JMSModel", Name="GetEmployeeByManager_Result")]
+    [DataContractAttribute(IsReference=true)]
+    [Serializable()]
+    public partial class GetEmployeeByManager_Result : ComplexObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new GetEmployeeByManager_Result object.
+        /// </summary>
+        /// <param name="employeeID">Initial value of the EmployeeID property.</param>
+        public static GetEmployeeByManager_Result CreateGetEmployeeByManager_Result(global::System.String employeeID)
+        {
+            GetEmployeeByManager_Result getEmployeeByManager_Result = new GetEmployeeByManager_Result();
+            getEmployeeByManager_Result.EmployeeID = employeeID;
+            return getEmployeeByManager_Result;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String EmployeeID
+        {
+            get
+            {
+                return _EmployeeID;
+            }
+            set
+            {
+                OnEmployeeIDChanging(value);
+                ReportPropertyChanging("EmployeeID");
+                _EmployeeID = StructuralObject.SetValidValue(value, false, "EmployeeID");
+                ReportPropertyChanged("EmployeeID");
+                OnEmployeeIDChanged();
+            }
+        }
+        private global::System.String _EmployeeID;
+        partial void OnEmployeeIDChanging(global::System.String value);
+        partial void OnEmployeeIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ManagerID
+        {
+            get
+            {
+                return _ManagerID;
+            }
+            set
+            {
+                OnManagerIDChanging(value);
+                ReportPropertyChanging("ManagerID");
+                _ManagerID = StructuralObject.SetValidValue(value, true, "ManagerID");
+                ReportPropertyChanged("ManagerID");
+                OnManagerIDChanged();
+            }
+        }
+        private global::System.String _ManagerID;
+        partial void OnManagerIDChanging(global::System.String value);
+        partial void OnManagerIDChanged();
 
         #endregion
 

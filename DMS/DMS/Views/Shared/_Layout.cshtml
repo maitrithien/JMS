@@ -42,12 +42,51 @@
             <div class="content-wrapper menu-context">
                 <nav>
                     <ul id="menu">
-                        <li>@Html.ActionLink("Hồ sơ", "Index", "Jobs")</li>
-                        <li>@Html.ActionLink("Hồ sơ đã nhận", "JobsReceived", "Jobs")</li>
-                        <li>@Html.ActionLink("Hồ sơ đã gửi", "JobsSent", "Jobs")</li>
-                        <li>@Html.ActionLink("Hồ sơ hết hạn", "JobsOverdue", "Jobs")</li>
-                        <li>@Html.ActionLink("Thống kê", "JobsStatc", "Jobs")</li>
-                        @*<li>@Html.ActionLink("Completed", "Contact", "Jobs")</li>*@
+                        @{
+                            string cssClassIndex = string.Empty;
+                            string cssClassJobsReceived = string.Empty;
+                            string cssClassJobsSent = string.Empty;
+                            string cssClassJobsOverdue = string.Empty;
+                            string cssClassJobsEmployee = string.Empty;
+                            string cssClassJobsStatc = string.Empty;
+                            
+                            DMS.Models.JMSEntities entity = new DMS.Models.JMSEntities();
+                            bool isManager = entity.Employees.FirstOrDefault(x =>
+                                            (!string.IsNullOrEmpty(x.GroupID) && !x.GroupID.Equals("0") && User.Identity.Name.Equals(x.EmployeeID))) != null;
+                                              
+                            if (ViewData.Keys.Contains("MenuSelected"))
+                            {
+                                string currentMenu = ViewData["MenuSelected"].ToString();
+                                switch(currentMenu)
+                                {
+                                    case "Index": cssClassIndex = "selected";
+                                        break;
+                                    case "JobsReceived": cssClassJobsReceived = "selected";
+                                        break;
+                                    case "JobsSent": cssClassJobsSent = "selected";
+                                        break;
+                                    case "JobsOverdue": cssClassJobsOverdue = "selected";
+                                        break;
+                                    case "JobsEmployee": cssClassJobsEmployee = "selected";
+                                        break;
+                                    case "JobsStatc": cssClassJobsStatc = "selected";
+                                        break;
+                                }
+                            }
+                        
+                            <li class="@cssClassIndex">@Html.ActionLink("Hồ sơ", "Index", "Jobs")</li>
+                            <li class="@cssClassJobsReceived">@Html.ActionLink("Hồ sơ đã nhận", "JobsReceived", "Jobs")</li>
+                            <li class="@cssClassJobsSent">@Html.ActionLink("Hồ sơ đã gửi", "JobsSent", "Jobs")</li>
+                            <li class="@cssClassJobsOverdue">@Html.ActionLink("Hồ sơ quá hạn", "JobsOverdue", "Jobs")</li>
+                        
+                       
+                            if(isManager)
+                            {
+                                <li class="@cssClassJobsEmployee">@Html.ActionLink("Hồ sơ nhân viên", "JobsEmployee", "Jobs")</li>
+                            }
+                        
+                            <li class="@cssClassJobsStatc">@Html.ActionLink("Thống kê", "JobsStatc", "Jobs")</li>
+                        }
                     </ul>
                 </nav>
             </div>

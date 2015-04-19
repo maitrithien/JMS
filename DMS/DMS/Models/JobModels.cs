@@ -88,7 +88,7 @@ namespace DMS.Models
         [Display(Name="Hồ sơ quá hạn")]
         public bool IsOverDateFiler { get; set; }
 
-        [Display(Name = "Phòng ban")]
+        [Display(Name = "Phòng nhận hồ sơ")]
         public string DepartmentIDFilter { get; set; }
 
         #endregion ---- Filter ----
@@ -109,12 +109,18 @@ namespace DMS.Models
         [Display(Name = "Ngày hết hạn")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime Deadline { 
+        public DateTime? Deadline { 
             get { return _deadline; }
             set { _deadline = value; }
         }
 
-        private DateTime _deadline = DateTime.Now;
+        private DateTime? _deadline = DateTime.Now;
+
+        /// <summary>
+        /// Số ngày quá hạn
+        /// </summary>
+        [Display(Name = "Số ngày quá hạn")]
+        public double OverDeadlineNumber { get; set; }
 
         [Display(Name = "Tình trạng")]
         public string Status { get; set; }
@@ -134,10 +140,10 @@ namespace DMS.Models
         [Display(Name = "Người lập")]
         public string PosterName { get; set; }
 
-        [Display(Name = "Phòng ban")]
+        [Display(Name = "Phòng nhận hồ sơ")]
         public string DepartmentID { get; set; }
 
-        [Display(Name = "Phòng ban")]
+        [Display(Name = "Phòng nhận hồ sơ")]
         public string DepartmentName { get; set; }
 
         [Display(Name = "Độ ưu tiên")]
