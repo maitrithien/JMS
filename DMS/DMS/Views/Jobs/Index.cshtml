@@ -86,9 +86,9 @@
 @Html.Partial("Grid")
 @Html.Hidden("jobDialogUrl", Url.Action("JobDialog", "Jobs"))
 @Html.Hidden("removeJobUrl", Url.Action("Delete", "Jobs"))
-@Html.Hidden("checkEditJobUrl", Url.Action("CheckEdit", "Jobs"))
+@Html.Hidden("checkDeleteJobUrl", Url.Action("CheckDelete", "Jobs"))
 <div id="jobDialog">
-    @{
+    @*@{
         Html.RenderPartial("JobDialog", new DMS.Models.JobModels());
-    }
+    }*@
 </div>

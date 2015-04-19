@@ -1,56 +1,94 @@
 ﻿@{
-    ViewBag.Title = "Danh sách hồ sơ đã gửi";
+    ViewBag.Title = "Hồ sơ đã gửi";
 }
 @section featured {
     @Html.Partial("Filter")
     <div class="content-wrapper">
-        <div class="toolbar">
-            <button id="btnAddNew" title="Thêm mới" type="button"></button>
-            <button id="btnDelete" title="Xóa" type="button"></button>
+        <div class="toolbar-search">
             <button id="btnSearch" title="Tìm kiếm" type="button" class="btn-right">Tìm kiếm</button>
         </div>
+    </div>
+    <div class="content-wrapper">
+        <div class="toolbar">
+            <button id="btnAddNew" style="visibility: hidden" title="Thêm mới" type="button"></button>
+        </div>
+        <div id="jobConfirmDialog"></div>
+        <script type="text/x-kendo-template" id="jobConfirmTemplate">
+            <div class="content-wrapper">
+                <p>Bạn có muốn xóa hồ sơ <strong>#= JobID #</strong> ?</p>
+                <div class="content-wrapper bottom-toolbar">
+                    <button class="k-button" id="yesButton">Đồng ý</button>
+                    <button class="k-button" id="noButton">Hủy</button>
+                </div>
+            </div>
+        </script>
+        <div id="jobMessageDialog"></div>
+        <script type="text/x-kendo-template" id="jobMessageTemplate">
+            <div class="content-wrapper">
+                <p>#= message #</p>
+                <div class="content-wrapper bottom-toolbar">
+                    <button class="k-button" id="okButton">Đồng ý</button>
+                </div>
+            </div>
+        </script>
         <script>
             $(document).ready(function () {
-                $("#window").kendoWindow({
+                $("#jobDialog").kendoWindow({
                     iframe: false,
                     modal: true,
-                    height: 500,
+                    height: 560,
                     width: 900,
                     title: "Cập nhật thông tin hồ sơ",
                     visible: false
                 }).data("kendoWindow");
 
-                $("#btnAddNew").kendoButton({
-                    icon: "plus",
-                    click: function (e) {
-                        var win = $("#window").data("kendoWindow");
-                        win.center();
-                        win.open();
-                    }
-                });
-
-                $("#btnDelete").kendoButton({
-                    icon: "close",
-                    click: function (e) {
-                        console.log("delete");
-                    }
-                });
-
+                //$("#btnAddNew").kendoButton({
+                //    icon: "plus",
+                //    click: function (e) {
+                //        var win = $("#jobDialog").data("kendoWindow");
+                //        if (win) {
+                //            win.center();
+                //            win.refresh({
+                //                url: $('#jobDialogUrl').val(),
+                //                data: {
+                //                    APK: null,
+                //                    Action: 1
+                //                },
+                //                type: 'POST'
+                //            });
+                //            win.open();
+                //        }
+                //    }
+                //});
+                
                 $("#btnSearch").kendoButton({
                     icon: "search",
                     click: function (e) {
-                        console.log("search");
+                        //console.log("search");
+                        var grid = $("#grid").data("kendoGrid");
+                        var data = common.getFormDataTypeJson("frm-main-filter");
+                        data['IsFilter'] = 1;
+
+                        grid.dataSource.read(data);
                     }
                 });
+
+                
             });
         </script>
     </div>
 }
 
-@Html.Partial("Grid")
+@section scripts{
+    <script src="~/Scripts/Jobs.js"></script>
+}
 
-<div id="window">
-    @{
+@Html.Partial("GridJobsSent")
+@Html.Hidden("jobDialogUrl", Url.Action("JobDialog", "Jobs"))
+@Html.Hidden("removeJobUrl", Url.Action("Delete", "Jobs"))
+@Html.Hidden("checkEditJobUrl", Url.Action("CheckEdit", "Jobs"))
+<div id="jobDialog">
+    @*@{
         Html.RenderPartial("JobDialog", new DMS.Models.JobModels());
-    }
+    }*@
 </div>

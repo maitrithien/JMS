@@ -37,6 +37,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <ExcludeApp_Data>false</ExcludeApp_Data>
+    <PrecompileBeforePublish>true</PrecompileBeforePublish>
+    <FilesToIncludeForPublish>OnlyFilesToRunTheApp</FilesToIncludeForPublish>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -319,6 +322,7 @@
     <Content Include="Models\Entities.edmx.diagram">
       <DependentUpon>Entities.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\DMS.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\attachments.js" />
     <Content Include="Scripts\common.js" />
@@ -425,7 +429,6 @@
     <Content Include="Views\Jobs\GridHistories.cshtml" />
     <Content Include="Views\Jobs\Filter.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
-    <Content Include="Views\Jobs\JobsStatc.cshtml" />
     <Content Include="Views\Jobs\AttachmentDialog.cshtml" />
     <Content Include="Views\Jobs\NoteDialog.cshtml" />
     <Content Include="Views\Jobs\UpdateAttachmentDialog.cshtml" />
@@ -438,6 +441,7 @@
     <Content Include="Views\Jobs\GridJobsReceived.cshtml" />
     <Content Include="Views\Jobs\GridJobsSent.cshtml" />
     <Content Include="Views\Jobs\GridJobsOverdue.cshtml" />
+    <Content Include="Views\Jobs\JobsStatc.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

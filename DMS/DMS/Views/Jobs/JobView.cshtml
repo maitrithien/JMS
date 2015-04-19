@@ -5,41 +5,86 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div id="jobMessageDialog"></div>
+<script type="text/x-kendo-template" id="jobMessageTemplate">
+    <div class="content-wrapper">
+        <p>#= message #</p>
+        <div class="content-wrapper bottom-toolbar">
+            <button class="k-button" id="okButton">Đồng ý</button>
+        </div>
+    </div>
+</script>
+
 @section scripts{
     <script src="~/Scripts/Jobs.js"></script>
     <script>
-    $(document).ready(function () {
-        $("#btnEdit").kendoButton({
-            icon: "pencil",
-            click: function () {
-                var win = $("#jobDialog").data("kendoWindow");
-                win.center();
-                win.refresh({
-                    url: $('#jobDialogUrl').val(),
-                    data: {
-                        APK: $('#JobAPK').val(),
-                        Action: 2
-                    },
-                    type: 'POST'
+        $(document).ready(function () {
+            var jobMessageTemplate = kendo.template($("#jobMessageTemplate").html());
+            var jobMessageWindow = $("#jobMessageDialog").kendoWindow({
+                title: "Thông báo",
+                visible: false,
+                modal: true,
+                width: "400px",
+                height: "100px",
+            }).data("kendoWindow");
+
+            function checkEditJob(data) {
+                $.ajax({
+                    type: 'POST',
+                    url: $('#checkEditJobUrl').val(),
+                    data: JSON.stringify(data),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (dataResult) {
+                        if (!dataResult.result) {
+                            jobMessageWindow.content(jobMessageTemplate(dataResult)); //send the row data object to the template and render it
+                            jobMessageWindow.open().center();
+
+                            $("#okButton").click(function () {
+                                jobMessageWindow.close();
+                            });
+                        }
+                        else {
+                            var win = $("#jobDialog").data("kendoWindow");
+                            win.center();
+                            win.refresh({
+                                url: $('#jobDialogUrl').val(),
+                                data: {
+                                    APK: $('#JobAPK').val(),
+                                    Action: 2
+                                },
+                                type: 'POST'
+                            });
+                            win.open();
+                        }
+                    }
                 });
-                win.open();
             }
-        });
 
-        $("#btnDelete").kendoButton({
-            icon: "close",
-            click: function (e) {
-                console.log("delete");
-            }
-        });
+            $("#btnEdit").kendoButton({
+                icon: "pencil",
+                click: function () {
+                    var data = {
+                        APK: $('#JobAPK').val(),
+                    };
 
-        $("#btnAddNote").kendoButton({
-            icon: "plus",
-            click: function (e) {
-                var win = $("#NoteDialog").data("kendoWindow");
-                win.center();
-                win.refresh({
-                    url: '@Url.Action("NoteDialog", "Jobs")',
+                    checkEditJob(data);
+                }
+            });
+
+            $("#btnDelete").kendoButton({
+                icon: "close",
+                click: function (e) {
+                    console.log("delete");
+                }
+            });
+
+            $("#btnAddNote").kendoButton({
+                icon: "plus",
+                click: function (e) {
+                    var win = $("#NoteDialog").data("kendoWindow");
+                    win.center();
+                    win.refresh({
+                        url: '@Url.Action("NoteDialog", "Jobs")',
                     data: {},
                     type: 'POST'
                 });
@@ -60,83 +105,83 @@
                 win.open();
             }
         });*@
-        
-        //$("#btnDeleteNote").kendoButton({
-        //    icon: "close",
-        //    click: function (e) {
-        //        console.log("delete");
-        //    }
-        //});
 
-        $("#btnAddAttachment").kendoButton({
-            icon: "plus",
-            click: function (e) {
-                var win = $("#AttachmentDialog").data("kendoWindow");
-                win.center();
-                win.refresh({
-                    url: "@Url.Action("AttachmentDialog", "Jobs")",
-                     data: {},
-                     type: 'POST'
-                 });
+            //$("#btnDeleteNote").kendoButton({
+            //    icon: "close",
+            //    click: function (e) {
+            //        console.log("delete");
+            //    }
+            //});
+
+            $("#btnAddAttachment").kendoButton({
+                icon: "plus",
+                click: function (e) {
+                    var win = $("#AttachmentDialog").data("kendoWindow");
+                    win.center();
+                    win.refresh({
+                        url: "@Url.Action("AttachmentDialog", "Jobs")",
+                    data: {},
+                    type: 'POST'
+                });
                 win.open();
             }
         });
 
-        $("#btnDeleteHistory").kendoButton({
-            icon: "close",
-            click: function (e) {
-                console.log("delete");
-            }
-        });
-
-        $("#tabstrip").kendoTabStrip({
-            tabPosition: "top",
-            animation: {
-                open: {
-                    effects: "fadeIn"
+            $("#btnDeleteHistory").kendoButton({
+                icon: "close",
+                click: function (e) {
+                    console.log("delete");
                 }
-            }
+            });
+
+            $("#tabstrip").kendoTabStrip({
+                tabPosition: "top",
+                animation: {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                }
+            });
+
+            $("#jobDialog").kendoWindow({
+                iframe: false,
+                modal: true,
+                height: 600,
+                width: 900,
+                title: "Cập nhật thông tin hồ sơ",
+                visible: false
+            }).data("kendoWindow");
+
+            $("#NoteDialog").kendoWindow({
+                iframe: false,
+                modal: true,
+                height: 530,
+                width: 800,
+                title: "Cập nhật ghi chú",
+                visible: false
+            }).data("kendoWindow");
+
+            $("#AttachmentDialog").kendoWindow({
+                iframe: false,
+                modal: true,
+                height: 350,
+                width: 500,
+                title: "Đính kèm tập tin",
+                visible: false
+            }).data("kendoWindow");
+
+            $("#UpdateAttachmentDialog").kendoWindow({
+                iframe: false,
+                modal: true,
+                height: 350,
+                width: 500,
+                title: "Cập nhật thông tin đính kèm",
+                visible: false
+            }).data("kendoWindow");
         });
 
-        $("#jobDialog").kendoWindow({
-            iframe: false,
-            modal: true,
-            height: 600,
-            width: 900,
-            title: "Cập nhật thông tin hồ sơ",
-            visible: false
-        }).data("kendoWindow");
+    </script>
 
-        $("#NoteDialog").kendoWindow({
-            iframe: false,
-            modal: true,
-            height: 530,
-            width: 800,
-            title: "Cập nhật ghi chú",
-            visible: false
-        }).data("kendoWindow");
-
-        $("#AttachmentDialog").kendoWindow({
-            iframe: false,
-            modal: true,
-            height: 350,
-            width: 500,
-            title: "Đính kèm tập tin",
-            visible: false
-        }).data("kendoWindow");
-
-        $("#UpdateAttachmentDialog").kendoWindow({
-            iframe: false,
-            modal: true,
-            height: 350,
-            width: 500,
-            title: "Cập nhật thông tin đính kèm",
-            visible: false
-        }).data("kendoWindow");
-    });
-
-</script>
-    
 }
 
 <div id="View">
@@ -152,7 +197,7 @@
             <div class="content-wrapper">
                 <div class="toolbar">
                     <button id="btnEdit" title="Cập nhật" type="button"></button>
-                    <button id="btnDelete" style="visibility:hidden" title="Xóa" type="button"></button>
+                    <button id="btnDelete" style="visibility: hidden" title="Xóa" type="button"></button>
                 </div>
                 <div class="title-info">
                     <span>Thông tin mặc định</span>
@@ -161,7 +206,7 @@
                     @Html.Partial("JobViewPartial")
                 </div>
             </div>
-                
+
             <div class="content-wrapper">
                 <div class="toolbar">
                     <button id="btnAddNote" title="Thêm mới ghi chú" type="button"></button>
@@ -213,7 +258,7 @@
                         </div>
                     </div>
                     <div class="content-column">
-                        
+
                         <div class="content-row">
                             <div class="display-label">
                                 @Html.DisplayNameFor(model => model.LastModifyDate)
@@ -240,6 +285,7 @@
 @Html.Hidden("JobAPK", Model.APK)
 @Html.Hidden("jobDialogUrl", Url.Action("JobDialog", "Jobs"))
 @Html.Hidden("checkEditNoteUrl", Url.Action("CheckEditNote", "Jobs"))
+@Html.Hidden("checkEditJobUrl", Url.Action("CheckEdit", "Jobs"))
 <div id="jobDialog">
     @*@{
         Html.RenderPartial("JobDialog");

@@ -191,10 +191,10 @@ var jobs = new function () {
             }
         };
 
-        function checkEditJob(data, func) {
+        function checkDeleteJob(data, func) {
             $.ajax({
                 type: 'POST',
-                url: $('#checkEditJobUrl').val(),
+                url: $('#checkDeleteJobUrl').val(),
                 data: JSON.stringify(data),
                 contentType: 'application/json; charset=utf-8',
                 success: function (dataResult) {
@@ -240,7 +240,7 @@ var jobs = new function () {
             jobConfirmWindow.open().center();
 
             $("#yesButton").click(function () {
-                checkEditJob(data);
+                checkDeleteJob(data);
             });
 
             $("#noButton").click(function () {

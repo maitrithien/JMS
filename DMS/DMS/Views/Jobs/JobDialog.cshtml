@@ -1,5 +1,9 @@
 ﻿@model DMS.Models.JobModels
 
+@{
+    bool isReadonly = false; // (User.Identity.Name.Equals(Model.Confirmer));
+}
+
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-update-job" }))
 {
     @Html.ValidationSummary(true)

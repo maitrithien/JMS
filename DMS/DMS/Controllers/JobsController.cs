@@ -271,6 +271,7 @@ namespace DMS.Controllers
                        && (x.Rate == (string.IsNullOrEmpty(item.RateFilter) ? x.Rate : item.RateFilter) || x.Rate == null)
                        && x.Complex == (string.IsNullOrEmpty(item.ComplexFilter) ? x.Complex : item.ComplexFilter)
                        && x.DepartmentID.Contains(string.IsNullOrEmpty(item.DepartmentIDFilter) ? x.DepartmentID : item.DepartmentIDFilter)
+                       && x.Status != "2" && x.Status != "9"
                    ) && (
                        x.CreatedUserID == User.Identity.Name
                        || x.Poster == User.Identity.Name
@@ -303,13 +304,15 @@ namespace DMS.Controllers
             {
                 lst = _EntityModel.Jobs.Where(x =>
                    (
-                       x.CreatedUserID == User.Identity.Name
-                       || x.Poster == User.Identity.Name
-                       || (x.Confirmer == User.Identity.Name && x.StatusConfirm != "1")
-                       || (
-                                x.Recipient == User.Identity.Name
-                                && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
-                                && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
+                       x.Status != "2" && x.Status != "9"
+                       && (x.CreatedUserID == User.Identity.Name
+                           || x.Poster == User.Identity.Name
+                           || (x.Confirmer == User.Identity.Name && x.StatusConfirm != "1")
+                           || (
+                                    x.Recipient == User.Identity.Name
+                                    && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
+                                    && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
+                              )
                           )
                    )
                    ).Select(x => new JobModels()
@@ -625,7 +628,7 @@ namespace DMS.Controllers
             return Json(lst, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult CheckEdit(JobModels model)
+        public ActionResult CheckDelete(JobModels model)
         {
             var item = model ?? new JobModels();
 
@@ -644,6 +647,29 @@ namespace DMS.Controllers
                 else
                 {
                     message = string.Format("Bạn không có quyền xóa hồ sơ {0}", finder.JobID);
+                }
+            }
+
+            return Json(new { result = allowEdit, message = message });
+        }
+
+        public ActionResult CheckEdit(JobModels model)
+        {
+            var item = model ?? new JobModels();
+
+            bool allowEdit = true;
+            string message = string.Empty;
+
+            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
+            if (finder != null)
+            {
+                if (finder.Status == "2")
+                {
+                    if (!User.Identity.Name.Equals(finder.Recipient))
+                    {
+                        allowEdit = false;
+                        message = string.Format("Hồ sơ {0} đã hoàn tất. Bạn không có quyền sửa hồ sơ này.", finder.JobID);
+                    }
                 }
             }
 
@@ -800,6 +826,7 @@ namespace DMS.Controllers
             item.Status = "0";
             item.Complex = "1";
             item.Priority = "1";
+            item.Deadline = DateTime.Now.Date;
 
             var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
             if (finder != null)
