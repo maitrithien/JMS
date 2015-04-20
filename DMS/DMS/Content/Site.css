@@ -26,6 +26,13 @@ body {
     padding: 0;
 }
 
+	body#login-main-page
+	{
+		background-color:#efeeef;
+		background-image: url(images/bg.png);
+		background-size: cover;
+	}
+
 a {
     color: #333;
     outline: none;

@@ -25,12 +25,10 @@
         <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
         
     </head>
-    <body style="background-color:#efeeef;">
+    <body id="login-main-page" />
         <div id="body" style="background-color:#efeeef;">
             @RenderSection("featured", required: false)
-            <section class="content-wrapper main-content clear-fix">
-                @RenderBody()
-            </section>
+            @RenderBody()
         </div>
         @RenderSection("scripts", required: false)
     </body>

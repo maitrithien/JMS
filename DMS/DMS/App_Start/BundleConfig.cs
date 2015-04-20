@@ -26,7 +26,8 @@ namespace DMS
                 "~/Script/jszip.js",
                 "~/Script/kendo.all.min.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css",
+            bundles.Add(new StyleBundle("~/Content/css").Include(
+                "~/Content/site.css",
                 "~/Content/controls.css"));
 
             bundles.Add(new StyleBundle("~/Content/kendoUI").Include("~/Content/kendoUI/kendo.*"));

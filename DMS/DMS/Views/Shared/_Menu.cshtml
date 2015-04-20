@@ -1,0 +1,56 @@
+﻿<script>
+    angular.module("KendoMenu", ["kendo.directives"])
+      .controller("main-menu", function ($scope) {
+          $scope.menuOrientation = "horizontal";
+      })
+</script>
+<div id="context-menu" ng-app="KendoMenu">
+    <div class="menu-section k-content" ng-controller="main-menu">
+        <div class="box-col">
+              <ul kendo-menu style="display: inline-block; min-width: 150px; border: none !important;"
+                k-orientation="menuOrientation"
+                k-rebind="menuOrientation">
+                <li> Danh mục
+                    <ul>
+                        <li>Phòng ban</li>
+                        <li>Chức vụ</li>
+                        <li>Nhân viên</li>
+                    </ul>
+                </li>
+                <li> Nghiệp vụ
+                    <ul>
+                        <li>@Html.ActionLink("Hồ sơ cá nhân", "Index", "Jobs")</li>
+                        <li>@Html.ActionLink("Hồ sơ từ nhân viên", "JobsEmployee", "Jobs")</li>
+                        <li>@Html.ActionLink("Hồ sơ đã nhận", "JobsReceived", "Jobs")</li>
+                        <li>@Html.ActionLink("Hồ sơ đã gửi", "JobsSent", "Jobs")</li>
+                        <li>@Html.ActionLink("Hồ sơ quá hạn", "JobsOverdue", "Jobs")</li>
+                    </ul>
+                </li>
+                <li> Hệ thống
+                    <ul>
+                        <li>Tài khoản người dùng</li>
+                    </ul>
+                </li>
+                <li> Báo cáo
+                    <ul>
+                      <li>Footwear</li>
+                      <li>Leisure Clothing</li>
+                    </ul>
+                </li>
+        </div>
+    </div>
+    <style>
+        .k-menu .k-item, .k-widget.k-menu-horizontal > .k-item
+        {
+            border:none !important;
+        }
+        .menu-section {
+            padding:0 20px;
+        }
+        .menu-section .box-col li {
+            margin: 0;
+            border: none;
+        }
+    </style>
+</div>
+
