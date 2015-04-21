@@ -28,42 +28,24 @@ namespace DMS.Controllers
 
         #region ---- Jobs ----
 
+        /// <summary>
+        /// Counter
+        /// </summary>
+        /// <returns></returns>
         public ActionResult CountJobEmps()
         {
-            int countP = _EntityModel.Jobs.Where(x =>
-                x.CreatedUserID == User.Identity.Name
-                || x.Poster == _EmployeeID 
-                || x.Confirmer == _EmployeeID 
-                || x.Recipient == _EmployeeID).Count();
-
-            int countE = _EntityModel.Jobs.Where(x => 
-                x.Poster == _EmployeeID 
-                || x.Confirmer == _EmployeeID 
-                || x.Recipient == _EmployeeID).Count();
+            // Đếm số lượng hồ sơ (Notify menu)
+            var counter = _EntityModel.GetCounterJobs(User.Identity.Name).FirstOrDefault();
 
             return Json(new
             {
-                countE = string.Format("{0:00}", countE),
-                countS = string.Format("{0:00}", 100),
-                countR = string.Format("{0:00}", 3),
-                countP = string.Format("{0:00}", 6),
-                countO = string.Format("{0:00}", 0)
+                countE = string.Format("{0:00}", counter.CountE ?? 0),
+                countS = string.Format("{0:00}", counter.CountS ?? 0),
+                countR = string.Format("{0:00}", counter.CountR ?? 0),
+                countP = string.Format("{0:00}", counter.CountP ?? 0),
+                countO = string.Format("{0:00}", counter.CountS ?? 0)
             });
         }
-
-        #endregion ---- Jobs ----
-
-        #region ---- Attachments ----
-
-        #endregion ---- Attachments ----
-
-        #region ---- Notes ----
-
-        #endregion ---- Notes ----
-
-        #region ---- Histories ----
-
-        #endregion ---- Histories ----
 
         [Authorize]
         public ActionResult Index()
@@ -108,599 +90,274 @@ namespace DMS.Controllers
             return View();
         }
 
-        public JsonResult JobsGridReceived(JobModels model)
+        public JsonResult GridReceived(JobModels model)
         {
             var item = model ?? new JobModels();
 
             List<JobModels> lst = new List<JobModels>();
 
-            if (model.IsFilter == 1)
+            #region --- Load data ----
+
+            var result = _EntityModel.GetJobs(model.IsFilter,
+                model.JobIDFilter, model.JobNameFilter, model.StatusFilter, model.PosterFilter,
+                model.RecipientFilter, model.ConfirmerFilter, model.DeadlineFilter, model.PriorityFilter,
+                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, JobModels.JOBS_R_TYPE).ToList();
+
+            if (result != null && result.Count() > 0)
             {
-                lst = _EntityModel.Jobs.Where(x =>
-                   (
-                       x.JobID.Contains(string.IsNullOrEmpty(item.JobIDFilter) ? x.JobID : item.JobIDFilter)
-                       && x.JobName.Contains(string.IsNullOrEmpty(item.JobNameFilter) ? x.JobName : item.JobNameFilter)
-                       && x.Status == (string.IsNullOrEmpty(item.StatusFilter) ? x.Status : item.StatusFilter)
-                       && x.Poster.Contains(string.IsNullOrEmpty(item.PosterFilter) ? x.Poster : item.PosterFilter)
-                       && x.Recipient.Contains(string.IsNullOrEmpty(item.RecipientFilter) ? x.Recipient : item.RecipientFilter)
-                       && x.Confirmer.Contains(string.IsNullOrEmpty(item.ConfirmerFilter) ? x.Confirmer : item.ConfirmerFilter)
-                       && x.Deadline == (item.DeadlineFilter == null ? x.Deadline : item.DeadlineFilter)
-                       && x.Priority == (string.IsNullOrEmpty(item.PriorityFilter) ? x.Priority : item.PriorityFilter)
-                       && (x.Rate == (string.IsNullOrEmpty(item.RateFilter) ? x.Rate : item.RateFilter) || x.Rate == null)
-                       && x.Complex == (string.IsNullOrEmpty(item.ComplexFilter) ? x.Complex : item.ComplexFilter)
-                       && x.DepartmentID.Contains(string.IsNullOrEmpty(item.DepartmentIDFilter) ? x.DepartmentID : item.DepartmentIDFilter)
-                   ) && (
-                       x.Confirmer == _EmployeeID
-                       || (
-                            x.Recipient == _EmployeeID
-                            && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
-                            && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
-                          )
-                   )).Select(x => new JobModels()
-                   {
-                       APK = x.APK,
-                       JobID = x.JobID,
-                       JobName = x.JobName,
-                       Poster = x.Poster,
-                       Recipient = x.Recipient,
-                       Confirmer = x.Confirmer,
-                       Deadline = x.Deadline,
-                       Status = x.Status,
-                       Rate = x.Rate,
-                       Complex = x.Complex,
-                       Priority = x.Priority,
-                       DepartmentID = x.DepartmentID,
-                       CreatedUserID = x.CreatedUserID,
-                       LastModifyUserID = x.LastModifyUserID
-                   }).ToList() ?? new List<JobModels>();
-            }
-            else
-            {
-                lst = _EntityModel.Jobs.Where(x =>
-                   (
-                       x.Confirmer == _EmployeeID
-                       || (
-                                x.Recipient == _EmployeeID
-                                && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
-                                && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
-                          )
-                   )).Select(x => new JobModels()
-                   {
-                       APK = x.APK,
-                       JobID = x.JobID,
-                       JobName = x.JobName,
-                       Poster = x.Poster,
-                       Recipient = x.Recipient,
-                       Confirmer = x.Confirmer,
-                       Deadline = x.Deadline,
-                       Status = x.Status,
-                       Rate = x.Rate,
-                       Complex = x.Complex,
-                       Priority = x.Priority,
-                       DepartmentID = x.DepartmentID,
-                       CreatedUserID = x.CreatedUserID,
-                       LastModifyUserID = x.LastModifyUserID
-                   }).ToList() ?? new List<JobModels>();
+                lst = result.Select(x => new JobModels()
+                {
+                    APK = x.APK,
+                    Complex = x.Complex,
+                    ComplexName = x.ComplexName,
+                    Confirmer = x.Confirmer,
+                    ConfirmerName = x.ConfirmerName,
+                    CreatedDate = x.CreatedDate,
+                    CreatedUserID = x.CreatedUserID,
+                    Deadline = x.Deadline,
+                    DepartmentID = x.DepartmentID,
+                    DepartmentName = x.DepartmentName,
+                    JobID = x.JobID,
+                    JobName = x.JobName,
+                    LastModifyDate = x.LastModifyDate,
+                    LastModifyUserID = x.LastModifyUserID,
+                    Note = x.Note,
+                    OverDeadlineNumber = (double)(x.OverDeadlineNumber ?? 0),
+                    Poster = x.Poster,
+                    PosterName = x.PosterName,
+                    Priority = x.Priority,
+                    PriorityName = x.PriorityName,
+                    Rate = x.Rate,
+                    RateComment = x.RateComment,
+                    RateName = x.RateName,
+                    Recipient = x.Recipient,
+                    RecipientName = x.RecipientName,
+                    Status = x.Status,
+                    StatusConfirm = x.StatusConfirm,
+                    StatusConfirmName = x.StatusConfirmName,
+                    StatusName = x.StatusName
+                }).ToList();
             }
 
-            if (lst.Count > 0)
-            {
-                foreach (JobModels job in lst)
-                {
-                    job.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
-                                s.CodeID == job.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
-                    job.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.Rate && s.CodeGroupID == JobModels.RATE_CODE) ?? new Code()).CodeName;
-                    job.PriorityName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.Priority && s.CodeGroupID == JobModels.PRIORITY_CODE) ?? new Code()).CodeName;
-                    job.StatusConfirmName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.StatusConfirm && s.CodeGroupID == JobModels.STATUS_CONFIRM_CODE) ?? new Code()).CodeName;
-                    job.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
-                    job.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Poster) ?? new Employee()).FullName;
-                    job.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Recipient) ?? new Employee()).FullName;
-                    job.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Confirmer) ?? new Employee()).FullName;
-                    job.CreatedUserName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.CreatedUserID) ?? new Employee()).FullName;
-                    job.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == job.DepartmentID) ?? new Department()).DepartmentName;
-                }
-            }
+            #endregion --- Load data ----
 
             return Json(lst, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult JobsGridSent(JobModels model)
+        public JsonResult GridSent(JobModels model)
         {
             var item = model ?? new JobModels();
 
             List<JobModels> lst = new List<JobModels>();
 
-            if (model.IsFilter == 1)
+            #region --- Load data ----
+
+            List<GetJobs_Result> result = _EntityModel.GetJobs(model.IsFilter,
+                model.JobIDFilter, model.JobNameFilter, model.StatusFilter, model.PosterFilter,
+                model.RecipientFilter, model.ConfirmerFilter, model.DeadlineFilter, model.PriorityFilter,
+                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, JobModels.JOBS_S_TYPE).ToList();
+
+            if (result != null && result.Count() > 0)
             {
-                lst = _EntityModel.Jobs.Where(x =>
-                   (
-                       x.JobID.Contains(string.IsNullOrEmpty(item.JobIDFilter) ? x.JobID : item.JobIDFilter)
-                       && x.JobName.Contains(string.IsNullOrEmpty(item.JobNameFilter) ? x.JobName : item.JobNameFilter)
-                       && x.Status == (string.IsNullOrEmpty(item.StatusFilter) ? x.Status : item.StatusFilter)
-                       && x.Poster.Contains(string.IsNullOrEmpty(item.PosterFilter) ? x.Poster : item.PosterFilter)
-                       && x.Recipient.Contains(string.IsNullOrEmpty(item.RecipientFilter) ? x.Recipient : item.RecipientFilter)
-                       && x.Confirmer.Contains(string.IsNullOrEmpty(item.ConfirmerFilter) ? x.Confirmer : item.ConfirmerFilter)
-                       && x.Deadline == (item.DeadlineFilter == null ? x.Deadline : item.DeadlineFilter)
-                       && x.Priority == (string.IsNullOrEmpty(item.PriorityFilter) ? x.Priority : item.PriorityFilter)
-                       && (x.Rate == (string.IsNullOrEmpty(item.RateFilter) ? x.Rate : item.RateFilter) || x.Rate == null)
-                       && x.Complex == (string.IsNullOrEmpty(item.ComplexFilter) ? x.Complex : item.ComplexFilter)
-                       && x.DepartmentID.Contains(string.IsNullOrEmpty(item.DepartmentIDFilter) ? x.DepartmentID : item.DepartmentIDFilter)
-                   ) && (
-                       x.CreatedUserID == _EmployeeID
-                       || x.Poster == _EmployeeID
-                   )).Select(x => new JobModels()
-                   {
-                       APK = x.APK,
-                       JobID = x.JobID,
-                       JobName = x.JobName,
-                       Poster = x.Poster,
-                       Recipient = x.Recipient,
-                       Confirmer = x.Confirmer,
-                       Deadline = x.Deadline,
-                       Status = x.Status,
-                       Rate = x.Rate,
-                       Complex = x.Complex,
-                       Priority = x.Priority,
-                       DepartmentID = x.DepartmentID,
-                       CreatedUserID = x.CreatedUserID,
-                       LastModifyUserID = x.LastModifyUserID
-                   }).ToList() ?? new List<JobModels>();
-            }
-            else
-            {
-                lst = _EntityModel.Jobs.Where(x =>
-                   (
-                       x.CreatedUserID == _EmployeeID
-                       || x.Poster == _EmployeeID
-                   )).Select(x => new JobModels()
-                   {
-                       APK = x.APK,
-                       JobID = x.JobID,
-                       JobName = x.JobName,
-                       Poster = x.Poster,
-                       Recipient = x.Recipient,
-                       Confirmer = x.Confirmer,
-                       Deadline = x.Deadline,
-                       Status = x.Status,
-                       Rate = x.Rate,
-                       Complex = x.Complex,
-                       Priority = x.Priority,
-                       DepartmentID = x.DepartmentID,
-                       CreatedUserID = x.CreatedUserID,
-                       LastModifyUserID = x.LastModifyUserID
-                   }).ToList() ?? new List<JobModels>();
+                lst = result.Select(x => new JobModels()
+                {
+                    APK = x.APK,
+                    Complex = x.Complex,
+                    ComplexName = x.ComplexName,
+                    Confirmer = x.Confirmer,
+                    ConfirmerName = x.ConfirmerName,
+                    CreatedDate = x.CreatedDate,
+                    CreatedUserID = x.CreatedUserID,
+                    Deadline = x.Deadline,
+                    DepartmentID = x.DepartmentID,
+                    DepartmentName = x.DepartmentName,
+                    JobID = x.JobID,
+                    JobName = x.JobName,
+                    LastModifyDate = x.LastModifyDate,
+                    LastModifyUserID = x.LastModifyUserID,
+                    Note = x.Note,
+                    OverDeadlineNumber = (double)(x.OverDeadlineNumber ?? 0),
+                    Poster = x.Poster,
+                    PosterName = x.PosterName,
+                    Priority = x.Priority,
+                    PriorityName = x.PriorityName,
+                    Rate = x.Rate,
+                    RateComment = x.RateComment,
+                    RateName = x.RateName,
+                    Recipient = x.Recipient,
+                    RecipientName = x.RecipientName,
+                    Status = x.Status,
+                    StatusConfirm = x.StatusConfirm,
+                    StatusConfirmName = x.StatusConfirmName,
+                    StatusName = x.StatusName
+                }).ToList();
             }
 
-            if (lst.Count > 0)
-            {
-                foreach (JobModels job in lst)
-                {
-                    job.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
-                                s.CodeID == job.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
-                    job.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.Rate && s.CodeGroupID == JobModels.RATE_CODE) ?? new Code()).CodeName;
-                    job.PriorityName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.Priority && s.CodeGroupID == JobModels.PRIORITY_CODE) ?? new Code()).CodeName;
-                    job.StatusConfirmName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.StatusConfirm && s.CodeGroupID == JobModels.STATUS_CONFIRM_CODE) ?? new Code()).CodeName;
-                    job.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
-                    job.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Poster) ?? new Employee()).FullName;
-                    job.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Recipient) ?? new Employee()).FullName;
-                    job.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Confirmer) ?? new Employee()).FullName;
-                    job.CreatedUserName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.CreatedUserID) ?? new Employee()).FullName;
-                    job.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == job.DepartmentID) ?? new Department()).DepartmentName;
-                }
-            }
+            #endregion --- Load data ----
 
             return Json(lst, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult JobsGridOverdue(JobModels model)
+        public JsonResult GridOverdue(JobModels model)
         {
             var item = model ?? new JobModels();
 
             List<JobModels> lst = new List<JobModels>();
 
-            if (model.IsFilter == 1)
-            {
-                lst = _EntityModel.Jobs.Where(x =>
-                   (
-                       x.JobID.Contains(string.IsNullOrEmpty(item.JobIDFilter) ? x.JobID : item.JobIDFilter)
-                       && x.JobName.Contains(string.IsNullOrEmpty(item.JobNameFilter) ? x.JobName : item.JobNameFilter)
-                       && x.Status == (string.IsNullOrEmpty(item.StatusFilter) ? x.Status : item.StatusFilter)
-                       && x.Poster.Contains(string.IsNullOrEmpty(item.PosterFilter) ? x.Poster : item.PosterFilter)
-                       && x.Recipient.Contains(string.IsNullOrEmpty(item.RecipientFilter) ? x.Recipient : item.RecipientFilter)
-                       && x.Confirmer.Contains(string.IsNullOrEmpty(item.ConfirmerFilter) ? x.Confirmer : item.ConfirmerFilter)
-                       && x.Deadline == (item.DeadlineFilter == null ? x.Deadline : item.DeadlineFilter)
-                       && x.Priority == (string.IsNullOrEmpty(item.PriorityFilter) ? x.Priority : item.PriorityFilter)
-                       && (x.Rate == (string.IsNullOrEmpty(item.RateFilter) ? x.Rate : item.RateFilter) || x.Rate == null)
-                       && x.Complex == (string.IsNullOrEmpty(item.ComplexFilter) ? x.Complex : item.ComplexFilter)
-                       && x.DepartmentID.Contains(string.IsNullOrEmpty(item.DepartmentIDFilter) ? x.DepartmentID : item.DepartmentIDFilter)
-                       //&& x.Status != "2" && x.Status != "9"
-                   ) && (
-                       x.CreatedUserID == _EmployeeID
-                       || x.Poster == _EmployeeID
-                       || (x.Confirmer == _EmployeeID && x.StatusConfirm != "1")
-                       || (
-                            x.Recipient == _EmployeeID
-                            && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
-                            && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
-                          )
-                        )
-                   ).Select(x => new JobModels()
-                   {
-                       APK = x.APK,
-                       JobID = x.JobID,
-                       JobName = x.JobName,
-                       Poster = x.Poster,
-                       Recipient = x.Recipient,
-                       Confirmer = x.Confirmer,
-                       Deadline = x.Deadline,
-                       Status = x.Status,
-                       Rate = x.Rate,
-                       Complex = x.Complex,
-                       Priority = x.Priority,
-                       DepartmentID = x.DepartmentID,
-                       CreatedUserID = x.CreatedUserID,
-                       LastModifyUserID = x.LastModifyUserID
-                   }).ToList() ?? new List<JobModels>();
-            }
-            else
-            {
-                lst = _EntityModel.Jobs.Where(x =>
-                   (
-                       //x.Status != "2" && x.Status != "9" &&
-                       (x.CreatedUserID == _EmployeeID
-                        || x.Poster == _EmployeeID
-                        || (x.Confirmer == _EmployeeID && x.StatusConfirm != "1")
-                        || (
-                                x.Recipient == _EmployeeID
-                                && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
-                                && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
-                            )
-                        )
-                   )
-                   ).Select(x => new JobModels()
-                   {
-                       APK = x.APK,
-                       JobID = x.JobID,
-                       JobName = x.JobName,
-                       Poster = x.Poster,
-                       Recipient = x.Recipient,
-                       Confirmer = x.Confirmer,
-                       Deadline = x.Deadline,
-                       Status = x.Status,
-                       Rate = x.Rate,
-                       Complex = x.Complex,
-                       Priority = x.Priority,
-                       DepartmentID = x.DepartmentID,
-                       CreatedUserID = x.CreatedUserID,
-                       LastModifyUserID = x.LastModifyUserID
-                   }).ToList() ?? new List<JobModels>();
-            }
+            #region --- Load data ----
 
-            List<JobModels> overList = new List<JobModels>();
+            var result = _EntityModel.GetJobs(model.IsFilter,
+                model.JobIDFilter, model.JobNameFilter, model.StatusFilter, model.PosterFilter,
+                model.RecipientFilter, model.ConfirmerFilter, model.DeadlineFilter, model.PriorityFilter,
+                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, JobModels.JOBS_O_TYPE).ToList();
 
-            if (lst.Count > 0)
+            if (result != null && result.Count() > 0)
             {
-                foreach (JobModels job in lst)
+                lst = result.Select(x => new JobModels()
                 {
-                    if (Math.Round((DateTime.Now.Date - (job.Deadline ?? DateTime.Now).Date).TotalDays, 0) > 0)
-                    {
-                        job.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
-                                    s.CodeID == job.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
-                        job.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
-                            s.CodeID == job.Rate && s.CodeGroupID == JobModels.RATE_CODE) ?? new Code()).CodeName;
-                        job.PriorityName = (_EntityModel.Codes.FirstOrDefault(s =>
-                            s.CodeID == job.Priority && s.CodeGroupID == JobModels.PRIORITY_CODE) ?? new Code()).CodeName;
-                        job.StatusConfirmName = (_EntityModel.Codes.FirstOrDefault(s =>
-                            s.CodeID == job.StatusConfirm && s.CodeGroupID == JobModels.STATUS_CONFIRM_CODE) ?? new Code()).CodeName;
-                        job.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
-                            s.CodeID == job.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
-                        job.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Poster) ?? new Employee()).FullName;
-                        job.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Recipient) ?? new Employee()).FullName;
-                        job.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Confirmer) ?? new Employee()).FullName;
-                        job.CreatedUserName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.CreatedUserID) ?? new Employee()).FullName;
-                        job.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == job.DepartmentID) ?? new Department()).DepartmentName;
-                        job.OverDeadlineNumber = Math.Round((DateTime.Now.Date - (job.Deadline ?? DateTime.Now).Date).TotalDays, 0);
-
-                        overList.Add(job);
-                    }
-                }
+                    APK = x.APK,
+                    Complex = x.Complex,
+                    ComplexName = x.ComplexName,
+                    Confirmer = x.Confirmer,
+                    ConfirmerName = x.ConfirmerName,
+                    CreatedDate = x.CreatedDate,
+                    CreatedUserID = x.CreatedUserID,
+                    Deadline = x.Deadline,
+                    DepartmentID = x.DepartmentID,
+                    DepartmentName = x.DepartmentName,
+                    JobID = x.JobID,
+                    JobName = x.JobName,
+                    LastModifyDate = x.LastModifyDate,
+                    LastModifyUserID = x.LastModifyUserID,
+                    Note = x.Note,
+                    OverDeadlineNumber = (double)(x.OverDeadlineNumber ?? 0),
+                    Poster = x.Poster,
+                    PosterName = x.PosterName,
+                    Priority = x.Priority,
+                    PriorityName = x.PriorityName,
+                    Rate = x.Rate,
+                    RateComment = x.RateComment,
+                    RateName = x.RateName,
+                    Recipient = x.Recipient,
+                    RecipientName = x.RecipientName,
+                    Status = x.Status,
+                    StatusConfirm = x.StatusConfirm,
+                    StatusConfirmName = x.StatusConfirmName,
+                    StatusName = x.StatusName
+                }).ToList();
             }
 
-            return Json(overList, JsonRequestBehavior.AllowGet);
+            #endregion --- Load data ----
+
+            return Json(lst, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult JobsGrid(JobModels model)
+        public JsonResult GridPersonal(JobModels model)
         {
             var item = model ?? new JobModels();
 
             List<JobModels> lst = new List<JobModels>();
 
-            if (model.IsFilter == 1)
+            #region --- Load data ----
+
+            var result = _EntityModel.GetJobs(model.IsFilter,
+                model.JobIDFilter, model.JobNameFilter, model.StatusFilter, model.PosterFilter,
+                model.RecipientFilter, model.ConfirmerFilter, model.DeadlineFilter, model.PriorityFilter,
+                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, JobModels.JOBS_P_TYPE).ToList();
+
+            if (result != null && result.Count() > 0)
             {
-                lst = _EntityModel.Jobs.Where(x =>
-                   (
-                       x.JobID.Contains(string.IsNullOrEmpty(item.JobIDFilter) ? x.JobID : item.JobIDFilter)
-                       && x.JobName.Contains(string.IsNullOrEmpty(item.JobNameFilter) ? x.JobName : item.JobNameFilter)
-                       && x.Status == (string.IsNullOrEmpty(item.StatusFilter) ? x.Status : item.StatusFilter)
-                       && x.Poster.Contains(string.IsNullOrEmpty(item.PosterFilter) ? x.Poster : item.PosterFilter)
-                       && x.Recipient.Contains(string.IsNullOrEmpty(item.RecipientFilter) ? x.Recipient : item.RecipientFilter)
-                       && x.Confirmer.Contains(string.IsNullOrEmpty(item.ConfirmerFilter) ? x.Confirmer : item.ConfirmerFilter)
-                       && x.Deadline == (item.DeadlineFilter == null ? x.Deadline : item.DeadlineFilter)
-                       && x.Priority == (string.IsNullOrEmpty(item.PriorityFilter) ? x.Priority : item.PriorityFilter)
-                       && (x.Rate == (string.IsNullOrEmpty(item.RateFilter) ? x.Rate : item.RateFilter) || x.Rate == null)
-                       && x.Complex == (string.IsNullOrEmpty(item.ComplexFilter) ? x.Complex : item.ComplexFilter)
-                       && x.DepartmentID.Contains(string.IsNullOrEmpty(item.DepartmentIDFilter) ? x.DepartmentID : item.DepartmentIDFilter)
-                   ) && (
-                       x.CreatedUserID == _EmployeeID
-                       || x.Poster == _EmployeeID
-                       || x.Confirmer == _EmployeeID
-                       || (
-                            x.Recipient == _EmployeeID 
-                            && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
-                            && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
-                          )
-                   )).Select(x => new JobModels() { 
-                        APK = x.APK,
-                        JobID = x.JobID,
-                        JobName = x.JobName,
-                        Poster = x.Poster,
-                        Recipient = x.Recipient,
-                        Confirmer = x.Confirmer,
-                        Deadline = x.Deadline,
-                        Status = x.Status,
-                        Rate = x.Rate,
-                        Complex = x.Complex,
-                        Priority = x.Priority,
-                        DepartmentID = x.DepartmentID,
-                        CreatedUserID = x.CreatedUserID,
-                        LastModifyUserID = x.LastModifyUserID
-                   }).ToList() ?? new List<JobModels>();
-            }
-            else
-            {
-                lst = _EntityModel.Jobs.Where(x =>
-                   (
-                       x.CreatedUserID == _EmployeeID
-                       || x.Poster == _EmployeeID
-                       || x.Confirmer == _EmployeeID
-                       || (
-                                x.Recipient == _EmployeeID 
-                                && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
-                                && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
-                          )
-                   )).Select(x => new JobModels() { 
-                        APK = x.APK,
-                        JobID = x.JobID,
-                        JobName = x.JobName,
-                        Poster = x.Poster,
-                        Recipient = x.Recipient,
-                        Confirmer = x.Confirmer,
-                        Deadline = x.Deadline,
-                        Status = x.Status,
-                        Rate = x.Rate,
-                        Complex = x.Complex,
-                        Priority = x.Priority,
-                        DepartmentID = x.DepartmentID,
-                        CreatedUserID = x.CreatedUserID,
-                        LastModifyUserID = x.LastModifyUserID
-                   }).ToList() ?? new List<JobModels>();
+                lst = result.Select(x => new JobModels()
+                {
+                    APK = x.APK,
+                    Complex = x.Complex,
+                    ComplexName = x.ComplexName,
+                    Confirmer = x.Confirmer,
+                    ConfirmerName = x.ConfirmerName,
+                    CreatedDate = x.CreatedDate,
+                    CreatedUserID = x.CreatedUserID,
+                    Deadline = x.Deadline,
+                    DepartmentID = x.DepartmentID,
+                    DepartmentName = x.DepartmentName,
+                    JobID = x.JobID,
+                    JobName = x.JobName,
+                    LastModifyDate = x.LastModifyDate,
+                    LastModifyUserID = x.LastModifyUserID,
+                    Note = x.Note,
+                    OverDeadlineNumber = (double)(x.OverDeadlineNumber ?? 0),
+                    Poster = x.Poster,
+                    PosterName = x.PosterName,
+                    Priority = x.Priority,
+                    PriorityName = x.PriorityName,
+                    Rate = x.Rate,
+                    RateComment = x.RateComment,
+                    RateName = x.RateName,
+                    Recipient = x.Recipient,
+                    RecipientName = x.RecipientName,
+                    Status = x.Status,
+                    StatusConfirm = x.StatusConfirm,
+                    StatusConfirmName = x.StatusConfirmName,
+                    StatusName = x.StatusName
+                }).ToList();
             }
 
-            if (lst.Count > 0)
-            {
-                foreach (JobModels job in lst)
-                {
-                    job.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
-                                s.CodeID == job.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
-                    job.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.Rate && s.CodeGroupID == JobModels.RATE_CODE) ?? new Code()).CodeName;
-                    job.PriorityName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.Priority && s.CodeGroupID == JobModels.PRIORITY_CODE) ?? new Code()).CodeName;
-                    job.StatusConfirmName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.StatusConfirm && s.CodeGroupID == JobModels.STATUS_CONFIRM_CODE) ?? new Code()).CodeName;
-                    job.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
-                    job.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Poster) ?? new Employee()).FullName;
-                    job.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Recipient) ?? new Employee()).FullName;
-                    job.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Confirmer) ?? new Employee()).FullName;
-                    job.CreatedUserName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.CreatedUserID) ?? new Employee()).FullName;
-                    job.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == job.DepartmentID) ?? new Department()).DepartmentName;
-                }
-            }
+            #endregion --- Load data ----
 
             return Json(lst, JsonRequestBehavior.AllowGet);
         }
 
-        private List<Employee> GetEmployeeByManager()
-        {
-            List<Employee> result = new List<Employee>();
-            var emps = _EntityModel.GetEmployeeByManager(_EmployeeID);
-            if (emps != null)
-            {
-                foreach (var item in emps)
-                {
-                    result.Add(new Employee() { EmployeeID = item.EmployeeID });
-                }
-            }
-
-            return result;
-        }
-
-        public JsonResult JobsGridEmployee(JobModels model)
+        public JsonResult GridEmployee(JobModels model)
         {
             var item = model ?? new JobModels();
 
             List<JobModels> lst = new List<JobModels>();
 
-            List<Employee> emps = GetEmployeeByManager();
-            
-            if (model.IsFilter == 1)
+            #region --- Load data ----
+
+            var result = _EntityModel.GetJobs(model.IsFilter,
+                model.JobIDFilter, model.JobNameFilter, model.StatusFilter, model.PosterFilter,
+                model.RecipientFilter, model.ConfirmerFilter, model.DeadlineFilter, model.PriorityFilter,
+                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, JobModels.JOBS_E_TYPE).ToList();
+
+            if (result != null && result.Count() > 0)
             {
-                foreach (Employee em in emps)
+                lst = result.Select(x => new JobModels()
                 {
-                    #region ---- Lấy dữ liệu của từng nhân viên theo người quản lý trực tiếp ----
-                    List<JobModels> emList = _EntityModel.Jobs.Where(x =>
-                                                   (
-                                                       x.JobID.Contains(string.IsNullOrEmpty(item.JobIDFilter) ? x.JobID : item.JobIDFilter)
-                                                       && x.JobName.Contains(string.IsNullOrEmpty(item.JobNameFilter) ? x.JobName : item.JobNameFilter)
-                                                       && x.Status == (string.IsNullOrEmpty(item.StatusFilter) ? x.Status : item.StatusFilter)
-                                                       && x.Poster.Contains(string.IsNullOrEmpty(item.PosterFilter) ? x.Poster : item.PosterFilter)
-                                                       && x.Recipient.Contains(string.IsNullOrEmpty(item.RecipientFilter) ? x.Recipient : item.RecipientFilter)
-                                                       && x.Confirmer.Contains(string.IsNullOrEmpty(item.ConfirmerFilter) ? x.Confirmer : item.ConfirmerFilter)
-                                                       && x.Deadline == (item.DeadlineFilter == null ? x.Deadline : item.DeadlineFilter)
-                                                       && x.Priority == (string.IsNullOrEmpty(item.PriorityFilter) ? x.Priority : item.PriorityFilter)
-                                                       && (x.Rate == (string.IsNullOrEmpty(item.RateFilter) ? x.Rate : item.RateFilter) || x.Rate == null)
-                                                       && x.Complex == (string.IsNullOrEmpty(item.ComplexFilter) ? x.Complex : item.ComplexFilter)
-                                                       && x.DepartmentID.Contains(string.IsNullOrEmpty(item.DepartmentIDFilter) ? x.DepartmentID : item.DepartmentIDFilter)
-                                                   ) && ( x.Poster == em.EmployeeID || x.Confirmer == em.EmployeeID || x.Recipient == em.EmployeeID)
-                                                   ).Select(x => new JobModels()
-                                                                       {
-                                                                           APK = x.APK,
-                                                                           JobID = x.JobID,
-                                                                           JobName = x.JobName,
-                                                                           Poster = x.Poster,
-                                                                           Recipient = x.Recipient,
-                                                                           Confirmer = x.Confirmer,
-                                                                           Deadline = x.Deadline,
-                                                                           Status = x.Status,
-                                                                           Rate = x.Rate,
-                                                                           Complex = x.Complex,
-                                                                           Priority = x.Priority,
-                                                                           DepartmentID = x.DepartmentID,
-                                                                           CreatedUserID = x.CreatedUserID,
-                                                                           LastModifyUserID = x.LastModifyUserID
-                                                                       }).ToList() ?? new List<JobModels>();
-
-                    lst.AddRange(emList);
-
-                    #endregion ---- Lấy dữ liệu của từng nhân viên theo người quản lý trực tiếp ----
-                }
-
-            }
-            else
-            {
-                foreach (Employee em in emps)
-                {
-                    #region ---- Lấy dữ liệu của từng nhân viên theo người quản lý trực tiếp ----
-
-                    List<JobModels> emList = _EntityModel.Jobs.Where(x => (x.Poster == em.EmployeeID || x.Confirmer == em.EmployeeID || x.Recipient == em.EmployeeID))
-                                                                .Select(x => new JobModels()
-                                                                        {
-                                                                            APK = x.APK,
-                                                                            JobID = x.JobID,
-                                                                            JobName = x.JobName,
-                                                                            Poster = x.Poster,
-                                                                            Recipient = x.Recipient,
-                                                                            Confirmer = x.Confirmer,
-                                                                            Deadline = x.Deadline,
-                                                                            Status = x.Status,
-                                                                            Rate = x.Rate,
-                                                                            Complex = x.Complex,
-                                                                            Priority = x.Priority,
-                                                                            DepartmentID = x.DepartmentID,
-                                                                            CreatedUserID = x.CreatedUserID,
-                                                                            LastModifyUserID = x.LastModifyUserID
-                                                                        }).ToList() ?? new List<JobModels>();
-
-                    lst.AddRange(emList);
-
-                    #endregion ---- Lấy dữ liệu của từng nhân viên theo người quản lý trực tiếp ----
-                }
-                
+                    APK = x.APK,
+                    Complex = x.Complex,
+                    ComplexName = x.ComplexName,
+                    Confirmer = x.Confirmer,
+                    ConfirmerName = x.ConfirmerName,
+                    CreatedDate = x.CreatedDate,
+                    CreatedUserID = x.CreatedUserID,
+                    Deadline = x.Deadline,
+                    DepartmentID = x.DepartmentID,
+                    DepartmentName = x.DepartmentName,
+                    JobID = x.JobID,
+                    JobName = x.JobName,
+                    LastModifyDate = x.LastModifyDate,
+                    LastModifyUserID = x.LastModifyUserID,
+                    Note = x.Note,
+                    OverDeadlineNumber = (double)(x.OverDeadlineNumber ?? 0),
+                    Poster = x.Poster,
+                    PosterName = x.PosterName,
+                    Priority = x.Priority,
+                    PriorityName = x.PriorityName,
+                    Rate = x.Rate,
+                    RateComment = x.RateComment,
+                    RateName = x.RateName,
+                    Recipient = x.Recipient,
+                    RecipientName = x.RecipientName,
+                    Status = x.Status,
+                    StatusConfirm = x.StatusConfirm,
+                    StatusConfirmName = x.StatusConfirmName,
+                    StatusName = x.StatusName
+                }).ToList();
             }
 
-            if (lst.Count > 0)
-            {
-                foreach (JobModels job in lst)
-                {
-                    job.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
-                                s.CodeID == job.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
-                    job.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.Rate && s.CodeGroupID == JobModels.RATE_CODE) ?? new Code()).CodeName;
-                    job.PriorityName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.Priority && s.CodeGroupID == JobModels.PRIORITY_CODE) ?? new Code()).CodeName;
-                    job.StatusConfirmName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.StatusConfirm && s.CodeGroupID == JobModels.STATUS_CONFIRM_CODE) ?? new Code()).CodeName;
-                    job.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
-                        s.CodeID == job.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
-                    job.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Poster) ?? new Employee()).FullName;
-                    job.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Recipient) ?? new Employee()).FullName;
-                    job.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.Confirmer) ?? new Employee()).FullName;
-                    job.CreatedUserName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == job.CreatedUserID) ?? new Employee()).FullName;
-                    job.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == job.DepartmentID) ?? new Department()).DepartmentName;
-                }
-            }
+            #endregion --- Load data ----
 
-            List<JobModels> distinct = lst.GroupBy(x => x.APK).Select(x => x.First()).ToList();
-
-            return Json(distinct, JsonRequestBehavior.AllowGet);
-        }
-
-        public JsonResult NotesGrid(string apk)
-        {
-            Guid id = Guid.Empty;
-            if (!string.IsNullOrEmpty(apk))
-            {
-                Guid.TryParse(apk, out id);
-            }
-
-            List<Note> lst = _EntityModel.Notes.Where(x => x.JobAPK == id).ToList();
-                
             return Json(lst, JsonRequestBehavior.AllowGet);
-        }
-
-        public JsonResult AttachmentsGrid(string apk)
-        {
-            Guid id = Guid.Empty;
-            if(!string.IsNullOrEmpty(apk))
-            {
-                Guid.TryParse(apk, out id);
-            }
-
-            List<Attachment> model = _EntityModel.Attachments
-                                                .Where(x => x.JobAPK == id).ToList();
-
-            return Json(model, JsonRequestBehavior.AllowGet);
-        }
-
-        public JsonResult HistoriesGrid(JobModels model)
-        {
-            JobModels item = model ?? new JobModels();
-            List<History> lst = _EntityModel.Histories.Where(x => x.JobAPK == item.APK).ToList();
-            return Json(lst, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult CheckDelete(JobModels model)
-        {
-            var item = model ?? new JobModels();
-
-            bool allowEdit = false;
-            string message = string.Empty;
-
-            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
-            if (finder != null)
-            {
-                if (!string.IsNullOrEmpty(finder.Status) && finder.Status.Equals("0")
-                    && (_EmployeeID.Equals(finder.Poster) || _EmployeeID.Equals(finder.CreatedUserID)))
-                {
-                    // Xóa hồ sơ
-                    allowEdit = true;
-                }
-                else
-                {
-                    message = string.Format("Bạn không có quyền xóa hồ sơ {0}", finder.JobID);
-                }
-            }
-
-            return Json(new { result = allowEdit, message = message });
         }
 
         public ActionResult CheckEdit(JobModels model)
@@ -726,24 +383,25 @@ namespace DMS.Controllers
             return Json(new { result = allowEdit, message = message });
         }
 
-        public ActionResult CheckEditNote(NoteModels model)
+        public ActionResult CheckDelete(JobModels model)
         {
-            var item = model ?? new NoteModels();
+            var item = model ?? new JobModels();
 
             bool allowEdit = false;
             string message = string.Empty;
 
-            var finder = _EntityModel.Notes.FirstOrDefault(x => x.APK == item.APK);
+            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
             if (finder != null)
             {
-                if (_EmployeeID.Equals(finder.CreatedUserID))
+                if (!string.IsNullOrEmpty(finder.Status) && finder.Status.Equals("0")
+                    && (_EmployeeID.Equals(finder.Poster) || _EmployeeID.Equals(finder.CreatedUserID)))
                 {
                     // Xóa hồ sơ
                     allowEdit = true;
                 }
                 else
                 {
-                    message = string.Format("Bạn không có quyền sửa/xóa ghi chú này.");
+                    message = string.Format("Bạn không có quyền xóa hồ sơ {0}", finder.JobID);
                 }
             }
 
@@ -797,7 +455,7 @@ namespace DMS.Controllers
                         System.IO.File.Delete(physicalPath);
                     }
                 }
-                
+
             }
 
             return Json(new { result = true });
@@ -823,8 +481,8 @@ namespace DMS.Controllers
                 finder.StatusConfirm = string.IsNullOrEmpty(item.StatusConfirm) ? finder.StatusConfirm : item.StatusConfirm;
                 finder.RateComment = string.IsNullOrEmpty(item.RateComment) ? finder.RateComment : item.RateComment;
                 finder.Recipient = item.Recipient;
-                finder.Status = item.Status == "0" 
-                    ? (item.StatusConfirm == "1") 
+                finder.Status = item.Status == "0"
+                    ? (item.StatusConfirm == "1")
                         ? "1" : item.Status
                     : item.Status;
                 finder.LastModifyDate = DateTime.Now;
@@ -905,84 +563,113 @@ namespace DMS.Controllers
         }
 
         [Authorize]
-        public ActionResult NoteDialog(NoteModels model)
+        public ActionResult JobView(string id)
         {
-            NoteModels item = model ?? new NoteModels();
+            ViewData["MenuSelected"] = "Index";
 
-            var finder = _EntityModel.Notes.FirstOrDefault(x => x.APK == item.APK);
+            JobModels model = new JobModels() { APK = new Guid(id) };
+            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == model.APK);
+
             if (finder != null)
             {
-                item.Title = finder.Title;
-                item.Description = finder.Description;
-                item.CreatedDate = finder.CreatedDate;
-                item.CreatedUserID = finder.CreatedUserID;
-                item.LastModifyDate = finder.LastModifyDate;
-                item.LastModifyUserID = finder.LastModifyUserID;
+                model.Complex = finder.Complex;
+                model.Confirmer = finder.Confirmer;
+                model.CreatedDate = finder.CreatedDate;
+                model.CreatedUserID = finder.CreatedUserID;
+                model.Deadline = finder.Deadline ?? DateTime.Now;
+                model.DepartmentID = finder.DepartmentID;
+                model.JobID = finder.JobID;
+                model.JobName = finder.JobName;
+                model.LastModifyDate = finder.LastModifyDate;
+                model.LastModifyUserID = finder.LastModifyUserID;
+                model.Note = finder.Note;
+                model.Poster = finder.Poster;
+                model.Priority = finder.Priority;
+                model.Rate = finder.Rate;
+                model.Recipient = finder.Recipient;
+                model.Status = finder.Status;
+                model.StatusConfirm = finder.StatusConfirm;
+                model.RateComment = finder.RateComment;
+                model.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
+                model.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Rate && s.CodeGroupID == JobModels.RATE_CODE) ?? new Code()).CodeName;
+                model.PriorityName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Priority && s.CodeGroupID == JobModels.PRIORITY_CODE) ?? new Code()).CodeName;
+                model.StatusConfirmName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.StatusConfirm && s.CodeGroupID == JobModels.STATUS_CONFIRM_CODE) ?? new Code()).CodeName;
+                model.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
+                model.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Poster) ?? new Employee()).FullName;
+                model.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Recipient) ?? new Employee()).FullName;
+                model.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Confirmer) ?? new Employee()).FullName;
+                model.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == finder.DepartmentID) ?? new Department()).DepartmentName;
             }
 
-            return PartialView(item);
+            return View(model);
         }
 
-        /// <summary>
-        /// Save all attachments
-        /// </summary>
-        /// <param name="models"></param>
-        /// <returns></returns>
-        public ActionResult RemoveNote(NoteModels model)
+        [Authorize]
+        public ActionResult JobViewPartial(string id)
         {
-            var item = model ?? new NoteModels();
+            JobModels model = new JobModels() { APK = new Guid(id) };
 
-            var finder = _EntityModel.Notes.Where(x =>
-                    x.APK == item.APK).FirstOrDefault();
-
+            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == model.APK);
             if (finder != null)
             {
-                _EntityModel.Notes.DeleteObject(finder);
-                _EntityModel.SaveChanges();
+                model.Complex = finder.Complex;
+                model.Confirmer = finder.Confirmer;
+                model.CreatedDate = finder.CreatedDate;
+                model.CreatedUserID = finder.CreatedUserID;
+                model.Deadline = finder.Deadline ?? DateTime.Now;
+                model.DepartmentID = finder.DepartmentID;
+                model.JobID = finder.JobID;
+                model.JobName = finder.JobName;
+                model.LastModifyDate = finder.LastModifyDate;
+                model.LastModifyUserID = finder.LastModifyUserID;
+                model.Note = finder.Note;
+                model.Poster = finder.Poster;
+                model.Priority = finder.Priority;
+                model.Rate = finder.Rate;
+                model.Recipient = finder.Recipient;
+                model.Status = finder.Status;
+                model.StatusConfirm = finder.StatusConfirm;
+                model.RateComment = finder.RateComment;
+                model.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
+                model.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Rate && s.CodeGroupID == JobModels.RATE_CODE) ?? new Code()).CodeName;
+                model.PriorityName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Priority && s.CodeGroupID == JobModels.PRIORITY_CODE) ?? new Code()).CodeName;
+                model.StatusConfirmName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.StatusConfirm && s.CodeGroupID == JobModels.STATUS_CONFIRM_CODE) ?? new Code()).CodeName;
+                model.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
+                model.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Poster) ?? new Employee()).FullName;
+                model.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Recipient) ?? new Employee()).FullName;
+                model.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Confirmer) ?? new Employee()).FullName;
+                model.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == finder.DepartmentID) ?? new Department()).DepartmentName;
             }
 
-            return Json(new { result = true });
+            return PartialView(model);
         }
 
-        /// <summary>
-        /// Save all attachments
-        /// </summary>
-        /// <param name="models"></param>
-        /// <returns></returns>
-        public ActionResult UpdateNote(NoteModels model)
+        #endregion ---- Jobs ----
+
+        #region ---- Attachments ----
+
+        public JsonResult GridAttachments(string apk)
         {
-            var item = model ?? new NoteModels();
-
-            var finder = _EntityModel.Notes.Where(x =>
-                    x.APK == item.APK).FirstOrDefault();
-
-            if (finder != null)
+            Guid id = Guid.Empty;
+            if (!string.IsNullOrEmpty(apk))
             {
-                finder.Title = item.Title;
-                finder.Description = item.Description;
-                finder.LastModifyUserID = _EmployeeID;
-                finder.LastModifyDate = DateTime.Now;
-                _EntityModel.SaveChanges();
-            }
-            else
-            {
-                Note note = new Note
-                {
-                    APK = Guid.NewGuid(),
-                    JobAPK = item.JobAPK ?? Guid.Empty,
-                    Title = item.Title,
-                    Description = item.Description,
-                    LastModifyDate = DateTime.Now,
-                    LastModifyUserID = _EmployeeID,
-                    CreatedDate = DateTime.Now,
-                    CreatedUserID = _EmployeeID
-                };
-
-                _EntityModel.Notes.AddObject(note);
-                _EntityModel.SaveChanges();
+                Guid.TryParse(apk, out id);
             }
 
-            return Json(new { result = true });
+            List<Attachment> model = _EntityModel.Attachments
+                                                .Where(x => x.JobAPK == id).ToList();
+
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         [Authorize]
@@ -1037,7 +724,7 @@ namespace DMS.Controllers
 
             foreach (var item in attachments)
             {
-                var finder = _EntityModel.Attachments.Where(x => 
+                var finder = _EntityModel.Attachments.Where(x =>
                     x.AttachmentFileName == item.AttachmentFileName &&
                     x.AttachmentOwner == _EmployeeID).FirstOrDefault();
 
@@ -1130,98 +817,143 @@ namespace DMS.Controllers
             return PartialView(model);
         }
 
-        [Authorize]
-        public ActionResult JobView(string id)
-        {
-            ViewData["MenuSelected"] = "Index";
+        #endregion ---- Attachments ----
 
-            JobModels model = new JobModels() { APK = new Guid(id) };
-            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == model.APK);
-            
-            if (finder != null)
+        #region ---- Notes ----
+
+        public JsonResult GridNotes(string apk)
+        {
+            Guid id = Guid.Empty;
+            if (!string.IsNullOrEmpty(apk))
             {
-                model.Complex = finder.Complex;
-                model.Confirmer = finder.Confirmer;
-                model.CreatedDate = finder.CreatedDate;
-                model.CreatedUserID = finder.CreatedUserID;
-                model.Deadline = finder.Deadline ?? DateTime.Now;
-                model.DepartmentID = finder.DepartmentID;
-                model.JobID = finder.JobID;
-                model.JobName = finder.JobName;
-                model.LastModifyDate = finder.LastModifyDate;
-                model.LastModifyUserID = finder.LastModifyUserID;
-                model.Note = finder.Note;
-                model.Poster = finder.Poster;
-                model.Priority = finder.Priority;
-                model.Rate = finder.Rate;
-                model.Recipient = finder.Recipient;
-                model.Status = finder.Status;
-                model.StatusConfirm = finder.StatusConfirm;
-                model.RateComment = finder.RateComment;
-                model.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
-                model.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Rate && s.CodeGroupID == JobModels.RATE_CODE) ?? new Code()).CodeName;
-                model.PriorityName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Priority && s.CodeGroupID == JobModels.PRIORITY_CODE) ?? new Code()).CodeName;
-                model.StatusConfirmName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.StatusConfirm && s.CodeGroupID == JobModels.STATUS_CONFIRM_CODE) ?? new Code()).CodeName;
-                model.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
-                model.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Poster) ?? new Employee()).FullName;
-                model.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Recipient) ?? new Employee()).FullName;
-                model.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Confirmer) ?? new Employee()).FullName;
-                model.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == finder.DepartmentID) ?? new Department()).DepartmentName;
+                Guid.TryParse(apk, out id);
             }
 
-            return View(model);
+            List<Note> lst = _EntityModel.Notes.Where(x => x.JobAPK == id).ToList();
+
+            return Json(lst, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult CheckEditNote(NoteModels model)
+        {
+            var item = model ?? new NoteModels();
+
+            bool allowEdit = false;
+            string message = string.Empty;
+
+            var finder = _EntityModel.Notes.FirstOrDefault(x => x.APK == item.APK);
+            if (finder != null)
+            {
+                if (_EmployeeID.Equals(finder.CreatedUserID))
+                {
+                    // Xóa hồ sơ
+                    allowEdit = true;
+                }
+                else
+                {
+                    message = string.Format("Bạn không có quyền sửa/xóa ghi chú này.");
+                }
+            }
+
+            return Json(new { result = allowEdit, message = message });
         }
 
         [Authorize]
-        public ActionResult JobViewPartial(string id)
+        public ActionResult NoteDialog(NoteModels model)
         {
-            JobModels model = new JobModels() { APK = new Guid(id) };
+            NoteModels item = model ?? new NoteModels();
 
-            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == model.APK);
+            var finder = _EntityModel.Notes.FirstOrDefault(x => x.APK == item.APK);
             if (finder != null)
             {
-                model.Complex = finder.Complex;
-                model.Confirmer = finder.Confirmer;
-                model.CreatedDate = finder.CreatedDate;
-                model.CreatedUserID = finder.CreatedUserID;
-                model.Deadline = finder.Deadline ?? DateTime.Now;
-                model.DepartmentID = finder.DepartmentID;
-                model.JobID = finder.JobID;
-                model.JobName = finder.JobName;
-                model.LastModifyDate = finder.LastModifyDate;
-                model.LastModifyUserID = finder.LastModifyUserID;
-                model.Note = finder.Note;
-                model.Poster = finder.Poster;
-                model.Priority = finder.Priority;
-                model.Rate = finder.Rate;
-                model.Recipient = finder.Recipient;
-                model.Status = finder.Status;
-                model.StatusConfirm = finder.StatusConfirm;
-                model.RateComment = finder.RateComment;
-                model.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
-                model.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Rate && s.CodeGroupID == JobModels.RATE_CODE) ?? new Code()).CodeName;
-                model.PriorityName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Priority && s.CodeGroupID == JobModels.PRIORITY_CODE) ?? new Code()).CodeName;
-                model.StatusConfirmName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.StatusConfirm && s.CodeGroupID == JobModels.STATUS_CONFIRM_CODE) ?? new Code()).CodeName;
-                model.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
-                model.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Poster) ?? new Employee()).FullName;
-                model.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Recipient) ?? new Employee()).FullName;
-                model.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Confirmer) ?? new Employee()).FullName;
-                model.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == finder.DepartmentID) ?? new Department()).DepartmentName;
+                item.Title = finder.Title;
+                item.Description = finder.Description;
+                item.CreatedDate = finder.CreatedDate;
+                item.CreatedUserID = finder.CreatedUserID;
+                item.LastModifyDate = finder.LastModifyDate;
+                item.LastModifyUserID = finder.LastModifyUserID;
             }
 
-            return PartialView(model);
+            return PartialView(item);
         }
 
+        /// <summary>
+        /// Save all attachments
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
+        public ActionResult RemoveNote(NoteModels model)
+        {
+            var item = model ?? new NoteModels();
+
+            var finder = _EntityModel.Notes.Where(x =>
+                    x.APK == item.APK).FirstOrDefault();
+
+            if (finder != null)
+            {
+                _EntityModel.Notes.DeleteObject(finder);
+                _EntityModel.SaveChanges();
+            }
+
+            return Json(new { result = true });
+        }
+
+        /// <summary>
+        /// Save all attachments
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
+        public ActionResult UpdateNote(NoteModels model)
+        {
+            var item = model ?? new NoteModels();
+
+            var finder = _EntityModel.Notes.Where(x =>
+                    x.APK == item.APK).FirstOrDefault();
+
+            if (finder != null)
+            {
+                finder.Title = item.Title;
+                finder.Description = item.Description;
+                finder.LastModifyUserID = _EmployeeID;
+                finder.LastModifyDate = DateTime.Now;
+                _EntityModel.SaveChanges();
+            }
+            else
+            {
+                Note note = new Note
+                {
+                    APK = Guid.NewGuid(),
+                    JobAPK = item.JobAPK ?? Guid.Empty,
+                    Title = item.Title,
+                    Description = item.Description,
+                    LastModifyDate = DateTime.Now,
+                    LastModifyUserID = _EmployeeID,
+                    CreatedDate = DateTime.Now,
+                    CreatedUserID = _EmployeeID
+                };
+
+                _EntityModel.Notes.AddObject(note);
+                _EntityModel.SaveChanges();
+            }
+
+            return Json(new { result = true });
+        }
+
+        #endregion ---- Notes ----
+
+        #region ---- Histories ----
+
+        public JsonResult GridHistories(JobModels model)
+        {
+            JobModels item = model ?? new JobModels();
+            List<History> lst = _EntityModel.Histories.Where(x => x.JobAPK == item.APK).ToList();
+            return Json(lst, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion ---- Histories ----
+
+        #region ---- Others ----
+        
         public ActionResult About()
         {
             ViewBag.Message = "Your app description page.";
@@ -1235,6 +967,8 @@ namespace DMS.Controllers
 
             return View();
         }
+
+        #endregion ---- Others ----
 
     }
 }

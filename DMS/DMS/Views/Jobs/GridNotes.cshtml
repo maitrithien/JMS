@@ -154,7 +154,7 @@
                 dataSource: {
                     type: "json",
                     transport: {
-                        read: '@Url.Action("NotesGrid", "Jobs")' + '?apk=' + $('#JobAPK').val()
+                        read: '@Url.Action("GridNotes", "Jobs")' + '?apk=' + $('#JobAPK').val()
                     },
                     pageSize: 20
                 },

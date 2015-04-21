@@ -138,6 +138,9 @@
           <Property Name="CreatedUserID" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifyUserID" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <Function Name="GetCounterJobs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="GetEmployeeByManager" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ManagerID" Type="nvarchar" Mode="In" />
         </Function>
@@ -156,6 +159,9 @@
           <Parameter Name="DepartmentID" Type="nvarchar" Mode="In" />
           <Parameter Name="UserName" Type="nvarchar" Mode="In" />
           <Parameter Name="Type" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetManager" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EmployeeID" Type="nvarchar" Mode="In" />
         </Function>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -187,6 +193,12 @@
             <Parameter Name="DepartmentID" Mode="In" Type="String" />
             <Parameter Name="UserName" Mode="In" Type="String" />
             <Parameter Name="Type" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetCounterJobs" ReturnType="Collection(JMSModel.GetCounterJobs_Result)">
+            <Parameter Name="UserName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetManager" ReturnType="Collection(String)">
+            <Parameter Name="EmployeeID" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Attachment">
@@ -337,6 +349,13 @@
           <Property Type="String" Name="DepartmentName" Nullable="true" MaxLength="250" />
           <Property Type="String" Name="RateComment" Nullable="true" />
           <Property Type="Int32" Name="OverDeadlineNumber" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetCounterJobs_Result">
+          <Property Type="Int32" Name="CountP" Nullable="true" />
+          <Property Type="Int32" Name="CountE" Nullable="true" />
+          <Property Type="Int32" Name="CountO" Nullable="true" />
+          <Property Type="Int32" Name="CountS" Nullable="true" />
+          <Property Type="Int32" Name="CountR" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -504,6 +523,18 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetCounterJobs" FunctionName="JMSModel.Store.GetCounterJobs">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JMSModel.GetCounterJobs_Result">
+                <ScalarProperty Name="CountP" ColumnName="CountP" />
+                <ScalarProperty Name="CountE" ColumnName="CountE" />
+                <ScalarProperty Name="CountO" ColumnName="CountO" />
+                <ScalarProperty Name="CountS" ColumnName="CountS" />
+                <ScalarProperty Name="CountR" ColumnName="CountR" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetManager" FunctionName="JMSModel.Store.GetManager" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

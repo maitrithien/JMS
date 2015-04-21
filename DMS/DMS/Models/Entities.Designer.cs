@@ -421,6 +421,44 @@ namespace DMS.Models
     
             return base.ExecuteFunction<GetJobs_Result>("GetJobs", isFilterParameter, jobIDParameter, jobNameParameter, statusParameter, posterParameter, recipientParameter, confirmerParameter, deadlineParameter, priorityParameter, rateParameter, complexParameter, departmentIDParameter, userNameParameter, typeParameter);
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        /// <param name="userName">No Metadata Documentation available.</param>
+        public ObjectResult<GetCounterJobs_Result> GetCounterJobs(global::System.String userName)
+        {
+            ObjectParameter userNameParameter;
+            if (userName != null)
+            {
+                userNameParameter = new ObjectParameter("UserName", userName);
+            }
+            else
+            {
+                userNameParameter = new ObjectParameter("UserName", typeof(global::System.String));
+            }
+    
+            return base.ExecuteFunction<GetCounterJobs_Result>("GetCounterJobs", userNameParameter);
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        /// <param name="employeeID">No Metadata Documentation available.</param>
+        public ObjectResult<global::System.String> GetManager(global::System.String employeeID)
+        {
+            ObjectParameter employeeIDParameter;
+            if (employeeID != null)
+            {
+                employeeIDParameter = new ObjectParameter("EmployeeID", employeeID);
+            }
+            else
+            {
+                employeeIDParameter = new ObjectParameter("EmployeeID", typeof(global::System.String));
+            }
+    
+            return base.ExecuteFunction<global::System.String>("GetManager", employeeIDParameter);
+        }
 
         #endregion
 
@@ -2471,6 +2509,140 @@ namespace DMS.Models
     #endregion
 
     #region ComplexTypes
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmComplexTypeAttribute(NamespaceName="JMSModel", Name="GetCounterJobs_Result")]
+    [DataContractAttribute(IsReference=true)]
+    [Serializable()]
+    public partial class GetCounterJobs_Result : ComplexObject
+    {
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> CountP
+        {
+            get
+            {
+                return _CountP;
+            }
+            set
+            {
+                OnCountPChanging(value);
+                ReportPropertyChanging("CountP");
+                _CountP = StructuralObject.SetValidValue(value, "CountP");
+                ReportPropertyChanged("CountP");
+                OnCountPChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _CountP;
+        partial void OnCountPChanging(Nullable<global::System.Int32> value);
+        partial void OnCountPChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> CountE
+        {
+            get
+            {
+                return _CountE;
+            }
+            set
+            {
+                OnCountEChanging(value);
+                ReportPropertyChanging("CountE");
+                _CountE = StructuralObject.SetValidValue(value, "CountE");
+                ReportPropertyChanged("CountE");
+                OnCountEChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _CountE;
+        partial void OnCountEChanging(Nullable<global::System.Int32> value);
+        partial void OnCountEChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> CountO
+        {
+            get
+            {
+                return _CountO;
+            }
+            set
+            {
+                OnCountOChanging(value);
+                ReportPropertyChanging("CountO");
+                _CountO = StructuralObject.SetValidValue(value, "CountO");
+                ReportPropertyChanged("CountO");
+                OnCountOChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _CountO;
+        partial void OnCountOChanging(Nullable<global::System.Int32> value);
+        partial void OnCountOChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> CountS
+        {
+            get
+            {
+                return _CountS;
+            }
+            set
+            {
+                OnCountSChanging(value);
+                ReportPropertyChanging("CountS");
+                _CountS = StructuralObject.SetValidValue(value, "CountS");
+                ReportPropertyChanged("CountS");
+                OnCountSChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _CountS;
+        partial void OnCountSChanging(Nullable<global::System.Int32> value);
+        partial void OnCountSChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> CountR
+        {
+            get
+            {
+                return _CountR;
+            }
+            set
+            {
+                OnCountRChanging(value);
+                ReportPropertyChanging("CountR");
+                _CountR = StructuralObject.SetValidValue(value, "CountR");
+                ReportPropertyChanged("CountR");
+                OnCountRChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _CountR;
+        partial void OnCountRChanging(Nullable<global::System.Int32> value);
+        partial void OnCountRChanged();
+
+        #endregion
+
+    }
     
     /// <summary>
     /// No Metadata Documentation available.

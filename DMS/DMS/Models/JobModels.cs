@@ -18,6 +18,12 @@ namespace DMS.Models
         public const string RATE_CODE = "RATE";
         public const string EMPLOYEE_LEVEL_CODE = "EMPLOYEE_LEVEL";
 
+        public const int JOBS_P_TYPE = 0;
+        public const int JOBS_R_TYPE = 1;
+        public const int JOBS_S_TYPE = 2;
+        public const int JOBS_O_TYPE = 3;
+        public const int JOBS_E_TYPE = 4;
+
         #endregion ---- Constants & Member variables ----
 
         #region ---- Filter ----
