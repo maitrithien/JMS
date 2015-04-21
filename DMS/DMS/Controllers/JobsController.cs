@@ -15,6 +15,56 @@ namespace DMS.Controllers
         /// </summary>
         JMSEntities _EntityModel = new JMSEntities();
 
+        /// <summary>
+        /// Current employee login
+        /// </summary>
+        private string _EmployeeID {
+            get
+            {
+                return (_EntityModel.Employees.FirstOrDefault(
+                    x => User.Identity.Name.Equals(x.UserName)) ?? new Employee()).EmployeeID;
+            }
+        }
+
+        #region ---- Jobs ----
+
+        public ActionResult CountJobEmps()
+        {
+            int countP = _EntityModel.Jobs.Where(x =>
+                x.CreatedUserID == User.Identity.Name
+                || x.Poster == _EmployeeID 
+                || x.Confirmer == _EmployeeID 
+                || x.Recipient == _EmployeeID).Count();
+
+            int countE = _EntityModel.Jobs.Where(x => 
+                x.Poster == _EmployeeID 
+                || x.Confirmer == _EmployeeID 
+                || x.Recipient == _EmployeeID).Count();
+
+            return Json(new
+            {
+                countE = string.Format("{0:00}", countE),
+                countS = string.Format("{0:00}", 100),
+                countR = string.Format("{0:00}", 3),
+                countP = string.Format("{0:00}", 6),
+                countO = string.Format("{0:00}", 0)
+            });
+        }
+
+        #endregion ---- Jobs ----
+
+        #region ---- Attachments ----
+
+        #endregion ---- Attachments ----
+
+        #region ---- Notes ----
+
+        #endregion ---- Notes ----
+
+        #region ---- Histories ----
+
+        #endregion ---- Histories ----
+
         [Authorize]
         public ActionResult Index()
         {
@@ -80,9 +130,9 @@ namespace DMS.Controllers
                        && x.Complex == (string.IsNullOrEmpty(item.ComplexFilter) ? x.Complex : item.ComplexFilter)
                        && x.DepartmentID.Contains(string.IsNullOrEmpty(item.DepartmentIDFilter) ? x.DepartmentID : item.DepartmentIDFilter)
                    ) && (
-                       x.Confirmer == User.Identity.Name
+                       x.Confirmer == _EmployeeID
                        || (
-                            x.Recipient == User.Identity.Name
+                            x.Recipient == _EmployeeID
                             && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
                             && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
                           )
@@ -108,9 +158,9 @@ namespace DMS.Controllers
             {
                 lst = _EntityModel.Jobs.Where(x =>
                    (
-                       x.Confirmer == User.Identity.Name
+                       x.Confirmer == _EmployeeID
                        || (
-                                x.Recipient == User.Identity.Name
+                                x.Recipient == _EmployeeID
                                 && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
                                 && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
                           )
@@ -180,8 +230,8 @@ namespace DMS.Controllers
                        && x.Complex == (string.IsNullOrEmpty(item.ComplexFilter) ? x.Complex : item.ComplexFilter)
                        && x.DepartmentID.Contains(string.IsNullOrEmpty(item.DepartmentIDFilter) ? x.DepartmentID : item.DepartmentIDFilter)
                    ) && (
-                       x.CreatedUserID == User.Identity.Name
-                       || x.Poster == User.Identity.Name
+                       x.CreatedUserID == _EmployeeID
+                       || x.Poster == _EmployeeID
                    )).Select(x => new JobModels()
                    {
                        APK = x.APK,
@@ -204,8 +254,8 @@ namespace DMS.Controllers
             {
                 lst = _EntityModel.Jobs.Where(x =>
                    (
-                       x.CreatedUserID == User.Identity.Name
-                       || x.Poster == User.Identity.Name
+                       x.CreatedUserID == _EmployeeID
+                       || x.Poster == _EmployeeID
                    )).Select(x => new JobModels()
                    {
                        APK = x.APK,
@@ -273,11 +323,11 @@ namespace DMS.Controllers
                        && x.DepartmentID.Contains(string.IsNullOrEmpty(item.DepartmentIDFilter) ? x.DepartmentID : item.DepartmentIDFilter)
                        //&& x.Status != "2" && x.Status != "9"
                    ) && (
-                       x.CreatedUserID == User.Identity.Name
-                       || x.Poster == User.Identity.Name
-                       || (x.Confirmer == User.Identity.Name && x.StatusConfirm != "1")
+                       x.CreatedUserID == _EmployeeID
+                       || x.Poster == _EmployeeID
+                       || (x.Confirmer == _EmployeeID && x.StatusConfirm != "1")
                        || (
-                            x.Recipient == User.Identity.Name
+                            x.Recipient == _EmployeeID
                             && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
                             && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
                           )
@@ -305,11 +355,11 @@ namespace DMS.Controllers
                 lst = _EntityModel.Jobs.Where(x =>
                    (
                        //x.Status != "2" && x.Status != "9" &&
-                       (x.CreatedUserID == User.Identity.Name
-                        || x.Poster == User.Identity.Name
-                        || (x.Confirmer == User.Identity.Name && x.StatusConfirm != "1")
+                       (x.CreatedUserID == _EmployeeID
+                        || x.Poster == _EmployeeID
+                        || (x.Confirmer == _EmployeeID && x.StatusConfirm != "1")
                         || (
-                                x.Recipient == User.Identity.Name
+                                x.Recipient == _EmployeeID
                                 && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
                                 && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
                             )
@@ -389,11 +439,11 @@ namespace DMS.Controllers
                        && x.Complex == (string.IsNullOrEmpty(item.ComplexFilter) ? x.Complex : item.ComplexFilter)
                        && x.DepartmentID.Contains(string.IsNullOrEmpty(item.DepartmentIDFilter) ? x.DepartmentID : item.DepartmentIDFilter)
                    ) && (
-                       x.CreatedUserID == User.Identity.Name
-                       || x.Poster == User.Identity.Name
-                       || x.Confirmer == User.Identity.Name
+                       x.CreatedUserID == _EmployeeID
+                       || x.Poster == _EmployeeID
+                       || x.Confirmer == _EmployeeID
                        || (
-                            x.Recipient == User.Identity.Name 
+                            x.Recipient == _EmployeeID 
                             && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
                             && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
                           )
@@ -418,11 +468,11 @@ namespace DMS.Controllers
             {
                 lst = _EntityModel.Jobs.Where(x =>
                    (
-                       x.CreatedUserID == User.Identity.Name
-                       || x.Poster == User.Identity.Name
-                       || x.Confirmer == User.Identity.Name
+                       x.CreatedUserID == _EmployeeID
+                       || x.Poster == _EmployeeID
+                       || x.Confirmer == _EmployeeID
                        || (
-                                x.Recipient == User.Identity.Name 
+                                x.Recipient == _EmployeeID 
                                 && x.StatusConfirm.Equals((string.IsNullOrEmpty(x.StatusConfirm) ? x.StatusConfirm : "1"))
                                 && !x.Status.Equals((string.IsNullOrEmpty(x.Status) ? x.Status : "0"))
                           )
@@ -472,12 +522,12 @@ namespace DMS.Controllers
         private List<Employee> GetEmployeeByManager()
         {
             List<Employee> result = new List<Employee>();
-            var emps = _EntityModel.GetEmployeeByManager(User.Identity.Name);
+            var emps = _EntityModel.GetEmployeeByManager(_EmployeeID);
             if (emps != null)
             {
                 foreach (var item in emps)
                 {
-                    result.Add(new Employee() { EmployeeID = item.EmployeeID, ManagerID = item.ManagerID });
+                    result.Add(new Employee() { EmployeeID = item.EmployeeID });
                 }
             }
 
@@ -639,7 +689,7 @@ namespace DMS.Controllers
             if (finder != null)
             {
                 if (!string.IsNullOrEmpty(finder.Status) && finder.Status.Equals("0")
-                    && (User.Identity.Name.Equals(finder.Poster) || User.Identity.Name.Equals(finder.CreatedUserID)))
+                    && (_EmployeeID.Equals(finder.Poster) || _EmployeeID.Equals(finder.CreatedUserID)))
                 {
                     // Xóa hồ sơ
                     allowEdit = true;
@@ -665,7 +715,7 @@ namespace DMS.Controllers
             {
                 if (finder.Status == "2")
                 {
-                    if (!User.Identity.Name.Equals(finder.Recipient))
+                    if (!_EmployeeID.Equals(finder.Recipient))
                     {
                         allowEdit = false;
                         message = string.Format("Hồ sơ {0} đã hoàn tất. Bạn không có quyền sửa hồ sơ này.", finder.JobID);
@@ -686,7 +736,7 @@ namespace DMS.Controllers
             var finder = _EntityModel.Notes.FirstOrDefault(x => x.APK == item.APK);
             if (finder != null)
             {
-                if (User.Identity.Name.Equals(finder.CreatedUserID))
+                if (_EmployeeID.Equals(finder.CreatedUserID))
                 {
                     // Xóa hồ sơ
                     allowEdit = true;
@@ -739,7 +789,7 @@ namespace DMS.Controllers
                 // Xóa file vật lý đính kèm sau khi xóa JOB hoàn tất
                 foreach (var att in attachments)
                 {
-                    var physicalPath = Path.Combine(Server.MapPath("~/App_Data/" + User.Identity.Name), att.AttachmentFileName);
+                    var physicalPath = Path.Combine(Server.MapPath("~/App_Data/" + _EmployeeID), att.AttachmentFileName);
 
                     if (System.IO.File.Exists(physicalPath))
                     {
@@ -778,7 +828,7 @@ namespace DMS.Controllers
                         ? "1" : item.Status
                     : item.Status;
                 finder.LastModifyDate = DateTime.Now;
-                finder.LastModifyUserID = User.Identity.Name;
+                finder.LastModifyUserID = _EmployeeID;
 
                 _EntityModel.SaveChanges();
             }
@@ -803,9 +853,9 @@ namespace DMS.Controllers
                     StatusConfirm = item.StatusConfirm ?? "0",
                     RateComment = item.RateComment,
                     CreatedDate = DateTime.Now,
-                    CreatedUserID = User.Identity.Name,
+                    CreatedUserID = _EmployeeID,
                     LastModifyDate = DateTime.Now,
-                    LastModifyUserID = User.Identity.Name,
+                    LastModifyUserID = _EmployeeID,
                 };
 
                 _EntityModel.Jobs.AddObject(job);
@@ -822,7 +872,7 @@ namespace DMS.Controllers
         {
             JobModels item = model ?? new JobModels();
 
-            item.Poster = User.Identity.Name;
+            item.Poster = _EmployeeID;
             item.Status = "0";
             item.Complex = "1";
             item.Priority = "1";
@@ -910,7 +960,7 @@ namespace DMS.Controllers
             {
                 finder.Title = item.Title;
                 finder.Description = item.Description;
-                finder.LastModifyUserID = User.Identity.Name;
+                finder.LastModifyUserID = _EmployeeID;
                 finder.LastModifyDate = DateTime.Now;
                 _EntityModel.SaveChanges();
             }
@@ -923,9 +973,9 @@ namespace DMS.Controllers
                     Title = item.Title,
                     Description = item.Description,
                     LastModifyDate = DateTime.Now,
-                    LastModifyUserID = User.Identity.Name,
+                    LastModifyUserID = _EmployeeID,
                     CreatedDate = DateTime.Now,
-                    CreatedUserID = User.Identity.Name
+                    CreatedUserID = _EmployeeID
                 };
 
                 _EntityModel.Notes.AddObject(note);
@@ -961,12 +1011,12 @@ namespace DMS.Controllers
                     AttachmentFileExtension = item.AttachmentFileExtension,
                     AttachmentFileSize = item.AttachmentFileSize,
                     AttachmentFileType = item.AttachmentFileType,
-                    AttachmentOwner = User.Identity.Name,
+                    AttachmentOwner = _EmployeeID,
                     JobAPK = item.JobAPK ?? Guid.Empty,
                     CreatedDate = DateTime.Now,
-                    CreatedUserID = User.Identity.Name,
+                    CreatedUserID = _EmployeeID,
                     LastModifyDate = DateTime.Now,
-                    LastModifyUserID = User.Identity.Name
+                    LastModifyUserID = _EmployeeID
                 };
 
                 _EntityModel.Attachments.AddObject(att);
@@ -989,7 +1039,7 @@ namespace DMS.Controllers
             {
                 var finder = _EntityModel.Attachments.Where(x => 
                     x.AttachmentFileName == item.AttachmentFileName &&
-                    x.AttachmentOwner == User.Identity.Name).FirstOrDefault();
+                    x.AttachmentOwner == _EmployeeID).FirstOrDefault();
 
                 if (finder != null)
                 {
@@ -1018,7 +1068,7 @@ namespace DMS.Controllers
                 _EntityModel.Attachments.DeleteObject(finder);
                 _EntityModel.SaveChanges();
 
-                var physicalPath = Path.Combine(Server.MapPath("~/App_Data/" + User.Identity.Name), finder.AttachmentFileName);
+                var physicalPath = Path.Combine(Server.MapPath("~/App_Data/" + _EmployeeID), finder.AttachmentFileName);
 
                 if (System.IO.File.Exists(physicalPath))
                 {

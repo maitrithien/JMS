@@ -65,11 +65,11 @@
           <Property Name="APK" Type="uniqueidentifier" Nullable="false" />
           <Property Name="DepartmentID" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="DepartmentName" Type="nvarchar" MaxLength="250" />
-          <Property Name="Note" Type="nvarchar" MaxLength="500" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="LastModifyDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedUserID" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifyUserID" Type="nvarchar" MaxLength="50" />
+          <Property Name="ManagerID" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Employees">
           <Key>
@@ -78,11 +78,7 @@
           <Property Name="APK" Type="uniqueidentifier" Nullable="false" />
           <Property Name="EmployeeID" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="FullName" Type="nvarchar" Nullable="false" MaxLength="250" />
-          <Property Name="BirthDay" Type="datetime" />
-          <Property Name="IDCardNo" Type="nvarchar" MaxLength="50" />
-          <Property Name="Description" Type="nvarchar" MaxLength="500" />
           <Property Name="DepartmentID" Type="nvarchar" Nullable="false" MaxLength="50" />
-          <Property Name="ManagerID" Type="nvarchar" MaxLength="50" />
           <Property Name="GroupID" Type="nvarchar" MaxLength="50" />
           <Property Name="UserName" Type="nvarchar" MaxLength="56" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
@@ -111,19 +107,23 @@
           <Property Name="Priority" Type="nvarchar" MaxLength="50" />
           <Property Name="Complex" Type="nvarchar" MaxLength="50" />
           <Property Name="Rate" Type="nvarchar" MaxLength="50" />
+          <Property Name="RateComment" Type="nvarchar(max)" />
           <Property Name="Deadline" Type="datetime" />
           <Property Name="JobID" Type="nvarchar" MaxLength="50" />
           <Property Name="JobName" Type="nvarchar" MaxLength="250" />
           <Property Name="Poster" Type="nvarchar" MaxLength="50" />
+          <Property Name="PosterRead" Type="bit" />
           <Property Name="Recipient" Type="nvarchar" MaxLength="50" />
+          <Property Name="RecipientRead" Type="bit" />
           <Property Name="Confirmer" Type="nvarchar" MaxLength="50" />
+          <Property Name="ConfirmerRead" Type="bit" />
+          <Property Name="Sender" Type="nvarchar" MaxLength="50" />
           <Property Name="Note" Type="nvarchar(max)" />
           <Property Name="DepartmentID" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="LastModifyDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedUserID" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifyUserID" Type="nvarchar" MaxLength="50" />
-          <Property Name="RateComment" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Notes">
           <Key>
@@ -141,6 +141,22 @@
         <Function Name="GetEmployeeByManager" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ManagerID" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="GetJobs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IsFilter" Type="int" Mode="In" />
+          <Parameter Name="JobID" Type="nvarchar" Mode="In" />
+          <Parameter Name="JobName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Status" Type="nvarchar" Mode="In" />
+          <Parameter Name="Poster" Type="nvarchar" Mode="In" />
+          <Parameter Name="Recipient" Type="nvarchar" Mode="In" />
+          <Parameter Name="Confirmer" Type="nvarchar" Mode="In" />
+          <Parameter Name="Deadline" Type="datetime" Mode="In" />
+          <Parameter Name="Priority" Type="nvarchar" Mode="In" />
+          <Parameter Name="Rate" Type="nvarchar" Mode="In" />
+          <Parameter Name="Complex" Type="nvarchar" Mode="In" />
+          <Parameter Name="DepartmentID" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Type" Type="int" Mode="In" />
+        </Function>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -150,11 +166,27 @@
           <EntitySet Name="Histories" EntityType="JMSModel.History" />
           <EntitySet Name="Notes" EntityType="JMSModel.Note" />
           <EntitySet Name="Codes" EntityType="JMSModel.Code" />
-          <EntitySet Name="Jobs" EntityType="JMSModel.Job" />
-          <EntitySet Name="Departments" EntityType="JMSModel.Department" />
-          <EntitySet Name="Employees" EntityType="JMSModel.Employee" />
           <FunctionImport Name="GetEmployeeByManager" ReturnType="Collection(JMSModel.GetEmployeeByManager_Result)">
-            <Parameter Name="ManagerID" Mode="In" Type="String" />
+          <Parameter Name="ManagerID" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="Employees" EntityType="JMSModel.Employee" />
+          <EntitySet Name="Departments" EntityType="JMSModel.Department" />
+          <EntitySet Name="Jobs" EntityType="JMSModel.Job" />
+          <FunctionImport Name="GetJobs" ReturnType="Collection(JMSModel.GetJobs_Result)">
+            <Parameter Name="IsFilter" Mode="In" Type="Int32" />
+            <Parameter Name="JobID" Mode="In" Type="String" />
+            <Parameter Name="JobName" Mode="In" Type="String" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+            <Parameter Name="Poster" Mode="In" Type="String" />
+            <Parameter Name="Recipient" Mode="In" Type="String" />
+            <Parameter Name="Confirmer" Mode="In" Type="String" />
+            <Parameter Name="Deadline" Mode="In" Type="DateTime" />
+            <Parameter Name="Priority" Mode="In" Type="String" />
+            <Parameter Name="Rate" Mode="In" Type="String" />
+            <Parameter Name="Complex" Mode="In" Type="String" />
+            <Parameter Name="DepartmentID" Mode="In" Type="String" />
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="Type" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Attachment">
@@ -213,29 +245,24 @@
           <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
           <Property Type="String" Name="CreatedUserID" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="Job">
+        <ComplexType Name="GetEmployeeByManager_Result">
+          <Property Type="String" Name="EmployeeID" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ManagerID" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <EntityType Name="Employee">
           <Key>
             <PropertyRef Name="APK" />
           </Key>
           <Property Type="Guid" Name="APK" Nullable="false" />
-          <Property Type="String" Name="Status" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Priority" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Complex" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Rate" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="DateTime" Name="Deadline" Precision="3" />
-          <Property Type="String" Name="JobID" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="JobName" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Poster" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Recipient" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Confirmer" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Note" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="DepartmentID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="EmployeeID" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="FullName" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="DepartmentID" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="GroupID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="UserName" MaxLength="56" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
           <Property Type="DateTime" Name="LastModifyDate" Nullable="false" Precision="3" />
           <Property Type="String" Name="CreatedUserID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="LastModifyUserID" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="StatusConfirm" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="RateComment" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -244,34 +271,72 @@
           <Property Type="Guid" Name="APK" Nullable="false" />
           <Property Type="String" Name="DepartmentID" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="DepartmentName" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Note" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
           <Property Type="DateTime" Name="LastModifyDate" Nullable="false" Precision="3" />
           <Property Type="String" Name="CreatedUserID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="LastModifyUserID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ManagerID" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="Employee">
+        <EntityType Name="Job">
           <Key>
             <PropertyRef Name="APK" />
           </Key>
           <Property Type="Guid" Name="APK" Nullable="false" />
-          <Property Type="String" Name="EmployeeID" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="FullName" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Type="DateTime" Name="BirthDay" Precision="3" />
-          <Property Type="String" Name="IDCardNo" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Description" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="DepartmentID" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="ManagerID" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="GroupID" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="UserName" MaxLength="56" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Status" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="StatusConfirm" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Priority" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Complex" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Rate" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="RateComment" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Deadline" Precision="3" />
+          <Property Type="String" Name="JobID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="JobName" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Poster" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="PosterRead" />
+          <Property Type="String" Name="Recipient" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="RecipientRead" />
+          <Property Type="String" Name="Confirmer" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="ConfirmerRead" />
+          <Property Type="String" Name="Sender" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Note" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="DepartmentID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
           <Property Type="DateTime" Name="LastModifyDate" Nullable="false" Precision="3" />
           <Property Type="String" Name="CreatedUserID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="LastModifyUserID" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
-        <ComplexType Name="GetEmployeeByManager_Result">
-          <Property Type="String" Name="EmployeeID" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="ManagerID" Nullable="true" MaxLength="50" />
+        <ComplexType Name="GetJobs_Result">
+          <Property Type="Guid" Name="APK" Nullable="false" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="StatusName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="StatusConfirm" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="StatusConfirmName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Priority" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PriorityName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Complex" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ComplexName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Rate" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="RateName" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="Deadline" Nullable="true" Precision="23" />
+          <Property Type="String" Name="JobID" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="JobName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Poster" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PosterName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Recipient" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="RecipientName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Confirmer" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ConfirmerName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Sender" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="SenderName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Note" Nullable="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="LastModifyDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="CreatedUserID" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="LastModifyUserID" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DepartmentID" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DepartmentName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="RateComment" Nullable="true" />
+          <Property Type="Int32" Name="OverDeadlineNumber" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -335,45 +400,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Jobs">
-            <EntityTypeMapping TypeName="JMSModel.Job">
-              <MappingFragment StoreEntitySet="Jobs">
-                <ScalarProperty Name="RateComment" ColumnName="RateComment" />
-                <ScalarProperty Name="StatusConfirm" ColumnName="StatusConfirm" />
-                <ScalarProperty Name="LastModifyUserID" ColumnName="LastModifyUserID" />
-                <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
-                <ScalarProperty Name="LastModifyDate" ColumnName="LastModifyDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
-                <ScalarProperty Name="Note" ColumnName="Note" />
-                <ScalarProperty Name="Confirmer" ColumnName="Confirmer" />
-                <ScalarProperty Name="Recipient" ColumnName="Recipient" />
-                <ScalarProperty Name="Poster" ColumnName="Poster" />
-                <ScalarProperty Name="JobName" ColumnName="JobName" />
-                <ScalarProperty Name="JobID" ColumnName="JobID" />
-                <ScalarProperty Name="Deadline" ColumnName="Deadline" />
-                <ScalarProperty Name="Rate" ColumnName="Rate" />
-                <ScalarProperty Name="Complex" ColumnName="Complex" />
-                <ScalarProperty Name="Priority" ColumnName="Priority" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="APK" ColumnName="APK" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Departments">
-            <EntityTypeMapping TypeName="JMSModel.Department">
-              <MappingFragment StoreEntitySet="Departments">
-                <ScalarProperty Name="LastModifyUserID" ColumnName="LastModifyUserID" />
-                <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
-                <ScalarProperty Name="LastModifyDate" ColumnName="LastModifyDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Note" ColumnName="Note" />
-                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
-                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
-                <ScalarProperty Name="APK" ColumnName="APK" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetEmployeeByManager" FunctionName="JMSModel.Store.GetEmployeeByManager">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JMSModel.GetEmployeeByManager_Result">
+                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+                <ScalarProperty Name="ManagerID" ColumnName="ManagerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <EntitySetMapping Name="Employees">
             <EntityTypeMapping TypeName="JMSModel.Employee">
               <MappingFragment StoreEntitySet="Employees">
@@ -383,22 +417,90 @@
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="GroupID" ColumnName="GroupID" />
-                <ScalarProperty Name="ManagerID" ColumnName="ManagerID" />
                 <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="IDCardNo" ColumnName="IDCardNo" />
-                <ScalarProperty Name="BirthDay" ColumnName="BirthDay" />
                 <ScalarProperty Name="FullName" ColumnName="FullName" />
                 <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
                 <ScalarProperty Name="APK" ColumnName="APK" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetEmployeeByManager" FunctionName="JMSModel.Store.GetEmployeeByManager">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="JMSModel.GetEmployeeByManager_Result">
-                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <EntitySetMapping Name="Departments">
+            <EntityTypeMapping TypeName="JMSModel.Department">
+              <MappingFragment StoreEntitySet="Departments">
                 <ScalarProperty Name="ManagerID" ColumnName="ManagerID" />
+                <ScalarProperty Name="LastModifyUserID" ColumnName="LastModifyUserID" />
+                <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+                <ScalarProperty Name="LastModifyDate" ColumnName="LastModifyDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="APK" ColumnName="APK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Jobs">
+            <EntityTypeMapping TypeName="JMSModel.Job">
+              <MappingFragment StoreEntitySet="Jobs">
+                <ScalarProperty Name="LastModifyUserID" ColumnName="LastModifyUserID" />
+                <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+                <ScalarProperty Name="LastModifyDate" ColumnName="LastModifyDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="Sender" ColumnName="Sender" />
+                <ScalarProperty Name="ConfirmerRead" ColumnName="ConfirmerRead" />
+                <ScalarProperty Name="Confirmer" ColumnName="Confirmer" />
+                <ScalarProperty Name="RecipientRead" ColumnName="RecipientRead" />
+                <ScalarProperty Name="Recipient" ColumnName="Recipient" />
+                <ScalarProperty Name="PosterRead" ColumnName="PosterRead" />
+                <ScalarProperty Name="Poster" ColumnName="Poster" />
+                <ScalarProperty Name="JobName" ColumnName="JobName" />
+                <ScalarProperty Name="JobID" ColumnName="JobID" />
+                <ScalarProperty Name="Deadline" ColumnName="Deadline" />
+                <ScalarProperty Name="RateComment" ColumnName="RateComment" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="Complex" ColumnName="Complex" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="StatusConfirm" ColumnName="StatusConfirm" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="APK" ColumnName="APK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetJobs" FunctionName="JMSModel.Store.GetJobs">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JMSModel.GetJobs_Result">
+                <ScalarProperty Name="APK" ColumnName="APK" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+                <ScalarProperty Name="StatusConfirm" ColumnName="StatusConfirm" />
+                <ScalarProperty Name="StatusConfirmName" ColumnName="StatusConfirmName" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="PriorityName" ColumnName="PriorityName" />
+                <ScalarProperty Name="Complex" ColumnName="Complex" />
+                <ScalarProperty Name="ComplexName" ColumnName="ComplexName" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="RateName" ColumnName="RateName" />
+                <ScalarProperty Name="Deadline" ColumnName="Deadline" />
+                <ScalarProperty Name="JobID" ColumnName="JobID" />
+                <ScalarProperty Name="JobName" ColumnName="JobName" />
+                <ScalarProperty Name="Poster" ColumnName="Poster" />
+                <ScalarProperty Name="PosterName" ColumnName="PosterName" />
+                <ScalarProperty Name="Recipient" ColumnName="Recipient" />
+                <ScalarProperty Name="RecipientName" ColumnName="RecipientName" />
+                <ScalarProperty Name="Confirmer" ColumnName="Confirmer" />
+                <ScalarProperty Name="ConfirmerName" ColumnName="ConfirmerName" />
+                <ScalarProperty Name="Sender" ColumnName="Sender" />
+                <ScalarProperty Name="SenderName" ColumnName="SenderName" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="LastModifyDate" ColumnName="LastModifyDate" />
+                <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+                <ScalarProperty Name="LastModifyUserID" ColumnName="LastModifyUserID" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+                <ScalarProperty Name="RateComment" ColumnName="RateComment" />
+                <ScalarProperty Name="OverDeadlineNumber" ColumnName="OverDeadlineNumber" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

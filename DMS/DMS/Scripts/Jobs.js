@@ -2,16 +2,10 @@
     jobs.attachment.initAttachmentGrid();
     jobs.attachment.initAttachmentDeleteConfirmDialog();
     $('#chkAll').bind('click', common.checkAll);
-
-    var kgroup = $('.k-grouping-header');
-    if (kgroup) {
-        $.each(kgroup, function (i, item) {
-            $(item).text("Kéo một tiêu đề cột và thả nó vào đây để nhóm theo cột đó");
-        });
-    }
 });
 
 var jobs = new function () {
+    
     this.attachment = new function () {
         var attachmentConfirmTemplate = null;
         var attachmentConfirmWindow = null;
@@ -86,7 +80,11 @@ var jobs = new function () {
                     pageSize: 20
                 },
                 height: 500,
-                groupable: true,
+                groupable: {
+                    messages: {
+                        empty: "Kéo một tiêu đề cột và thả nó vào đây để nhóm theo cột đó"
+                    }
+                },
                 resizable: true,
                 selectable: true,
                 pageable: {
@@ -283,7 +281,11 @@ var jobs = new function () {
                     pageSize: 20
                 },
                 height: 500,
-                groupable: true,
+                groupable: {
+                    messages: {
+                        empty: "Kéo một tiêu đề cột và thả nó vào đây để nhóm theo cột đó"
+                    }
+                },
                 resizable: true,
                 //sortable: true,
                 selectable: true,
@@ -311,18 +313,11 @@ var jobs = new function () {
                     }, {
                         field: "StatusName",
                         title: "Tình trạng",
-                        width: 100
-                    }, {
-                        field: "CreatedUserName",
-                        title: "Người tạo",
-                        width: 150
+                        width: 100,
+                        template: "<span class='status-#= Status #-ico'>#= StatusName #<span>"
                     }, {
                         field: "PosterName",
                         title: "Người lập",
-                        width: 150
-                    }, {
-                        field: "DepartmentName",
-                        title: "Phòng nhận hồ sơ",
                         width: 150
                     }, {
                         field: "RecipientName",
@@ -344,10 +339,6 @@ var jobs = new function () {
                         width: 120,
                         type: "date",
                         template: '#= kendo.toString(data.Deadline, "dd/MM/yyyy") #'
-                    }, {
-                        field: "RateName",
-                        title: "Đánh giá",
-                        width: 100
                     }, {
                         field: "PriorityName",
                         title: "Độ ưu tiên",
@@ -385,7 +376,11 @@ var jobs = new function () {
                     pageSize: 20
                 },
                 height: 500,
-                groupable: true,
+                groupable: {
+                    messages: {
+                        empty: "Kéo một tiêu đề cột và thả nó vào đây để nhóm theo cột đó"
+                    }
+                },
                 resizable: true,
                 //sortable: true,
                 selectable: true,
@@ -413,7 +408,8 @@ var jobs = new function () {
                     }, {
                         field: "StatusName",
                         title: "Tình trạng",
-                        width: 100
+                        width: 100,
+                        template: "<span class='status-#= Status #-ico'>#= StatusName #<span>"
                     }, {
                         field: "CreatedUserName",
                         title: "Người tạo",
@@ -477,7 +473,11 @@ var jobs = new function () {
                     pageSize: 20
                 },
                 height: 500,
-                groupable: true,
+                groupable: {
+                    messages: {
+                        empty: "Kéo một tiêu đề cột và thả nó vào đây để nhóm theo cột đó"
+                    }
+                },
                 resizable: true,
                 //sortable: true,
                 selectable: true,
@@ -505,7 +505,8 @@ var jobs = new function () {
                     },  {
                         field: "StatusName",
                         title: "Tình trạng",
-                        width: 100
+                        width: 100,
+                        template: "<span class='status-#= Status #-ico'>#= StatusName #<span>"
                     }, {
                         field: "OverDeadlineNumber",
                         title: "Số ngày quá hạn",

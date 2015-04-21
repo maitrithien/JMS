@@ -865,3 +865,42 @@ tr.pager td {
                 line-height: 20px;
                 padding:0 10px;
             }
+/* ICON
+    ----------------------------------------------------------*/
+.status-0-ico
+{
+	border-left: 20px solid #4cff00;
+    padding-left: 5px;
+}
+
+.status-1-ico
+{
+	border-left: 20px solid yellow;
+    padding-left: 5px;
+}
+
+.status-2-ico
+{
+	border-left: 20px solid #00ffff;
+    padding-left: 5px;
+}
+
+.status-9-ico
+{
+	border-left: 20px solid  #ff6a00;
+    padding-left: 5px;
+}
+
+#notify00
+{
+	visibility:hidden;
+	display:none;
+}
+.red-notify
+{
+	border-radius: 80px !important;
+	background-color: #f00;
+	color: #fff;
+	padding: 2px 4px;
+	font-size: smaller;
+}

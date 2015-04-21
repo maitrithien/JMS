@@ -3,28 +3,57 @@
       .controller("main-menu", function ($scope) {
           $scope.menuOrientation = "horizontal";
       })
+
+    function timeCtrl($scope, $timeout) {
+        $scope.countE = "00";
+        $scope.countS = "00";
+        $scope.countR = "00";
+        $scope.countP = "00";
+        $scope.countO = "00";
+
+        function updateTime() {
+            $.ajax({
+                type: 'POST',
+                url: $('#countUrl').val(),
+                data: {},
+                contentType: 'application/json; charset=utf-8',
+                success: function (dataResult) {
+                    $scope.countE = dataResult.countE;
+                    $scope.countS = dataResult.countS;
+                    $scope.countR = dataResult.countR;
+                    $scope.countP = dataResult.countP;
+                    $scope.countO = dataResult.countO;
+                }
+            });
+            
+            $timeout(updateTime, 3000);
+        };
+        updateTime();
+    }
+
 </script>
+@Html.Hidden("countUrl", Url.Action("CountJobEmps", "Jobs"))
 <div id="context-menu" ng-app="KendoMenu">
     <div class="menu-section k-content" ng-controller="main-menu">
         <div class="box-col">
-              <ul kendo-menu style="display: inline-block; min-width: 150px; border: none !important;"
-                k-orientation="menuOrientation"
-                k-rebind="menuOrientation">
-                <li> Danh mục
-                    <ul>
-                        <li>Phòng ban</li>
-                        <li>Chức vụ</li>
-                        <li>Nhân viên</li>
-                    </ul>
+              <ul   kendo-menu style="display: inline-block; min-width: 150px; border: none !important;"
+                    k-orientation="menuOrientation"
+                    k-rebind="menuOrientation"  
+                    ng-controller="timeCtrl">
+                <li>
+                     <a href="@Url.Action("Index", "Jobs")">Hồ sơ cá nhân <span id="notify{{countP}}" class="red-notify">{{countP}}</span></a>
                 </li>
-                <li> Nghiệp vụ
-                    <ul>
-                        <li>@Html.ActionLink("Hồ sơ cá nhân", "Index", "Jobs")</li>
-                        <li>@Html.ActionLink("Hồ sơ từ nhân viên", "JobsEmployee", "Jobs")</li>
-                        <li>@Html.ActionLink("Hồ sơ đã nhận", "JobsReceived", "Jobs")</li>
-                        <li>@Html.ActionLink("Hồ sơ đã gửi", "JobsSent", "Jobs")</li>
-                        <li>@Html.ActionLink("Hồ sơ quá hạn", "JobsOverdue", "Jobs")</li>
-                    </ul>
+                <li>
+                    <a href="@Url.Action("JobsEmployee", "Jobs")">Hồ sơ từ nhân viên <span id="notify{{countE}}" class="red-notify">{{countE}}</span></a>
+                </li>
+                <li>
+                    <a href="@Url.Action("JobsReceived", "Jobs")">Hồ sơ đã nhận <span id="notify{{countR}}" class="red-notify">{{countR}}</span></a>
+                </li>
+                <li>
+                    <a href="@Url.Action("JobsSent", "Jobs")">Hồ sơ đã gửi <span id="notify{{countS}}" class="red-notify">{{countS}}</span></a>
+                </li>
+                <li>
+                    <a href="@Url.Action("JobsOverdue", "Jobs")">Hồ sơ quá hạn <span id="notify{{countO}}" class="red-notify">{{countO}}</span></a>
                 </li>
                 <li> Hệ thống
                     <ul>
@@ -37,6 +66,7 @@
                       <li>Leisure Clothing</li>
                     </ul>
                 </li>
+            </ul>
         </div>
     </div>
     <style>
