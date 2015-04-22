@@ -27,6 +27,18 @@ namespace DMS.Controllers
                     x => User.Identity.Name.Equals(x.UserName)) ?? new Employee()).EmployeeID;
             }
         }
+        /// <summary>
+        /// Current manager of this account
+        /// </summary>
+        private string _ManagerID
+        {
+            get
+            {
+                var departmentId = (_EntityModel.Employees.FirstOrDefault(
+                    x => User.Identity.Name.Equals(x.UserName)) ?? new Employee()).DepartmentID;
+                return (_EntityModel.Departments.FirstOrDefault(x => x.DepartmentID == departmentId) ?? new Department()).ManagerID;
+            }
+        }
 
         #region ---- Jobs ----
 
@@ -542,10 +554,16 @@ namespace DMS.Controllers
             item.Complex = "1";
             item.Priority = "1";
             item.Deadline = DateTime.Now.Date;
+            item.Poster = _EmployeeID;
+            item.Recipient = _EmployeeID;
+            item.Confirmer = _ManagerID;
 
+            bool isUpdate = false;
             var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
             if (finder != null)
             {
+                isUpdate = true;
+
                 item.Complex = finder.Complex;
                 item.Confirmer = finder.Confirmer;
                 item.CreatedDate = finder.CreatedDate;
@@ -564,6 +582,14 @@ namespace DMS.Controllers
                 item.Status = finder.Status;
                 item.StatusConfirm = finder.StatusConfirm;
                 item.RateComment = finder.RateComment;
+            }
+
+            if (!isUpdate)
+            {
+                GetNextJobID_Result id = _EntityModel.GetNextJobID(User.Identity.Name).FirstOrDefault()
+                    ?? new GetNextJobID_Result();
+                item.JobID = string.Format("{0}-{1}-{2:0000}{3:00}{4:000}", 
+                    id.DepartmentID, id.EmployeeID, id.Year, id.Month, id.Next);
             }
 
             return PartialView(item);

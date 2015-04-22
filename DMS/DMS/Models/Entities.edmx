@@ -163,6 +163,9 @@
         <Function Name="GetManager" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="EmployeeID" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="GetNextJobID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+        </Function>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -195,10 +198,13 @@
             <Parameter Name="Type" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetCounterJobs" ReturnType="Collection(JMSModel.GetCounterJobs_Result)">
-            <Parameter Name="UserName" Mode="In" Type="String" />
+          <Parameter Name="UserName" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="GetManager" ReturnType="Collection(String)">
-            <Parameter Name="EmployeeID" Mode="In" Type="String" />
+          <Parameter Name="EmployeeID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetNextJobID" ReturnType="Collection(JMSModel.GetNextJobID_Result)">
+            <Parameter Name="UserName" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Attachment">
@@ -356,6 +362,13 @@
           <Property Type="Int32" Name="CountO" Nullable="true" />
           <Property Type="Int32" Name="CountS" Nullable="true" />
           <Property Type="Int32" Name="CountR" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetNextJobID_Result">
+          <Property Type="String" Name="DepartmentID" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="EmployeeID" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Year" Nullable="true" />
+          <Property Type="Int32" Name="Month" Nullable="true" />
+          <Property Type="Int32" Name="Next" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -535,6 +548,17 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetManager" FunctionName="JMSModel.Store.GetManager" />
+          <FunctionImportMapping FunctionImportName="GetNextJobID" FunctionName="JMSModel.Store.GetNextJobID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JMSModel.GetNextJobID_Result">
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+                <ScalarProperty Name="Next" ColumnName="Next" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

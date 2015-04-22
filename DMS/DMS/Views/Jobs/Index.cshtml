@@ -66,8 +66,12 @@
                     click: function (e) {
                         //console.log("search");
                         var grid = $("#grid").data("kendoGrid");
+                        var x = kendo.parseDate($('#DeadlineFilter').val());
+                        var data = common.getFormDataTypeJson("frm-main-filter");
+                        data["IsFilter"] = 1;
+                        data["DeadlineFilter"] = kendo.toString(x, "u");
 
-                        grid.dataSource.read();
+                        grid.dataSource.read(data);
                     }
                 });
 

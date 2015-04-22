@@ -134,7 +134,8 @@ var common = new function () {
     this.getFormDataTypeJson = function (formId) {
 
         var elems = $('#' + formId).serializeArray();//.find('input, textarea, checkbox');
-        
+        console.log(elems);
+
         var data = {};
         $.each(elems, function (i, obj) {
             data[obj.name] = obj.value;

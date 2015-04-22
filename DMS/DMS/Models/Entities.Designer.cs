@@ -459,6 +459,25 @@ namespace DMS.Models
     
             return base.ExecuteFunction<global::System.String>("GetManager", employeeIDParameter);
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        /// <param name="userName">No Metadata Documentation available.</param>
+        public ObjectResult<GetNextJobID_Result> GetNextJobID(global::System.String userName)
+        {
+            ObjectParameter userNameParameter;
+            if (userName != null)
+            {
+                userNameParameter = new ObjectParameter("UserName", userName);
+            }
+            else
+            {
+                userNameParameter = new ObjectParameter("UserName", typeof(global::System.String));
+            }
+    
+            return base.ExecuteFunction<GetNextJobID_Result>("GetNextJobID", userNameParameter);
+        }
 
         #endregion
 
@@ -3493,6 +3512,140 @@ namespace DMS.Models
         private Nullable<global::System.Int32> _OverDeadlineNumber;
         partial void OnOverDeadlineNumberChanging(Nullable<global::System.Int32> value);
         partial void OnOverDeadlineNumberChanged();
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmComplexTypeAttribute(NamespaceName="JMSModel", Name="GetNextJobID_Result")]
+    [DataContractAttribute(IsReference=true)]
+    [Serializable()]
+    public partial class GetNextJobID_Result : ComplexObject
+    {
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String DepartmentID
+        {
+            get
+            {
+                return _DepartmentID;
+            }
+            set
+            {
+                OnDepartmentIDChanging(value);
+                ReportPropertyChanging("DepartmentID");
+                _DepartmentID = StructuralObject.SetValidValue(value, true, "DepartmentID");
+                ReportPropertyChanged("DepartmentID");
+                OnDepartmentIDChanged();
+            }
+        }
+        private global::System.String _DepartmentID;
+        partial void OnDepartmentIDChanging(global::System.String value);
+        partial void OnDepartmentIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String EmployeeID
+        {
+            get
+            {
+                return _EmployeeID;
+            }
+            set
+            {
+                OnEmployeeIDChanging(value);
+                ReportPropertyChanging("EmployeeID");
+                _EmployeeID = StructuralObject.SetValidValue(value, true, "EmployeeID");
+                ReportPropertyChanged("EmployeeID");
+                OnEmployeeIDChanged();
+            }
+        }
+        private global::System.String _EmployeeID;
+        partial void OnEmployeeIDChanging(global::System.String value);
+        partial void OnEmployeeIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Year
+        {
+            get
+            {
+                return _Year;
+            }
+            set
+            {
+                OnYearChanging(value);
+                ReportPropertyChanging("Year");
+                _Year = StructuralObject.SetValidValue(value, "Year");
+                ReportPropertyChanged("Year");
+                OnYearChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Year;
+        partial void OnYearChanging(Nullable<global::System.Int32> value);
+        partial void OnYearChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Month
+        {
+            get
+            {
+                return _Month;
+            }
+            set
+            {
+                OnMonthChanging(value);
+                ReportPropertyChanging("Month");
+                _Month = StructuralObject.SetValidValue(value, "Month");
+                ReportPropertyChanged("Month");
+                OnMonthChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Month;
+        partial void OnMonthChanging(Nullable<global::System.Int32> value);
+        partial void OnMonthChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Next
+        {
+            get
+            {
+                return _Next;
+            }
+            set
+            {
+                OnNextChanging(value);
+                ReportPropertyChanging("Next");
+                _Next = StructuralObject.SetValidValue(value, "Next");
+                ReportPropertyChanged("Next");
+                OnNextChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Next;
+        partial void OnNextChanging(Nullable<global::System.Int32> value);
+        partial void OnNextChanged();
 
         #endregion
 

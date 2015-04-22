@@ -419,10 +419,6 @@ var jobs = new function () {
                         width: 100,
                         template: "<span class='status-#= Status #-ico'>#= StatusName #<span>"
                     }, {
-                        field: "CreatedUserName",
-                        title: "Người tạo",
-                        width: 150
-                    }, {
                         field: "PosterName",
                         title: "Người gửi",
                         width: 150
@@ -519,10 +515,6 @@ var jobs = new function () {
                         field: "OverDeadlineNumber",
                         title: "Số ngày quá hạn",
                         width: 100
-                    }, {
-                        field: "CreatedUserName",
-                        title: "Người tạo",
-                        width: 150
                     }, {
                         field: "PosterName",
                         title: "Người gửi",
