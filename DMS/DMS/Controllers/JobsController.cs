@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
+using System.Globalization;
+using System.Threading;
 
 namespace DMS.Controllers
 {
@@ -254,6 +256,11 @@ namespace DMS.Controllers
 
         public JsonResult GridPersonal(JobModels model)
         {
+            // Xử lý đa ngôn ngữ
+            CultureInfo cultureInfo = CultureInfo.GetCultureInfo("vi-VN");
+            Thread.CurrentThread.CurrentUICulture = cultureInfo;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB");
+
             var item = model ?? new JobModels();
 
             List<JobModels> lst = new List<JobModels>();

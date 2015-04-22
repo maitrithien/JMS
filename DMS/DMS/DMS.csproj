@@ -351,6 +351,7 @@
     <Content Include="Scripts\kendoUI\kendo.all.min.js" />
     <Content Include="Scripts\kendoUI\kendo.angular.min.js" />
     <Content Include="Scripts\kendoUI\kendo.core.min.js" />
+    <Content Include="Scripts\kendoUI\kendo.culture.en-GB.min.js" />
     <Content Include="Scripts\kendoUI\kendo.data.min.js" />
     <Content Include="Scripts\kendoUI\kendo.dataviz.core.min.js" />
     <Content Include="Scripts\kendoUI\kendo.mobile.min.js" />

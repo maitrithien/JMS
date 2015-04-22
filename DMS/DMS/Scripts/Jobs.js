@@ -276,7 +276,15 @@ var jobs = new function () {
                 dataSource: {
                     type: "json",
                     transport: {
-                        read: $('#gridJobsUrl').val()
+                        read: $('#gridJobsUrl').val(),
+                        data: function () {
+                            var data = {
+                                DeadlineFilter: '26/04/2015',
+                                IsFilter: 1,
+
+                            }
+                            return data;
+                        }//gridSendData
                     },
                     pageSize: 20
                 },

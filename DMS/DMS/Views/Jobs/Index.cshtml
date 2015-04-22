@@ -66,15 +66,19 @@
                     click: function (e) {
                         //console.log("search");
                         var grid = $("#grid").data("kendoGrid");
-                        var data = common.getFormDataTypeJson("frm-main-filter");
-                        data['IsFilter'] = 1;
 
-                        grid.dataSource.read(data);
+                        grid.dataSource.read();
                     }
                 });
 
                 
             });
+
+            //function gridSendData() {
+            //    var data = common.getFormDataTypeJson("frm-main-filter");
+            //    data['IsFilter'] = 1;
+            //    return data;
+            //}
         </script>
     </div>
 }

@@ -62,6 +62,7 @@ namespace DMS.Models
         /// Ngày hết hạn
         /// </summary>
         [Display(Name = "Ngày hết hạn")]
+        [DisplayFormat(ApplyFormatInEditMode=true, DataFormatString="dd/MM/yyyy")]
         public DateTime? DeadlineFilter { get; set; }
 
         /// <summary>

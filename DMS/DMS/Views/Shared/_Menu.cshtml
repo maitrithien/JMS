@@ -11,6 +11,8 @@
         $scope.countP = "00";
         $scope.countO = "00";
 
+        updateTime();
+
         function updateTime() {
             $.ajax({
                 type: 'POST',
@@ -26,9 +28,9 @@
                 }
             });
             
-            $timeout(updateTime, 3000);
+            $timeout(updateTime, 10000);
         };
-        updateTime();
+        
     }
 
 </script>

@@ -132,11 +132,12 @@
 
 var common = new function () {
     this.getFormDataTypeJson = function (formId) {
-        var elems = $('#' + formId).find('input, textarea, checkbox');
+
+        var elems = $('#' + formId).serializeArray();//.find('input, textarea, checkbox');
         
         var data = {};
         $.each(elems, function (i, obj) {
-            data[obj.id] = obj.value;
+            data[obj.name] = obj.value;
         });
 
         return data;
@@ -155,5 +156,5 @@ var common = new function () {
 };
 
 $(document).ready(function () {
-    
+    kendo.culture("en-GB");
 });
