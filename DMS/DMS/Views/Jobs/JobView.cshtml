@@ -71,6 +71,40 @@
                 }
             });
 
+            $("#btnSent").kendoButton({
+                icon: "redo",
+                click: function () {
+                    var data = {
+                        APK: $('#JobAPK').val(),
+                    };
+
+                    var win = $("#sentDialog").data("kendoWindow");
+                    win.center();
+                    win.refresh({
+                        url: $('#sentDialogUrl').val(),
+                        data: {
+                            APK: $('#JobAPK').val(),
+                        },
+                        type: 'POST'
+                    });
+                    win.open();
+                }
+            });
+
+            $("#btnLock").kendoButton({
+                icon: "lock",
+                click: function (e) {
+                    console.log("lock");
+                }
+            });
+
+            $("#btnUnlock").kendoButton({
+                icon: "unlock",
+                click: function (e) {
+                    console.log("unlock");
+                }
+            });
+
             $("#btnDelete").kendoButton({
                 icon: "close",
                 click: function (e) {
@@ -85,12 +119,12 @@
                     win.center();
                     win.refresh({
                         url: '@Url.Action("NoteDialog", "Jobs")',
-                    data: {},
-                    type: 'POST'
-                });
-                win.open();
-            }
-        });
+                        data: {},
+                        type: 'POST'
+                    });
+                    win.open();
+                }
+            });
 
        @* $("#btnEditNote").kendoButton({
             icon: "pencil",
@@ -120,12 +154,12 @@
                     win.center();
                     win.refresh({
                         url: "@Url.Action("AttachmentDialog", "Jobs")",
-                    data: {},
-                    type: 'POST'
-                });
-                win.open();
-            }
-        });
+                        data: {},
+                        type: 'POST'
+                    });
+                    win.open();
+                }
+            });
 
             $("#btnDeleteHistory").kendoButton({
                 icon: "close",
@@ -150,6 +184,16 @@
                 width: 900,
                 actions: ["Close", "Maximize"],
                 title: "Cập nhật thông tin hồ sơ",
+                visible: false
+            }).data("kendoWindow");
+
+            $("#sentDialog").kendoWindow({
+                iframe: false,
+                modal: true,
+                height: 380,
+                width: 900,
+                actions: ["Close", "Maximize"],
+                title: "Gửi hồ sơ",
                 visible: false
             }).data("kendoWindow");
 
@@ -202,6 +246,10 @@
                 <div class="toolbar">
                     <button id="btnEdit" title="Cập nhật" type="button"></button>
                     <button id="btnDelete" style="visibility: hidden" title="Xóa" type="button"></button>
+
+                    <button id="btnLock" title="Không duyệt" type="button" class="btn-right"></button>
+                    <button id="btnUnlock" title="Duyệt" type="button" class="btn-right"></button>
+                    <button id="btnSent" title="Gửi" type="button" class="btn-right"></button>
                 </div>
                 <div class="title-info">
                     <span>Thông tin mặc định</span>
@@ -288,8 +336,10 @@
 
 @Html.Hidden("JobAPK", Model.APK)
 @Html.Hidden("jobDialogUrl", Url.Action("JobDialog", "Jobs"))
+@Html.Hidden("sentDialogUrl", Url.Action("SentDialog", "Jobs"))
 @Html.Hidden("checkEditNoteUrl", Url.Action("CheckEditNote", "Jobs"))
 @Html.Hidden("checkEditJobUrl", Url.Action("CheckEdit", "Jobs"))
+<div id="sentDialog"></div>
 <div id="jobDialog">
     @*@{
         Html.RenderPartial("JobDialog");
@@ -303,9 +353,9 @@
 </div>
 
 <div id="AttachmentDialog">
-    @{
+    @* @{
         Html.RenderPartial("AttachmentDialog", new DMS.Models.AttachmentModels());
-    }
+    }*@
 </div>
 
 <div id="UpdateAttachmentDialog">

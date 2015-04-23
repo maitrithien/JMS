@@ -38,6 +38,14 @@ namespace DMS.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult ManagerID(string DepartmentID)
+        {
+            List<Employee> model = _EntityModel.Employees.Where(x => x.GroupID != "0" && x.DepartmentID == DepartmentID).ToList();
+            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "< Không >", UserName = string.Empty });
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult StatusID()
         {
             List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.STATUS_CODE).ToList();

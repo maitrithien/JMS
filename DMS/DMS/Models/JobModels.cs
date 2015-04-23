@@ -107,6 +107,10 @@ namespace DMS.Models
 
         public Guid? APK { get; set; }
 
+        public Guid? ReAPK { get; set; }
+
+        public string ReJobID { get; set; }
+
         [Display(Name = "Mã hồ sơ")]
         public string JobID { get; set; }
 
@@ -188,5 +192,12 @@ namespace DMS.Models
 
         [Display(Name = "Ghi chú")]
         public string Note { get; set; }
+
+        [Display(Name = "Nội dung")]
+        public string SentMessage { get; set; }
+
+        [Display(Name = "Người gửi")]
+        public string Sender { get; set; }
+
     }
 }

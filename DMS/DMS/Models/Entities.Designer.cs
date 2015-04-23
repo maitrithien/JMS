@@ -2288,6 +2288,78 @@ namespace DMS.Models
         private global::System.String _LastModifyUserID;
         partial void OnLastModifyUserIDChanging(global::System.String value);
         partial void OnLastModifyUserIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ReJobID
+        {
+            get
+            {
+                return _ReJobID;
+            }
+            set
+            {
+                OnReJobIDChanging(value);
+                ReportPropertyChanging("ReJobID");
+                _ReJobID = StructuralObject.SetValidValue(value, true, "ReJobID");
+                ReportPropertyChanged("ReJobID");
+                OnReJobIDChanged();
+            }
+        }
+        private global::System.String _ReJobID;
+        partial void OnReJobIDChanging(global::System.String value);
+        partial void OnReJobIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String SentMessage
+        {
+            get
+            {
+                return _SentMessage;
+            }
+            set
+            {
+                OnSentMessageChanging(value);
+                ReportPropertyChanging("SentMessage");
+                _SentMessage = StructuralObject.SetValidValue(value, true, "SentMessage");
+                ReportPropertyChanged("SentMessage");
+                OnSentMessageChanged();
+            }
+        }
+        private global::System.String _SentMessage;
+        partial void OnSentMessageChanging(global::System.String value);
+        partial void OnSentMessageChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Guid> ReAPK
+        {
+            get
+            {
+                return _ReAPK;
+            }
+            set
+            {
+                OnReAPKChanging(value);
+                ReportPropertyChanging("ReAPK");
+                _ReAPK = StructuralObject.SetValidValue(value, "ReAPK");
+                ReportPropertyChanged("ReAPK");
+                OnReAPKChanged();
+            }
+        }
+        private Nullable<global::System.Guid> _ReAPK;
+        partial void OnReAPKChanging(Nullable<global::System.Guid> value);
+        partial void OnReAPKChanged();
 
         #endregion
 

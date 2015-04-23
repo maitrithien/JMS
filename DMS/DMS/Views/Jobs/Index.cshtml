@@ -93,6 +93,7 @@
 
 @Html.Partial("Grid")
 @Html.Hidden("jobDialogUrl", Url.Action("JobDialog", "Jobs"))
+@Html.Hidden("sentDialogUrl", Url.Action("SentDialog", "Jobs"))
 @Html.Hidden("removeJobUrl", Url.Action("Delete", "Jobs"))
 @Html.Hidden("checkDeleteJobUrl", Url.Action("CheckDelete", "Jobs"))
 <div id="jobDialog">

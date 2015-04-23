@@ -450,6 +450,7 @@
     <Content Include="Views\Jobs\GridJobsOverdue.cshtml" />
     <Content Include="Views\Jobs\JobsStatc.cshtml" />
     <Content Include="Views\Shared\_Menu.cshtml" />
+    <Content Include="Views\Jobs\SentDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

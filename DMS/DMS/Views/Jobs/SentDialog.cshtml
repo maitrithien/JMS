@@ -1,0 +1,178 @@
+﻿@model DMS.Models.JobModels
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-sent-job" }))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.APK)
+    @Html.HiddenFor(model => model.Sender)
+    @Html.HiddenFor(model => model.ReJobID)
+    @Html.HiddenFor(model => model.ReAPK)
+    <div class="content-wrapper">
+        @*<div class="error">
+            @Html.ValidationMessageFor(model => model.JobID)
+            @Html.ValidationMessageFor(model => model.JobName)
+            @Html.ValidationMessageFor(model => model.Deadline)
+            @Html.ValidationMessageFor(model => model.Note)
+            @Html.ValidationMessageFor(model => model.Status)
+            @Html.ValidationMessageFor(model => model.Recipient)
+        </div>*@
+
+        <div class="tab-content">
+            <div class="content-column">
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DepartmentID, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.DepartmentID, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            $("#DepartmentID").dropdownlist({
+                                url: '@Url.Action("DepartmentID", "ComboBox")',
+                                dataTextField: 'DepartmentName',
+                                dataValueField: 'DepartmentID'
+                            });
+                        </script>
+                    </div>
+                </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Confirmer, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Confirmer, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            @{ 
+                                string param = !string.IsNullOrEmpty(Model.DepartmentID) 
+                                    ? "?DepartmentID=" + Model.DepartmentID 
+                                    : "";
+                            }
+                            $("#Confirmer").dropdownlist({
+
+                                url: '@Url.Action("ManagerID", "ComboBox")' + '@param',
+                                dataTextField: 'FullName',
+                                dataValueField: 'EmployeeID',
+                                open: function () {
+                                    var data = {};
+                                    var departmentId = $("#DepartmentID").val();
+                                    data["DepartmentID"] = departmentId == undefined ? '' : departmentId;
+
+                                    var complex = $("#Confirmer").data("kendoDropDownList");
+                                    if (complex) {
+                                        complex.dataSource.read(data);
+                                    }
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Recipient, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Recipient, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            @{ 
+                                    param = !string.IsNullOrEmpty(Model.DepartmentID) 
+                                    ? "?DepartmentID=" + Model.DepartmentID 
+                                    : "";
+                            }
+                            $("#Recipient").dropdownlist({
+
+                                url: '@Url.Action("RecipientID", "ComboBox")' + '@param',
+                                dataTextField: 'FullName',
+                                dataValueField: 'EmployeeID',
+                                open: function () {
+                                    var data = {};
+                                    var departmentId = $("#DepartmentID").val();
+                                    data["DepartmentID"] = departmentId == undefined ? '' : departmentId;
+
+                                    var complex = $("#Recipient").data("kendoDropDownList");
+                                    if (complex) {
+                                        complex.dataSource.read(data);
+                                    }
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="title-info">
+            <span>Nội dung đính kèm</span>
+        </div>
+        <div class="tab-content">
+            <div class="content-column-full">
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.SentMessage, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.SentMessage, new { style = "width: 100%; height: 80px; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="content-wrapper bottom-toolbar">
+        <button id="btnSentJob" type="button">Lưu & đóng</button>
+        <script type="text/javascript">
+            $("#btnSentJob").kendoButton({
+                width: 120,
+                icon: "tick",
+                click: function () {
+                    var data = common.getFormDataTypeJson('frm-sent-job');
+                    $.ajax({
+                        type: 'POST',
+                        url: $('#sentJobUrl').val(),
+                        data: JSON.stringify(data),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            if (data.result) {
+                                $.ajax({
+                                    type: 'GET',
+                                    url: $('#viewJobPartialUrl').val(),
+                                    data: {
+                                        id: data.id
+                                    },
+                                    contentType: 'application/json; charset=utf-8',
+                                    success: function (result) {
+                                        $('#main-content').empty();
+                                        $('#main-content').html(result);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        </script>
+        <button id="btnCancel" type="button">Đóng</button>
+        <script type="text/javascript">
+            $("#btnCancel").kendoButton({
+                width: 120,
+                icon: "close",
+                click: function () {
+                    var win = $("#sentDialog").data("kendoWindow");
+                    if (win) {
+                        win.close();
+                    }
+                }
+            });
+        </script>
+    </div>
+        
+}
+
+@Html.Hidden("sentJobUrl", Url.Action("SentJob", "Jobs"))
+@Html.Hidden("viewJobUrl", Url.Action("JobView", "Jobs"))
+@Html.Hidden("viewJobPartialUrl", Url.Action("JobViewPartial", "Jobs"))
+
+
+
+
+
+

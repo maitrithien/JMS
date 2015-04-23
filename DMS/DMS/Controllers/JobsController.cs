@@ -623,6 +623,9 @@ namespace DMS.Controllers
                 model.Status = finder.Status;
                 model.StatusConfirm = finder.StatusConfirm;
                 model.RateComment = finder.RateComment;
+                model.ReAPK = finder.ReAPK;
+                model.SentMessage = finder.SentMessage;
+                model.ReJobID = finder.ReJobID;
                 model.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
                     s.CodeID == finder.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
                 model.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
@@ -668,6 +671,9 @@ namespace DMS.Controllers
                 model.Status = finder.Status;
                 model.StatusConfirm = finder.StatusConfirm;
                 model.RateComment = finder.RateComment;
+                model.ReAPK = finder.ReAPK;
+                model.SentMessage = finder.SentMessage;
+                model.ReJobID = finder.ReJobID;
                 model.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
                     s.CodeID == finder.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
                 model.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
@@ -685,6 +691,73 @@ namespace DMS.Controllers
             }
 
             return PartialView(model);
+        }
+
+        [Authorize]
+        public ActionResult SentDialog(JobModels model)
+        {
+            JobModels item = model ?? new JobModels();
+
+            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
+            if (finder != null)
+            {
+                item.ReAPK = finder.APK;
+                item.ReJobID = finder.JobID;
+                item.Sender = _EmployeeID;
+            }
+
+            return PartialView(model);
+        }
+
+        public ActionResult SentJob(JobModels model)
+        {
+            JobModels item = model ?? new JobModels();
+
+            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
+            if (finder != null)
+            {
+                string empUserName = (_EntityModel.Employees.FirstOrDefault(x => x.EmployeeID == item.Recipient)
+                    ?? new Employee()).UserName;
+
+                GetNextJobID_Result id = _EntityModel.GetNextJobID(empUserName).FirstOrDefault()
+                                                                                        ?? new GetNextJobID_Result();
+                finder.JobID = string.Format("{0}-{1}-{2:0000}{3:00}{4:000}",
+                                    id.DepartmentID, id.EmployeeID, id.Year, id.Month, id.Next);
+
+                // Do Insert
+                Job job = new Job
+                {
+                    APK = Guid.NewGuid(),
+                    Complex = finder.Complex,
+                    Confirmer = item.Confirmer,
+                    Deadline = finder.Deadline,
+                    DepartmentID = item.DepartmentID,
+                    JobID = finder.JobID,
+                    JobName = finder.JobName,
+                    Note = finder.Note,
+                    Poster = item.Sender,
+                    Priority = finder.Priority,
+                    Rate = finder.Rate,
+                    Sender = item.Sender,
+                    ReAPK = finder.APK,
+                    ReJobID = item.ReJobID,
+                    Recipient = item.Recipient,
+                    Status = finder.Status,
+                    StatusConfirm = "0",
+                    RateComment = finder.RateComment,
+                    CreatedDate = DateTime.Now,
+                    CreatedUserID = User.Identity.Name,
+                    LastModifyDate = DateTime.Now,
+                    LastModifyUserID = User.Identity.Name,
+                };
+
+                _EntityModel.Jobs.AddObject(job);
+                _EntityModel.SaveChanges();
+
+                item.APK = finder.APK;
+            }
+
+            return Json(new { result = true, id = item.APK });
         }
 
         #endregion ---- Jobs ----

@@ -124,6 +124,9 @@
           <Property Name="LastModifyDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedUserID" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifyUserID" Type="nvarchar" MaxLength="50" />
+          <Property Name="ReJobID" Type="nvarchar" MaxLength="50" />
+          <Property Name="SentMessage" Type="nvarchar(max)" />
+          <Property Name="ReAPK" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="Notes">
           <Key>
@@ -204,7 +207,7 @@
           <Parameter Name="EmployeeID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="GetNextJobID" ReturnType="Collection(JMSModel.GetNextJobID_Result)">
-            <Parameter Name="UserName" Mode="In" Type="String" />
+          <Parameter Name="UserName" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Attachment">
@@ -322,6 +325,9 @@
           <Property Type="DateTime" Name="LastModifyDate" Nullable="false" Precision="3" />
           <Property Type="String" Name="CreatedUserID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="LastModifyUserID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ReJobID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="SentMessage" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Guid" Name="ReAPK" />
         </EntityType>
         <ComplexType Name="GetJobs_Result">
           <Property Type="Guid" Name="APK" Nullable="false" />
@@ -473,6 +479,9 @@
           <EntitySetMapping Name="Jobs">
             <EntityTypeMapping TypeName="JMSModel.Job">
               <MappingFragment StoreEntitySet="Jobs">
+                <ScalarProperty Name="ReAPK" ColumnName="ReAPK" />
+                <ScalarProperty Name="SentMessage" ColumnName="SentMessage" />
+                <ScalarProperty Name="ReJobID" ColumnName="ReJobID" />
                 <ScalarProperty Name="LastModifyUserID" ColumnName="LastModifyUserID" />
                 <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
                 <ScalarProperty Name="LastModifyDate" ColumnName="LastModifyDate" />
