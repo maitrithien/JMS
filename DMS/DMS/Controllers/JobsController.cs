@@ -505,7 +505,7 @@ namespace DMS.Controllers
                         ? "1" : item.Status
                     : item.Status;
                 finder.LastModifyDate = DateTime.Now;
-                finder.LastModifyUserID = _EmployeeID;
+                finder.LastModifyUserID = User.Identity.Name;
 
                 _EntityModel.SaveChanges();
             }
@@ -530,9 +530,9 @@ namespace DMS.Controllers
                     StatusConfirm = item.StatusConfirm ?? "0",
                     RateComment = item.RateComment,
                     CreatedDate = DateTime.Now,
-                    CreatedUserID = _EmployeeID,
+                    CreatedUserID = User.Identity.Name,
                     LastModifyDate = DateTime.Now,
-                    LastModifyUserID = _EmployeeID,
+                    LastModifyUserID = User.Identity.Name,
                 };
 
                 _EntityModel.Jobs.AddObject(job);
@@ -734,9 +734,9 @@ namespace DMS.Controllers
                     AttachmentOwner = _EmployeeID,
                     JobAPK = item.JobAPK ?? Guid.Empty,
                     CreatedDate = DateTime.Now,
-                    CreatedUserID = _EmployeeID,
+                    CreatedUserID = User.Identity.Name,
                     LastModifyDate = DateTime.Now,
-                    LastModifyUserID = _EmployeeID
+                    LastModifyUserID = User.Identity.Name
                 };
 
                 _EntityModel.Attachments.AddObject(att);
@@ -947,7 +947,7 @@ namespace DMS.Controllers
             {
                 finder.Title = item.Title;
                 finder.Description = item.Description;
-                finder.LastModifyUserID = _EmployeeID;
+                finder.LastModifyUserID = User.Identity.Name;
                 finder.LastModifyDate = DateTime.Now;
                 _EntityModel.SaveChanges();
             }
@@ -960,9 +960,9 @@ namespace DMS.Controllers
                     Title = item.Title,
                     Description = item.Description,
                     LastModifyDate = DateTime.Now,
-                    LastModifyUserID = _EmployeeID,
+                    LastModifyUserID = User.Identity.Name,
                     CreatedDate = DateTime.Now,
-                    CreatedUserID = _EmployeeID
+                    CreatedUserID = User.Identity.Name
                 };
 
                 _EntityModel.Notes.AddObject(note);
