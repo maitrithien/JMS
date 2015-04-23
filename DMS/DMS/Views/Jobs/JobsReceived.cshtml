@@ -36,7 +36,7 @@
                 $("#jobDialog").kendoWindow({
                     iframe: false,
                     modal: true,
-                    height: 560,
+                    height: 480,
                     width: 900,
                     title: "Cập nhật thông tin hồ sơ",
                     visible: false
@@ -66,8 +66,10 @@
                     click: function (e) {
                         //console.log("search");
                         var grid = $("#grid").data("kendoGrid");
+                        var x = kendo.parseDate($('#DeadlineFilter').val());
                         var data = common.getFormDataTypeJson("frm-main-filter");
-                        data['IsFilter'] = 1;
+                        data["IsFilter"] = 1;
+                        data["DeadlineFilter"] = kendo.toString(x, "u");
 
                         grid.dataSource.read(data);
                     }

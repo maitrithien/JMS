@@ -146,8 +146,9 @@
             $("#jobDialog").kendoWindow({
                 iframe: false,
                 modal: true,
-                height: 600,
+                height: 480,
                 width: 900,
+                actions: ["Close", "Maximize"],
                 title: "Cập nhật thông tin hồ sơ",
                 visible: false
             }).data("kendoWindow");
@@ -158,6 +159,7 @@
                 height: 530,
                 width: 800,
                 title: "Cập nhật ghi chú",
+                actions: ["Close", "Maximize"],
                 visible: false
             }).data("kendoWindow");
 
@@ -167,6 +169,7 @@
                 height: 350,
                 width: 500,
                 title: "Đính kèm tập tin",
+                actions: ["Close", "Maximize"],
                 visible: false
             }).data("kendoWindow");
 
@@ -176,6 +179,7 @@
                 height: 350,
                 width: 500,
                 title: "Cập nhật thông tin đính kèm",
+                actions: ["Maximize", "Close"],
                 visible: false
             }).data("kendoWindow");
         });

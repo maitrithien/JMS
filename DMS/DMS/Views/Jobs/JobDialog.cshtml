@@ -24,6 +24,13 @@
                 <div class="content-row">
                     <div class="editor-label">
                         @Html.LabelFor(model => model.JobID, new { style = "font-weight: normal; font-size: small;" })
+                        @Html.HiddenFor(model => model.StatusConfirm)
+                        @Html.HiddenFor(model => model.Rate)
+                        @Html.HiddenFor(model => model.RateComment)
+                        @Html.HiddenFor(model => model.Confirmer)
+                        @Html.HiddenFor(model => model.DepartmentID)
+                        @Html.HiddenFor(model => model.Poster)
+                        @Html.HiddenFor(model => model.Recipient)
                     </div>
                     <div class="editor-field">
                         @Html.EditorFor(model => model.JobID, new { style = "width: 100%; font-weight: normal; font-size: small;" })
@@ -46,6 +53,43 @@
                         <script type="text/javascript">
                             $("#Deadline").kendoDatePicker({
                                 format: "dd/MM/yyyy"
+                            });
+                        </script>
+                    </div>
+                </div>
+                
+                @*@if (Model.Action == DMS.Models.FormAction.Edit && Model.Status == "2")
+                {
+                    <div class="content-row">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.Rate, new { style = "font-weight: normal; font-size: small;" })
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.Rate, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                            <script type="text/javascript">
+                                $("#Rate").dropdownlist({
+                                    url: '@Url.Action("RateID", "ComboBox")',
+                                    dataTextField: 'CodeName',
+                                    dataValueField: 'CodeID'
+                                });
+                            </script>
+                        </div>
+                    </div>
+                }*@
+            </div>
+            <div class="content-column">
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Status, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Status, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        
+                        <script type="text/javascript">
+                            $("#Status").dropdownlist({
+                                url: '@Url.Action("StatusID", "ComboBox")',
+                                dataTextField: 'CodeName',
+                                dataValueField: 'CodeID'
                             });
                         </script>
                     </div>
@@ -80,43 +124,7 @@
                         </script>
                     </div>
                 </div>
-                @if (Model.Action == DMS.Models.FormAction.Edit && Model.Status == "2")
-                {
-                    <div class="content-row">
-                        <div class="editor-label">
-                            @Html.LabelFor(model => model.Rate, new { style = "font-weight: normal; font-size: small;" })
-                        </div>
-                        <div class="editor-field">
-                            @Html.TextBoxFor(model => model.Rate, new { style = "width: 100%; font-weight: normal; font-size: small;" })
-                            <script type="text/javascript">
-                                $("#Rate").dropdownlist({
-                                    url: '@Url.Action("RateID", "ComboBox")',
-                                    dataTextField: 'CodeName',
-                                    dataValueField: 'CodeID'
-                                });
-                            </script>
-                        </div>
-                    </div>
-                }
-            </div>
-            <div class="content-column">
-                <div class="content-row">
-                    <div class="editor-label">
-                        @Html.LabelFor(model => model.Status, new { style = "font-weight: normal; font-size: small;" })
-                    </div>
-                    <div class="editor-field">
-                        @Html.TextBoxFor(model => model.Status, new { style = "width: 100%; font-weight: normal; font-size: small;" })
-                        
-                        <script type="text/javascript">
-                            $("#Status").dropdownlist({
-                                url: '@Url.Action("StatusID", "ComboBox")',
-                                dataTextField: 'CodeName',
-                                dataValueField: 'CodeID'
-                            });
-                        </script>
-                    </div>
-                </div>
-                <div class="content-row">
+                @*<div class="content-row">
                     <div class="editor-label">
                         @Html.LabelFor(model => model.Poster, new { style = "font-weight: normal; font-size: small;" })
                     </div>
@@ -192,9 +200,9 @@
                             });
                         </script>
                     </div>
-                </div>
+                </div>*@
                 
-                @{
+               @* @{
                     if(!string.IsNullOrEmpty(Model.Confirmer) && Model.Confirmer.Equals(User.Identity.Name))
                     {
                         <div class="content-row">
@@ -213,7 +221,7 @@
                             </div>
                         </div>
                     }
-                }
+                }*@
             </div>
         </div>
         <div class="title-info">
@@ -226,7 +234,7 @@
                         @Html.LabelFor(model => model.Note, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.TextAreaFor(model => model.Note, new { style = "width: 100%; height: 120px; font-weight: normal; font-size: small;" })
+                        @Html.TextAreaFor(model => model.Note, new { style = "width: 100%; height: 200px; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
             </div>

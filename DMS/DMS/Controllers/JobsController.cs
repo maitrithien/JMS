@@ -57,7 +57,7 @@ namespace DMS.Controllers
                 countS = string.Format("{0:00}", counter.CountS ?? 0),
                 countR = string.Format("{0:00}", counter.CountR ?? 0),
                 countP = string.Format("{0:00}", counter.CountP ?? 0),
-                countO = string.Format("{0:00}", counter.CountS ?? 0)
+                countO = string.Format("{0:00}", counter.CountO ?? 0)
             });
         }
 

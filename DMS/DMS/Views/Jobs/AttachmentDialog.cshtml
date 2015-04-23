@@ -26,5 +26,19 @@
             </div>
         </div>
     </div>
-        
+    <div class="content-wrapper bottom-toolbar">
+        <button id="btnAttachmentCancel" type="button">Đóng</button>
+        <script>
+            $("#btnAttachmentCancel").kendoButton({
+                width: 120,
+                icon: "close",
+                click: function () {
+                    var win = $("#AttachmentDialog").data("kendoWindow");
+                    if (win) {
+                        win.close();
+                    }
+                }
+            });
+        </script>
+    </div>
 }

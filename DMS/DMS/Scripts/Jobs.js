@@ -168,6 +168,7 @@ var jobs = new function () {
             attachmentConfirmWindow = $("#confirmDialog").kendoWindow({
                 title: "Thông báo",
                 visible: false,
+                actions: ["Minimize", "Maximize"],
                 modal: true,
                 width: "400px",
                 height: "100px",

@@ -867,6 +867,11 @@ tr.pager td {
             }
 /* ICON
     ----------------------------------------------------------*/
+.k-state-selected.selected
+{
+	background-color: #efeeef;
+	border-bottom: 5px solid #007ACC;
+}
 .status-0-ico
 {
 	border-left: 20px solid #4cff00;
