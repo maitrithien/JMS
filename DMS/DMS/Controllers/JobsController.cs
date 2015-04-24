@@ -50,6 +50,9 @@ namespace DMS.Controllers
         {
             // Đếm số lượng hồ sơ (Notify menu)
             var counter = _EntityModel.GetCounterJobs(User.Identity.Name).FirstOrDefault();
+            var feeds = _EntityModel.Feeds
+                .Where(x => x.Reader == _EmployeeID && !x.Read)
+                .Count();
 
             return Json(new
             {
@@ -57,7 +60,8 @@ namespace DMS.Controllers
                 countS = string.Format("{0:00}", counter.CountS ?? 0),
                 countR = string.Format("{0:00}", counter.CountR ?? 0),
                 countP = string.Format("{0:00}", counter.CountP ?? 0),
-                countO = string.Format("{0:00}", counter.CountO ?? 0)
+                countO = string.Format("{0:00}", counter.CountO ?? 0),
+                countM = string.Format("{0:00}", feeds)
             });
         }
 
@@ -149,7 +153,9 @@ namespace DMS.Controllers
                     Status = x.Status,
                     StatusConfirm = x.StatusConfirm,
                     StatusConfirmName = x.StatusConfirmName,
-                    StatusName = x.StatusName
+                    StatusName = x.StatusName,
+                    Sender = x.Sender,
+                    SenderName = x.SenderName
                 }).ToList();
             }
 
@@ -203,7 +209,9 @@ namespace DMS.Controllers
                     Status = x.Status,
                     StatusConfirm = x.StatusConfirm,
                     StatusConfirmName = x.StatusConfirmName,
-                    StatusName = x.StatusName
+                    StatusName = x.StatusName,
+                    Sender = x.Sender,
+                    SenderName = x.SenderName
                 }).ToList();
             }
 
@@ -257,7 +265,9 @@ namespace DMS.Controllers
                     Status = x.Status,
                     StatusConfirm = x.StatusConfirm,
                     StatusConfirmName = x.StatusConfirmName,
-                    StatusName = x.StatusName
+                    StatusName = x.StatusName,
+                    Sender = x.Sender,
+                    SenderName = x.SenderName
                 }).ToList();
             }
 
@@ -316,7 +326,9 @@ namespace DMS.Controllers
                     Status = x.Status,
                     StatusConfirm = x.StatusConfirm,
                     StatusConfirmName = x.StatusConfirmName,
-                    StatusName = x.StatusName
+                    StatusName = x.StatusName,
+                    Sender = x.Sender,
+                    SenderName = x.SenderName
                 }).ToList();
             }
 
@@ -370,7 +382,9 @@ namespace DMS.Controllers
                     Status = x.Status,
                     StatusConfirm = x.StatusConfirm,
                     StatusConfirmName = x.StatusConfirmName,
-                    StatusName = x.StatusName
+                    StatusName = x.StatusName,
+                    Sender = x.Sender,
+                    SenderName = x.SenderName
                 }).ToList();
             }
 
@@ -624,6 +638,7 @@ namespace DMS.Controllers
                 model.StatusConfirm = finder.StatusConfirm;
                 model.RateComment = finder.RateComment;
                 model.ReAPK = finder.ReAPK;
+                model.Sender = finder.Sender;
                 model.SentMessage = finder.SentMessage;
                 model.ReJobID = finder.ReJobID;
                 model.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
@@ -637,9 +652,23 @@ namespace DMS.Controllers
                 model.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
                     s.CodeID == finder.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
                 model.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Poster) ?? new Employee()).FullName;
+                model.SenderName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Sender) ?? new Employee()).FullName;
                 model.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Recipient) ?? new Employee()).FullName;
                 model.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Confirmer) ?? new Employee()).FullName;
                 model.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == finder.DepartmentID) ?? new Department()).DepartmentName;
+
+                // Update feeds
+                var feeds = _EntityModel.Feeds
+                    .Where(x => x.JobAPK == finder.APK
+                        && x.Reader == _EmployeeID).ToList();
+                if (feeds != null)
+                {
+                    foreach (var f in feeds)
+                    {
+                        f.Read = true;
+                    }
+                    _EntityModel.SaveChanges();
+                }
             }
 
             return View(model);
@@ -674,6 +703,7 @@ namespace DMS.Controllers
                 model.ReAPK = finder.ReAPK;
                 model.SentMessage = finder.SentMessage;
                 model.ReJobID = finder.ReJobID;
+                model.Sender = finder.Sender;
                 model.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
                     s.CodeID == finder.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
                 model.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
@@ -685,6 +715,7 @@ namespace DMS.Controllers
                 model.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
                     s.CodeID == finder.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
                 model.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Poster) ?? new Employee()).FullName;
+                model.SenderName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Sender) ?? new Employee()).FullName;
                 model.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Recipient) ?? new Employee()).FullName;
                 model.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Confirmer) ?? new Employee()).FullName;
                 model.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == finder.DepartmentID) ?? new Department()).DepartmentName;
@@ -978,6 +1009,19 @@ namespace DMS.Controllers
                 item.CreatedUserID = finder.CreatedUserID;
                 item.LastModifyDate = finder.LastModifyDate;
                 item.LastModifyUserID = finder.LastModifyUserID;
+
+                // Update feeds
+                var feeds = _EntityModel.Feeds
+                    .Where(x => x.NoteAPK == item.APK 
+                        && x.Reader == _EmployeeID).ToList();
+                if (feeds != null)
+                {
+                    foreach (var f in feeds)
+                    {
+                        f.Read = true;
+                    }
+                    _EntityModel.SaveChanges();
+                }
             }
 
             return PartialView(item);
@@ -1015,6 +1059,8 @@ namespace DMS.Controllers
 
             var finder = _EntityModel.Notes.Where(x =>
                     x.APK == item.APK).FirstOrDefault();
+            bool isSaved = false;
+            var apk = item.APK;
 
             if (finder != null)
             {
@@ -1023,6 +1069,7 @@ namespace DMS.Controllers
                 finder.LastModifyUserID = User.Identity.Name;
                 finder.LastModifyDate = DateTime.Now;
                 _EntityModel.SaveChanges();
+                isSaved = true;
             }
             else
             {
@@ -1040,9 +1087,68 @@ namespace DMS.Controllers
 
                 _EntityModel.Notes.AddObject(note);
                 _EntityModel.SaveChanges();
+                isSaved = true;
+                apk = note.APK;
+            }
+
+            if (isSaved)
+            {
+                var job = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.JobAPK)
+                    ?? new Job();
+
+                List<string> reader = new List<string>(){
+                    job.Recipient,
+                    job.Sender,
+                    job.Confirmer,
+                    job.Poster
+                }.Distinct().ToList();
+
+                foreach (var r in reader)
+                {
+                    // Không notify cho người tạo
+                    if (_EmployeeID.Equals(r)) continue;
+
+                    _EntityModel.Feeds.AddObject(new Feed{ 
+                        APK = Guid.NewGuid(),
+                        JobAPK = job.APK,
+                        JobID = job.JobID,
+                        NoteAPK = apk,
+                        Read = false,
+                        Reader = r
+                    });
+                    _EntityModel.SaveChanges();
+                }
             }
 
             return Json(new { result = true });
+        }
+
+        [Authorize]
+        public ActionResult FeedDialog()
+        {
+            return PartialView();
+        }
+
+        [Authorize]
+        public ActionResult MakeAsReadFeed(Feed model)
+        {
+            Feed feed = model ?? new Feed();
+            var finder = _EntityModel.Feeds.FirstOrDefault(x => x.APK == feed.APK);
+            if (finder != null)
+            {
+                finder.Read = true;
+                _EntityModel.SaveChanges();
+            }
+            return Json(new { result = true });
+        }
+
+        public JsonResult GridFeeds(JobModels model)
+        {
+            var item = model ?? new JobModels();
+
+            var feeds = _EntityModel.Feeds.Where(x => x.Reader == _EmployeeID).ToList();
+
+            return Json(feeds, JsonRequestBehavior.AllowGet);
         }
 
         #endregion ---- Notes ----

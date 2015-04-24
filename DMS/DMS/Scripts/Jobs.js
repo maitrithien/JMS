@@ -420,7 +420,7 @@ var jobs = new function () {
                         width: 100,
                         template: "<span class='status-#= Status #-ico'>#= StatusName #<span>"
                     }, {
-                        field: "PosterName",
+                        field: "SenderName",
                         title: "Người gửi",
                         width: 150
                     }, {

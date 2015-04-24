@@ -19,6 +19,7 @@
           </EntitySet>
           <EntitySet Name="Departments" EntityType="JMSModel.Store.Departments" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Employees" EntityType="JMSModel.Store.Employees" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Feeds" EntityType="JMSModel.Store.Feeds" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Histories" EntityType="JMSModel.Store.Histories" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Jobs" EntityType="JMSModel.Store.Jobs" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Notes" EntityType="JMSModel.Store.Notes" store:Type="Tables" Schema="dbo" />
@@ -85,6 +86,17 @@
           <Property Name="LastModifyDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedUserID" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifyUserID" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Feeds">
+          <Key>
+            <PropertyRef Name="APK" />
+          </Key>
+          <Property Name="APK" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="JobAPK" Type="uniqueidentifier" />
+          <Property Name="JobID" Type="nvarchar" MaxLength="50" />
+          <Property Name="NoteAPK" Type="uniqueidentifier" />
+          <Property Name="Reader" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Read" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Histories">
           <Key>
@@ -209,6 +221,7 @@
           <FunctionImport Name="GetNextJobID" ReturnType="Collection(JMSModel.GetNextJobID_Result)">
           <Parameter Name="UserName" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="Feeds" EntityType="JMSModel.Feed" />
         </EntityContainer>
         <EntityType Name="Attachment">
           <Key>
@@ -376,6 +389,17 @@
           <Property Type="Int32" Name="Month" Nullable="true" />
           <Property Type="Int32" Name="Next" Nullable="true" />
         </ComplexType>
+        <EntityType Name="Feed">
+          <Key>
+            <PropertyRef Name="APK" />
+          </Key>
+          <Property Type="Guid" Name="APK" Nullable="false" />
+          <Property Type="Guid" Name="JobAPK" />
+          <Property Type="String" Name="JobID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Guid" Name="NoteAPK" />
+          <Property Type="String" Name="Reader" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Read" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -568,6 +592,18 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Feeds">
+            <EntityTypeMapping TypeName="JMSModel.Feed">
+              <MappingFragment StoreEntitySet="Feeds">
+                <ScalarProperty Name="Read" ColumnName="Read" />
+                <ScalarProperty Name="Reader" ColumnName="Reader" />
+                <ScalarProperty Name="NoteAPK" ColumnName="NoteAPK" />
+                <ScalarProperty Name="JobID" ColumnName="JobID" />
+                <ScalarProperty Name="JobAPK" ColumnName="JobAPK" />
+                <ScalarProperty Name="APK" ColumnName="APK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

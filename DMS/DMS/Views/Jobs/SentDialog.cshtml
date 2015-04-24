@@ -144,6 +144,11 @@
                                         $('#main-content').html(result);
                                     }
                                 });
+
+                                var win = $("#sentDialog").data("kendoWindow");
+                                if (win) {
+                                    win.close();
+                                }
                             }
                         }
                     });

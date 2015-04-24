@@ -11,6 +11,7 @@
         $scope.countR = "00";
         $scope.countP = "00";
         $scope.countO = "00";
+        $scope.countM = "00";
 
         updateTime();
 
@@ -26,12 +27,23 @@
                     $scope.countR = dataResult.countR;
                     $scope.countP = dataResult.countP;
                     $scope.countO = dataResult.countO;
+                    $scope.countM = dataResult.countM;
                 }
             });
             
-            $timeout(updateTime, 10000);
+            $timeout(updateTime, 1000);
         };
         
+        $scope.openFeedDialog = function () {
+            var win = $("#feedDialog").data("kendoWindow");
+            win.center();
+            win.refresh({
+                url: '@Url.Action("FeedDialog", "Jobs")',
+                data: {},
+                type: 'POST'
+            });
+            win.open();
+        }
     }
 </script>
 
@@ -63,6 +75,9 @@
                 <li class="@(controller == "Jobs" && action == "JobsOverdue" ? "k-state-selected selected" : string.Empty)">
                     <a href="@Url.Action("JobsOverdue", "Jobs")">Hồ sơ quá hạn <span id="notify{{countO}}" class="red-notify">{{countO}}</span></a>
                 </li>
+                <li>
+                    <a href="javascript:void(0);" ng-click="openFeedDialog">Ghi chú <span id="notify{{countM}}" class="red-notify">{{countM}}</span></a>
+                </li>
             </ul>
         </div>
     </div>
@@ -81,3 +96,15 @@
     </style>
 </div>
 
+<div id="feedDialog"></div>
+<script>
+    var feedWindow = $("#feedDialog").kendoWindow({
+        title: "Ghi chú mới",
+        visible: false,
+        modal: true,
+        width: "400px",
+        height: "400px",
+    }).data("kendoWindow");
+
+    
+</script>

@@ -102,6 +102,46 @@
         </div>
     </div>
 </div>
+@{
+    if(!string.IsNullOrEmpty(Model.Sender))
+    {
+        <div class="tab-content">
+            <div class="title-info">
+                <span>Thông tin gửi hồ sơ</span>
+            </div>
+            <div class="content-column">
+                <div class="content-row">
+                    <div class="display-label">
+                        @Html.DisplayNameFor(model => model.Sender)
+                    </div>
+                    <div class="display-field">
+                        @Html.DisplayFor(model => model.Sender)
+                    </div>
+                </div>
+            </div>
+            <div class="content-column">
+                <div class="content-row">
+                    <div class="display-label">
+                        @Html.DisplayName("Được gửi từ hồ sơ")
+                    </div>
+                    <div class="display-field">
+                        @Html.ActionLink(Model.ReJobID, "JobView", new { @id = Model.ReAPK }, new { @target = "_blank" })
+                    </div>
+                </div>
+            </div>
+            <div class="content-column-full">
+                <div class="content-row">
+                    <div class="display-label">
+                        @Html.DisplayNameFor(model => model.SentMessage)
+                    </div>
+                    <div class="display-field">
+                        @Html.DisplayFor(model => model.SentMessage)
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
 <div class="tab-content">
     <div class="title-info">
         <span>Nhận xét/Tự đánh giá</span>

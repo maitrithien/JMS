@@ -176,6 +176,22 @@ namespace DMS.Models
             }
         }
         private ObjectSet<Job> _Jobs;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Feed> Feeds
+        {
+            get
+            {
+                if ((_Feeds == null))
+                {
+                    _Feeds = base.CreateObjectSet<Feed>("Feeds");
+                }
+                return _Feeds;
+            }
+        }
+        private ObjectSet<Feed> _Feeds;
 
         #endregion
 
@@ -235,6 +251,14 @@ namespace DMS.Models
         public void AddToJobs(Job job)
         {
             base.AddObject("Jobs", job);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Feeds EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToFeeds(Feed feed)
+        {
+            base.AddObject("Feeds", feed);
         }
 
         #endregion
@@ -1518,6 +1542,186 @@ namespace DMS.Models
         private global::System.String _LastModifyUserID;
         partial void OnLastModifyUserIDChanging(global::System.String value);
         partial void OnLastModifyUserIDChanged();
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="JMSModel", Name="Feed")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class Feed : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new Feed object.
+        /// </summary>
+        /// <param name="aPK">Initial value of the APK property.</param>
+        /// <param name="reader">Initial value of the Reader property.</param>
+        /// <param name="read">Initial value of the Read property.</param>
+        public static Feed CreateFeed(global::System.Guid aPK, global::System.String reader, global::System.Boolean read)
+        {
+            Feed feed = new Feed();
+            feed.APK = aPK;
+            feed.Reader = reader;
+            feed.Read = read;
+            return feed;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Guid APK
+        {
+            get
+            {
+                return _APK;
+            }
+            set
+            {
+                if (_APK != value)
+                {
+                    OnAPKChanging(value);
+                    ReportPropertyChanging("APK");
+                    _APK = StructuralObject.SetValidValue(value, "APK");
+                    ReportPropertyChanged("APK");
+                    OnAPKChanged();
+                }
+            }
+        }
+        private global::System.Guid _APK;
+        partial void OnAPKChanging(global::System.Guid value);
+        partial void OnAPKChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Guid> JobAPK
+        {
+            get
+            {
+                return _JobAPK;
+            }
+            set
+            {
+                OnJobAPKChanging(value);
+                ReportPropertyChanging("JobAPK");
+                _JobAPK = StructuralObject.SetValidValue(value, "JobAPK");
+                ReportPropertyChanged("JobAPK");
+                OnJobAPKChanged();
+            }
+        }
+        private Nullable<global::System.Guid> _JobAPK;
+        partial void OnJobAPKChanging(Nullable<global::System.Guid> value);
+        partial void OnJobAPKChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String JobID
+        {
+            get
+            {
+                return _JobID;
+            }
+            set
+            {
+                OnJobIDChanging(value);
+                ReportPropertyChanging("JobID");
+                _JobID = StructuralObject.SetValidValue(value, true, "JobID");
+                ReportPropertyChanged("JobID");
+                OnJobIDChanged();
+            }
+        }
+        private global::System.String _JobID;
+        partial void OnJobIDChanging(global::System.String value);
+        partial void OnJobIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Guid> NoteAPK
+        {
+            get
+            {
+                return _NoteAPK;
+            }
+            set
+            {
+                OnNoteAPKChanging(value);
+                ReportPropertyChanging("NoteAPK");
+                _NoteAPK = StructuralObject.SetValidValue(value, "NoteAPK");
+                ReportPropertyChanged("NoteAPK");
+                OnNoteAPKChanged();
+            }
+        }
+        private Nullable<global::System.Guid> _NoteAPK;
+        partial void OnNoteAPKChanging(Nullable<global::System.Guid> value);
+        partial void OnNoteAPKChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Reader
+        {
+            get
+            {
+                return _Reader;
+            }
+            set
+            {
+                OnReaderChanging(value);
+                ReportPropertyChanging("Reader");
+                _Reader = StructuralObject.SetValidValue(value, false, "Reader");
+                ReportPropertyChanged("Reader");
+                OnReaderChanged();
+            }
+        }
+        private global::System.String _Reader;
+        partial void OnReaderChanging(global::System.String value);
+        partial void OnReaderChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean Read
+        {
+            get
+            {
+                return _Read;
+            }
+            set
+            {
+                OnReadChanging(value);
+                ReportPropertyChanging("Read");
+                _Read = StructuralObject.SetValidValue(value, "Read");
+                ReportPropertyChanged("Read");
+                OnReadChanged();
+            }
+        }
+        private global::System.Boolean _Read;
+        partial void OnReadChanging(global::System.Boolean value);
+        partial void OnReadChanged();
 
         #endregion
 

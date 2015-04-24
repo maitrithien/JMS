@@ -199,5 +199,8 @@ namespace DMS.Models
         [Display(Name = "Người gửi")]
         public string Sender { get; set; }
 
+        [Display(Name = "Người gửi")]
+        public string SenderName { get; set; }
+
     }
 }
