@@ -179,6 +179,7 @@
     <Compile Include="Controllers\JobsController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Models\BaseModels.cs" />
+    <Compile Include="Models\FeedModels.cs" />
     <Compile Include="Models\Entities.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

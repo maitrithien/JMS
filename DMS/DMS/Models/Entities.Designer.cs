@@ -164,22 +164,6 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Job> Jobs
-        {
-            get
-            {
-                if ((_Jobs == null))
-                {
-                    _Jobs = base.CreateObjectSet<Job>("Jobs");
-                }
-                return _Jobs;
-            }
-        }
-        private ObjectSet<Job> _Jobs;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<Feed> Feeds
         {
             get
@@ -192,6 +176,22 @@ namespace DMS.Models
             }
         }
         private ObjectSet<Feed> _Feeds;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Job> Jobs
+        {
+            get
+            {
+                if ((_Jobs == null))
+                {
+                    _Jobs = base.CreateObjectSet<Job>("Jobs");
+                }
+                return _Jobs;
+            }
+        }
+        private ObjectSet<Job> _Jobs;
 
         #endregion
 
@@ -246,19 +246,19 @@ namespace DMS.Models
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the Jobs EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToJobs(Job job)
-        {
-            base.AddObject("Jobs", job);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the Feeds EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToFeeds(Feed feed)
         {
             base.AddObject("Feeds", feed);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Jobs EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToJobs(Job job)
+        {
+            base.AddObject("Jobs", job);
         }
 
         #endregion
@@ -1923,12 +1923,18 @@ namespace DMS.Models
         /// Create a new Job object.
         /// </summary>
         /// <param name="aPK">Initial value of the APK property.</param>
+        /// <param name="posterRead">Initial value of the PosterRead property.</param>
+        /// <param name="recipientRead">Initial value of the RecipientRead property.</param>
+        /// <param name="confirmerRead">Initial value of the ConfirmerRead property.</param>
         /// <param name="createdDate">Initial value of the CreatedDate property.</param>
         /// <param name="lastModifyDate">Initial value of the LastModifyDate property.</param>
-        public static Job CreateJob(global::System.Guid aPK, global::System.DateTime createdDate, global::System.DateTime lastModifyDate)
+        public static Job CreateJob(global::System.Guid aPK, global::System.Boolean posterRead, global::System.Boolean recipientRead, global::System.Boolean confirmerRead, global::System.DateTime createdDate, global::System.DateTime lastModifyDate)
         {
             Job job = new Job();
             job.APK = aPK;
+            job.PosterRead = posterRead;
+            job.RecipientRead = recipientRead;
+            job.ConfirmerRead = confirmerRead;
             job.CreatedDate = createdDate;
             job.LastModifyDate = lastModifyDate;
             return job;
@@ -2208,9 +2214,9 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Boolean> PosterRead
+        public global::System.Boolean PosterRead
         {
             get
             {
@@ -2225,8 +2231,8 @@ namespace DMS.Models
                 OnPosterReadChanged();
             }
         }
-        private Nullable<global::System.Boolean> _PosterRead;
-        partial void OnPosterReadChanging(Nullable<global::System.Boolean> value);
+        private global::System.Boolean _PosterRead;
+        partial void OnPosterReadChanging(global::System.Boolean value);
         partial void OnPosterReadChanged();
     
         /// <summary>
@@ -2256,9 +2262,9 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Boolean> RecipientRead
+        public global::System.Boolean RecipientRead
         {
             get
             {
@@ -2273,8 +2279,8 @@ namespace DMS.Models
                 OnRecipientReadChanged();
             }
         }
-        private Nullable<global::System.Boolean> _RecipientRead;
-        partial void OnRecipientReadChanging(Nullable<global::System.Boolean> value);
+        private global::System.Boolean _RecipientRead;
+        partial void OnRecipientReadChanging(global::System.Boolean value);
         partial void OnRecipientReadChanged();
     
         /// <summary>
@@ -2304,9 +2310,9 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Boolean> ConfirmerRead
+        public global::System.Boolean ConfirmerRead
         {
             get
             {
@@ -2321,8 +2327,8 @@ namespace DMS.Models
                 OnConfirmerReadChanged();
             }
         }
-        private Nullable<global::System.Boolean> _ConfirmerRead;
-        partial void OnConfirmerReadChanging(Nullable<global::System.Boolean> value);
+        private global::System.Boolean _ConfirmerRead;
+        partial void OnConfirmerReadChanging(global::System.Boolean value);
         partial void OnConfirmerReadChanged();
     
         /// <summary>

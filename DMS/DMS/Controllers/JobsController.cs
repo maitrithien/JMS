@@ -573,7 +573,7 @@ namespace DMS.Controllers
             item.Confirmer = _ManagerID;
 
             bool isUpdate = false;
-            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
+            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == (item.APK ?? Guid.Empty));
             if (finder != null)
             {
                 isUpdate = true;
@@ -1146,9 +1146,27 @@ namespace DMS.Controllers
         {
             var item = model ?? new JobModels();
 
-            var feeds = _EntityModel.Feeds.Where(x => x.Reader == _EmployeeID).ToList();
+            var feeds = _EntityModel.Feeds.Where(x => x.Reader == _EmployeeID && !x.Read);
+            List<FeedModels> feedNotes = new List<FeedModels>();
+            if (feeds != null)
+            {
+                foreach (var f in feeds)
+                {
+                    feedNotes.Add(new FeedModels()
+                    {
+                        APK = f.APK,
+                        JobAPK = f.JobAPK,
+                        JobID = f.JobID,
+                        NoteAPK = f.NoteAPK,
+                        Title = (_EntityModel.Notes.FirstOrDefault(x => x.APK == f.NoteAPK) ?? new Note()).Title,
+                        Description = (_EntityModel.Notes.FirstOrDefault(x => x.APK == f.NoteAPK) ?? new Note()).Description,
+                        Status = f.Read ? 1 : 0,
+                        StatusName = f.Read ? "Đã đọc" : "Chưa đọc",
+                    });
+                }
+            }
 
-            return Json(feeds, JsonRequestBehavior.AllowGet);
+            return Json(feedNotes, JsonRequestBehavior.AllowGet);
         }
 
         #endregion ---- Notes ----

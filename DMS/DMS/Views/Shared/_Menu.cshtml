@@ -3,6 +3,16 @@
     angular.module("KendoMenu", ["kendo.directives"])
       .controller("main-menu", function ($scope) {
           $scope.menuOrientation = "horizontal";
+          $scope.openFeedDialog = function () {
+              var win = $("#feedDialog").data("kendoWindow");
+              win.center();
+              win.refresh({
+                    url: '@Url.Action("FeedDialog", "Jobs")',
+                    data: {},
+                    type: 'POST'
+                });
+              win.open();
+          }
       })
 
     function timeCtrl($scope, $timeout) {
@@ -34,16 +44,7 @@
             $timeout(updateTime, 1000);
         };
         
-        $scope.openFeedDialog = function () {
-            var win = $("#feedDialog").data("kendoWindow");
-            win.center();
-            win.refresh({
-                url: '@Url.Action("FeedDialog", "Jobs")',
-                data: {},
-                type: 'POST'
-            });
-            win.open();
-        }
+        
     }
 </script>
 
@@ -76,7 +77,7 @@
                     <a href="@Url.Action("JobsOverdue", "Jobs")">Hồ sơ quá hạn <span id="notify{{countO}}" class="red-notify">{{countO}}</span></a>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" ng-click="openFeedDialog">Ghi chú <span id="notify{{countM}}" class="red-notify">{{countM}}</span></a>
+                    <a href="javascript:void(0);" ng-click="openFeedDialog()">Ghi chú <span id="notify{{countM}}" class="red-notify">{{countM}}</span></a>
                 </li>
             </ul>
         </div>
@@ -102,8 +103,8 @@
         title: "Ghi chú mới",
         visible: false,
         modal: true,
-        width: "400px",
-        height: "400px",
+        width: 900,
+        height: 500,
     }).data("kendoWindow");
 
     

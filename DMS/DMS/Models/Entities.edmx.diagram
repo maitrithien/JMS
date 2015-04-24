@@ -11,8 +11,8 @@
         <EntityTypeShape EntityType="JMSModel.Code" Width="1.5" PointX="2" PointY="0.5" IsExpanded="false" />
         <EntityTypeShape EntityType="JMSModel.Employee" Width="1.5" PointX="2" PointY="1" IsExpanded="false" />
         <EntityTypeShape EntityType="JMSModel.Department" Width="1.5" PointX="3.5" PointY="1" IsExpanded="false" />
-        <EntityTypeShape EntityType="JMSModel.Job" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="false" />
         <EntityTypeShape EntityType="JMSModel.Feed" Width="1.5" PointX="0.5" PointY="1" IsExpanded="false" />
+        <EntityTypeShape EntityType="JMSModel.Job" Width="1.5" PointX="6.4535323057572977" PointY="11.247099300495862" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

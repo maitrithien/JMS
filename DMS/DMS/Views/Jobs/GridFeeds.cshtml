@@ -1,31 +1,29 @@
 ﻿<div id="feed-grid">
-    <div id="gridFeeds"></div>
     <script>
-        $(document).ready(function () {
-            makeAsReadFeed_Click = function () {
-                e.preventDefault();
-                var tr = $(e.target).closest("tr"); //get the row for deletion
-                var data = this.dataItem(tr); //get the row data so it can be referred later
+        var makeAsReadFeed_Click = function (e) {
+            e.preventDefault();
+            var tr = $(e.target).closest("tr"); //get the row for deletion
+            var data = this.dataItem(tr); //get the row data so it can be referred later
 
-                $.ajax({
-                    type: 'POST',
-                    url: $('#makeAsReadFeedUrl').val(),
-                    data: JSON.stringify(data),
-                    contentType: 'application/json; charset=utf-8',
-                    success: function () {
-                        var grid = $('#gridFeeds').data('kendoGrid');
-                        if (grid) {
-                            grid.dataSource.read();
-                        }
+            $.ajax({
+                type: 'POST',
+                url: $('#makeAsReadFeedUrl').val(),
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                success: function () {
+                    var grid = $('#gridFeeds').data('kendoGrid');
+                    if (grid) {
+                        grid.dataSource.read();
                     }
-                });
-            }
+                }
+            });
+        }
 
-            $("#gridFeeds").kendoGrid({
-                dataSource: {
-                    type: "json",
-                    transport: {
-                        read: '@Url.Action("GridFeeds", "Jobs")' 
+        $("#gridFeeds").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: '@Url.Action("GridFeeds", "Jobs")'
                     },
                     pageSize: 20
                 },
@@ -43,6 +41,7 @@
                     {
                         field: "APK",
                         title: "",
+                        hidden: true,
                         template: "<span class='feed-status-#= Status #-ico'>&nbsp;<span>",
                         width: 30
                     }, {
@@ -55,23 +54,23 @@
                     }, {
                         field: "JobID",
                         title: 'Hồ sơ',
-                        width: 120,
+                        width: 200,
                         template: "<a href='/Jobs/JobView/#: data.JobAPK #' target='_blank' title='Xem chi tiết hồ sơ #: data.JobID #'>#: data.JobID #</a>"
                     }, {
                         command: [
                             {
                                 text: 'Đã đọc',
-                                imageClass: 'k-icon k-i-close ob-icon-only',
+                                imageClass: 'k-icon k-i-tick ob-icon-only',
                                 title: 'Đã đọc',
                                 click: makeAsReadFeed_Click
                             }
                         ],
-                        width: 160
+                        width: 90
                     }
                 ]
             });
-        });
     </script>
+    <div id="gridFeeds"></div>
 </div>
 
 @Html.Hidden("makeAsReadFeedUrl", Url.Action("MakeAsReadFeed", "Jobs"))
