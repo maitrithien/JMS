@@ -169,10 +169,10 @@ namespace DMS.Models
         [Display(Name = "Độ phức tạp")]
         public string ComplexName { get; set; }
 
-        [Display(Name = "Đánh giá")]
+        [Display(Name = "Đánh giá loại")]
         public string Rate { get; set; }
 
-        [Display(Name = "Đánh giá")]
+        [Display(Name = "Đánh giá loại")]
         public string RateName { get; set; }
 
         [Display(Name = "Người thực hiện")]
@@ -187,7 +187,7 @@ namespace DMS.Models
         [Display(Name = "Người duyệt")]
         public string ConfirmerName { get; set; }
 
-        [Display(Name = "Tự đánh giá")]
+        [Display(Name = "Nhận xét")]
         public string RateComment { get; set; }
 
         [Display(Name = "Ghi chú")]
@@ -201,6 +201,8 @@ namespace DMS.Models
 
         [Display(Name = "Người gửi")]
         public string SenderName { get; set; }
+
+        public int ReadStatus { get; set; }
 
     }
 }

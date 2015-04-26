@@ -81,16 +81,20 @@ namespace DMS.Controllers
 
             var currentFile = _EntityModel.Attachments
                 .FirstOrDefault(x => x.APK == apk);
-
-            var physicalPath = Path.Combine(Server.MapPath("~/App_Data/" + User.Identity.Name), currentFile.AttachmentFileName);
-            MemoryStream streamFile = new MemoryStream();
-
-            if (System.IO.File.Exists(physicalPath))
+            if (currentFile != null)
             {
-                streamFile = new MemoryStream(System.IO.File.ReadAllBytes(physicalPath));
+                var physicalPath = Path.Combine(Server.MapPath("~/App_Data/" + currentFile.CreatedUserID), currentFile.AttachmentFileName);
+                MemoryStream streamFile = new MemoryStream();
+
+                if (System.IO.File.Exists(physicalPath))
+                {
+                    streamFile = new MemoryStream(System.IO.File.ReadAllBytes(physicalPath));
+                }
+
+                return File(streamFile, "application/force-download", currentFile.AttachmentFileName);
             }
 
-            return File(streamFile, "application/force-download", currentFile.AttachmentFileName); 
+            return null;
         }
     }
 }

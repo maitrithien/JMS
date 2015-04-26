@@ -454,6 +454,7 @@
     <Content Include="Views\Jobs\SentDialog.cshtml" />
     <Content Include="Views\Jobs\GridFeeds.cshtml" />
     <Content Include="Views\Jobs\FeedDialog.cshtml" />
+    <Content Include="Views\Jobs\RateDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -68,43 +68,36 @@ namespace DMS.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            ViewData["MenuSelected"] = "Index";
-
             return View();
         }
 
         [Authorize]
         public ActionResult JobsOverdue()
         {
-            ViewData["MenuSelected"] = "JobsOverdue";
             return View();
         }
 
         [Authorize]
         public ActionResult JobsSent()
         {
-            ViewData["MenuSelected"] = "JobsSent";
             return View();
         }
 
         [Authorize]
         public ActionResult JobsReceived()
         {
-            ViewData["MenuSelected"] = "JobsReceived";
             return View();
         }
 
         [Authorize]
         public ActionResult JobsEmployee()
         {
-            ViewData["MenuSelected"] = "JobsEmployee";
             return View();
         }
 
         [Authorize]
         public ActionResult JobsStatc()
         {
-            ViewData["MenuSelected"] = "JobsStatc";
             return View();
         }
 
@@ -156,7 +149,7 @@ namespace DMS.Controllers
                     StatusName = x.StatusName,
                     Sender = x.Sender,
                     SenderName = x.SenderName
-                }).ToList();
+                }).OrderByDescending(x => x.CreatedDate).ToList();
             }
 
             #endregion --- Load data ----
@@ -212,7 +205,7 @@ namespace DMS.Controllers
                     StatusName = x.StatusName,
                     Sender = x.Sender,
                     SenderName = x.SenderName
-                }).ToList();
+                }).OrderByDescending(x => x.CreatedDate).ToList();
             }
 
             #endregion --- Load data ----
@@ -427,7 +420,7 @@ namespace DMS.Controllers
             if (finder != null)
             {
                 if (!string.IsNullOrEmpty(finder.Status) && finder.Status.Equals("0")
-                    && (_EmployeeID.Equals(finder.Poster) || _EmployeeID.Equals(finder.CreatedUserID)))
+                    && (_EmployeeID.Equals(finder.Poster) || User.Identity.Name.Equals(finder.CreatedUserID)))
                 {
                     // Xóa hồ sơ
                     allowEdit = true;
@@ -612,8 +605,6 @@ namespace DMS.Controllers
         [Authorize]
         public ActionResult JobView(string id)
         {
-            ViewData["MenuSelected"] = "Index";
-
             JobModels model = new JobModels() { APK = new Guid(id) };
             var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == model.APK);
 
@@ -657,7 +648,17 @@ namespace DMS.Controllers
                 model.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Confirmer) ?? new Employee()).FullName;
                 model.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == finder.DepartmentID) ?? new Department()).DepartmentName;
 
-                // Update feeds
+                // Make as read
+                if (_EmployeeID == finder.Poster)
+                    finder.PosterRead = true;
+                if(_EmployeeID == finder.Confirmer)
+                    finder.ConfirmerRead = true;
+                if(_EmployeeID == finder.Recipient)
+                    finder.RecipientRead = true;
+
+                _EntityModel.SaveChanges();
+
+                // Update feeds as read
                 var feeds = _EntityModel.Feeds
                     .Where(x => x.JobAPK == finder.APK
                         && x.Reader == _EmployeeID).ToList();
@@ -671,6 +672,7 @@ namespace DMS.Controllers
                 }
             }
 
+            model.CurrentEmployeeID = _EmployeeID;
             return View(model);
         }
 
@@ -721,6 +723,7 @@ namespace DMS.Controllers
                 model.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == finder.DepartmentID) ?? new Department()).DepartmentName;
             }
 
+            model.CurrentEmployeeID = _EmployeeID;
             return PartialView(model);
         }
 
@@ -786,6 +789,66 @@ namespace DMS.Controllers
                 _EntityModel.SaveChanges();
 
                 item.APK = finder.APK;
+            }
+
+            return Json(new { result = true, id = item.APK });
+        }
+
+        /// <summary>
+        /// Confirm Jobs
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public ActionResult ConfirmJob(JobModels model)
+        {
+            JobModels item = model ?? new JobModels();
+
+            bool result = false;
+            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
+            if (finder != null)
+            {
+                finder.StatusConfirm = model.StatusConfirm;
+                _EntityModel.SaveChanges();
+                result = true;
+            }
+
+            return Json(new { result = result, id = item.APK });
+        }
+
+        [Authorize]
+        public ActionResult RateDialog(JobModels model)
+        {
+            JobModels item = model ?? new JobModels();
+
+            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == (item.APK ?? Guid.Empty));
+            if (finder != null)
+            {
+                item.Rate = finder.Rate;
+                item.RateComment = finder.RateComment;
+            }
+            
+            return PartialView(item);
+        }
+
+        /// <summary>
+        /// Update rating job
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public ActionResult RateJob(JobModels model)
+        {
+            JobModels item = model ?? new JobModels();
+
+            var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
+            if (finder != null)
+            {
+                // Do Update
+                finder.Rate = string.IsNullOrEmpty(item.Rate) ? finder.Rate : item.Rate;
+                finder.RateComment = string.IsNullOrEmpty(item.RateComment) ? finder.RateComment : item.RateComment;
+                finder.LastModifyDate = DateTime.Now;
+                finder.LastModifyUserID = User.Identity.Name;
+
+                _EntityModel.SaveChanges();
             }
 
             return Json(new { result = true, id = item.APK });

@@ -1,0 +1,109 @@
+﻿@model DMS.Models.JobModels
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-rate-job" }))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.APK)
+    <div class="content-wrapper">
+        <div class="error">
+            @Html.ValidationMessageFor(model => model.Rate)
+            @Html.ValidationMessageFor(model => model.RateComment)
+        </div>
+
+        <div class="tab-content">
+            <div class="content-column">
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Rate, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Rate, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            $("#Rate").dropdownlist({
+                                url: '@Url.Action("RateID", "ComboBox")',
+                                dataTextField: 'CodeName',
+                                dataValueField: 'CodeID'
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="title-info">
+            <span>Nội dung đánh giá</span>
+        </div>
+        <div class="tab-content">
+            <div class="content-column-full">
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.RateComment, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.RateComment, new { style = "width: 100%; height: 200px; font-weight: normal; font-size: small;" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="content-wrapper bottom-toolbar">
+        <button id="btnSave" type="button">Lưu & đóng</button>
+        <script type="text/javascript">
+            $("#btnSave").kendoButton({
+                width: 120,
+                icon: "tick",
+                click: function () {
+                    var data = common.getFormDataTypeJson('frm-rate-job');
+                    $.ajax({
+                        type: 'POST',
+                        url: $('#rateJobUrl').val(),
+                        data: JSON.stringify(data),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            if (data.result) {
+                                $.ajax({
+                                    type: 'GET',
+                                    url: $('#viewJobPartialUrl').val(),
+                                    data: {
+                                        id: data.id
+                                    },
+                                    contentType: 'application/json; charset=utf-8',
+                                    success: function (result) {
+                                        $('#main-content').empty();
+                                        $('#main-content').html(result);
+                                    }
+                                });
+                            }
+
+                            var rateDialog = $("#RateDialog").data('kendoWindow');
+                            rateDialog.close();
+                        }
+                    });
+                }
+            });
+        </script>
+        <button id="btnCancel" type="button">Đóng</button>
+        <script type="text/javascript">
+            $("#btnCancel").kendoButton({
+                width: 120,
+                icon: "close",
+                click: function () {
+                    var win = $("#RateDialog").data("kendoWindow");
+                    if (win) {
+                        win.close();
+                    }
+                }
+            });
+        </script>
+    </div>
+        
+}
+
+@Html.Hidden("rateJobUrl", Url.Action("RateJob", "Jobs"))
+@Html.Hidden("viewJobUrl", Url.Action("JobView", "Jobs"))
+
+
+
+
+

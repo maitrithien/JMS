@@ -91,24 +91,26 @@
                 }
             });
 
-            $("#btnLock").kendoButton({
-                icon: "lock",
-                click: function (e) {
-                    console.log("lock");
-                }
-            });
-
-            $("#btnUnlock").kendoButton({
-                icon: "unlock",
-                click: function (e) {
-                    console.log("unlock");
-                }
-            });
-
             $("#btnDelete").kendoButton({
                 icon: "close",
                 click: function (e) {
                     console.log("delete");
+                }
+            });
+
+            $("#btnRate").kendoButton({
+                icon: "note",
+                click: function (e) {
+                    var win = $("#RateDialog").data("kendoWindow");
+                    win.center();
+                    win.refresh({
+                        url: "@Url.Action("RateDialog", "Jobs")",
+                        data: {
+                            APK: $('#JobAPK').val(),
+                        },
+                        type: 'POST'
+                    });
+                    win.open();
                 }
             });
 
@@ -182,7 +184,7 @@
                 modal: true,
                 height: 480,
                 width: 900,
-                actions: ["Close", "Maximize"],
+                actions: ["Maximize", "Close"],
                 title: "Cập nhật thông tin hồ sơ",
                 visible: false
             }).data("kendoWindow");
@@ -192,7 +194,7 @@
                 modal: true,
                 height: 380,
                 width: 900,
-                actions: ["Close", "Maximize"],
+                actions: ["Maximize", "Close"],
                 title: "Gửi hồ sơ",
                 visible: false
             }).data("kendoWindow");
@@ -203,7 +205,7 @@
                 height: 530,
                 width: 800,
                 title: "Cập nhật ghi chú",
-                actions: ["Close", "Maximize"],
+                actions: ["Maximize", "Close"],
                 visible: false
             }).data("kendoWindow");
 
@@ -213,7 +215,17 @@
                 height: 350,
                 width: 500,
                 title: "Đính kèm tập tin",
-                actions: ["Close", "Maximize"],
+                actions: ["Maximize", "Close"],
+                visible: false
+            }).data("kendoWindow");
+
+            $("#RateDialog").kendoWindow({
+                iframe: false,
+                modal: true,
+                height: 350,
+                width: 900,
+                title: "Đánh giá",
+                actions: ["Maximize", "Close"],
                 visible: false
             }).data("kendoWindow");
 
@@ -244,11 +256,91 @@
             </ul>
             <div class="content-wrapper">
                 <div class="toolbar">
-                    <button id="btnEdit" title="Cập nhật" type="button"></button>
-                    <button id="btnDelete" style="visibility: hidden" title="Xóa" type="button"></button>
+                    <button id="btnEdit" title="Cập nhật" type="button">Sửa</button>
+                    @{
+                        string visibleConfirmer = Model.CurrentEmployeeID == Model.Confirmer
+                            ? "visible" : "hidden";   
+                    }
+                    <button id="btnRate" style="visibility: @visibleConfirmer" title="Đánh giá" type="button">Đánh giá</button>
 
-                    <button id="btnLock" title="Không duyệt" type="button" class="btn-right">Không duyệt</button>
-                    <button id="btnUnlock" title="Duyệt" type="button" class="btn-right">Duyệt</button>
+                    <button id="btnDelete" style="visibility: hidden" title="Xóa" type="button"></button>
+                    @{
+                        if (Model.Confirmer == Model.CurrentEmployeeID)
+                        {
+                        <button id="btnLock" title="Không duyệt" type="button" class="btn-right">Không duyệt</button>
+                        <script>
+                            $("#btnLock").kendoButton({
+                                icon: "lock",
+                                click: function (e) {
+                                    var data = {
+                                        APK: $('#JobAPK').val(),
+                                        StatusConfirm: '0'
+                                    };
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: $('#confirmJobUrl').val(),
+                                        data: JSON.stringify(data),
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function (dataResult) {
+                                            if (dataResult.result) {
+                                                $.ajax({
+                                                    type: 'GET',
+                                                    url: $('#viewJobPartialUrl').val(),
+                                                    data: {
+                                                        id: dataResult.id
+                                                    },
+                                                    contentType: 'application/json; charset=utf-8',
+                                                    success: function (result) {
+                                                        $('#main-content').empty();
+                                                        $('#main-content').html(result);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        </script>
+                        <button id="btnUnlock" title="Duyệt" type="button" class="btn-right">Duyệt</button>
+                        <script>
+                            $("#btnUnlock").kendoButton({
+                                icon: "unlock",
+                                click: function (e) {
+                                    var data = {
+                                        APK: $('#JobAPK').val(),
+                                        StatusConfirm: '1'
+                                    };
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: $('#confirmJobUrl').val(),
+                                        data: JSON.stringify(data),
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function (dataResult) {
+                                            if (dataResult.result) {
+                                                $.ajax({
+                                                    type: 'GET',
+                                                    url: $('#viewJobPartialUrl').val(),
+                                                    data: {
+                                                        id: dataResult.id
+                                                    },
+                                                    contentType: 'application/json; charset=utf-8',
+                                                    success: function (result) {
+                                                        $('#main-content').empty();
+                                                        $('#main-content').html(result);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        </script>
+                        }
+
+                        @Html.Hidden("confirmJobUrl", Url.Action("ConfirmJob", "Jobs"))
+                    }
                     <button id="btnSent" title="Chuyển công việc" type="button" class="btn-right">Chuyển công việc</button>
                 </div>
                 <div class="title-info">
@@ -339,25 +431,12 @@
 @Html.Hidden("sentDialogUrl", Url.Action("SentDialog", "Jobs"))
 @Html.Hidden("checkEditNoteUrl", Url.Action("CheckEditNote", "Jobs"))
 @Html.Hidden("checkEditJobUrl", Url.Action("CheckEdit", "Jobs"))
+@Html.Hidden("viewJobPartialUrl", Url.Action("JobViewPartial", "Jobs"))
 <div id="sentDialog"></div>
-<div id="jobDialog">
-    @*@{
-        Html.RenderPartial("JobDialog");
-    }*@
-</div>
-
-<div id="NoteDialog">
-    @*@{
-        Html.RenderPartial("NoteDialog", new DMS.Models.NoteModels());
-    }*@
-</div>
-
-<div id="AttachmentDialog">
-    @* @{
-        Html.RenderPartial("AttachmentDialog", new DMS.Models.AttachmentModels());
-    }*@
-</div>
-
+<div id="jobDialog"></div>
+<div id="NoteDialog"></div>
+<div id="AttachmentDialog"></div>
+<div id="RateDialog"></div>
 <div id="UpdateAttachmentDialog">
     @{
         Html.RenderPartial("UpdateAttachmentDialog", new DMS.Models.AttachmentModels());

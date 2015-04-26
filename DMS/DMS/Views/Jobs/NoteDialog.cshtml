@@ -1,10 +1,112 @@
 ﻿@model DMS.Models.NoteModels
+<div id="noteConfirmDialog"></div>
+<script type="text/x-kendo-template" id="noteConfirmTemplate">
+    <div class="content-wrapper">
+        <p>Bạn có muốn xóa ghi chú này ?</p>
+        <div class="content-wrapper bottom-toolbar">
+            <button class="k-button" id="yesButton">Đồng ý</button>
+            <button class="k-button" id="noButton">Hủy</button>
+        </div>
+    </div>
+</script>
+<div id="noteMessageDialog"></div>
+<script type="text/x-kendo-template" id="noteMessageTemplate">
+    <div class="content-wrapper">
+        <p>#= message #</p>
+        <div class="content-wrapper bottom-toolbar">
+            <button class="k-button" id="okButton">Đồng ý</button>
+        </div>
+    </div>
+</script>
+<script>
+    $(document).ready(function () {
+        var noteConfirmTemplate = kendo.template($("#noteConfirmTemplate").html());
+        var noteConfirmWindow = $("#noteConfirmDialog").kendoWindow({
+            title: "Thông báo",
+            visible: false,
+            modal: true,
+            width: "400px",
+            height: "100px",
+        }).data("kendoWindow");
+        var noteMessageTemplate = kendo.template($("#noteMessageTemplate").html());
+        var noteMessageWindow = $("#noteMessageDialog").kendoWindow({
+            title: "Thông báo",
+            visible: false,
+            modal: true,
+            width: "400px",
+            height: "100px",
+        }).data("kendoWindow");
 
+        deleteNote = function (e) {
+            var data = {
+                APK: $("#APK").val()
+            };
+
+            noteConfirmWindow.content(noteConfirmTemplate(data)); //send the row data object to the template and render it
+            noteConfirmWindow.open().center();
+
+            $("#yesButton").click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: $('#removeNoteUrl').val(),
+                    data: JSON.stringify(data),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function () {
+                        var noteGrid = $('#gridNotes').data('kendoGrid');
+                        if (noteGrid) {
+                            noteGrid.dataSource.read();
+                        }
+                        noteConfirmWindow.close();
+                        var win = $("#NoteDialog").data("kendoWindow");
+                        win.close();
+                    }
+                });
+            });
+
+            $("#noButton").click(function () {
+                noteConfirmWindow.close();
+            });
+        };
+    });
+</script>
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-update-note" }))
 {
     @Html.ValidationSummary(true)
 
     @Html.HiddenFor(model => model.APK)
+    if(User.Identity.Name.Equals(Model.CreatedUserID) && Model.Action == DMS.Models.FormAction.View)
+    {
+        <div class="content-wrapper">
+            <div class="toolbar">
+                <button id="btnEditNote" title="Cập nhật" type="button"></button>
+                <script>
+                    $("#btnEditNote").kendoButton({
+                        icon: "pencil",
+                        click: function (e) {
+                            var win = $("#NoteDialog").data("kendoWindow");
+                            win.close();
+                            win.center();
+                            win.refresh({
+                                url: $('#NoteDialogUrl').val(),
+                                data: { APK: $("#APK").val(), Action: 2 },
+                                type: 'POST'
+                            });
+                            win.open();
+                        }
+                    })
+                </script>
+                <button id="btnDeleteNote" title="Xóa" type="button"></button>
+                <script>
+                    $("#btnDeleteNote").kendoButton({
+                        icon: "close",
+                        click: function (e) {
+                            deleteNote(e);
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    }
     <div class="content-wrapper">
         <div class="title-info">
             <span>Thông tin ghi chú</span>

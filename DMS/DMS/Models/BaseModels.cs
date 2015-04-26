@@ -18,6 +18,8 @@ namespace DMS.Models
 
     public class BaseModels
     {
+        public string CurrentEmployeeID { get; set; }
+
         [Display(Name = "Ngày tạo")]
         public DateTime CreatedDate { get; set; }
 

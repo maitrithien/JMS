@@ -88,7 +88,20 @@ namespace DMS.Controllers
 
         public JsonResult DepartmentID()
         {
-            List<Department> model = _EntityModel.Departments.ToList();
+            var employee = _EntityModel.Employees.FirstOrDefault(x
+                => x.UserName == User.Identity.Name && x.GroupID == "0");
+
+            List<Department> model = new List<Department>();
+            if (employee != null)
+            {
+                model = _EntityModel.Departments
+                    .Where(x => x.DepartmentID == employee.DepartmentID).ToList();
+            }
+            else
+            {
+                model = _EntityModel.Departments.ToList();
+            }
+
             model.Insert(0, new Department() { DepartmentID = string.Empty, DepartmentName = "< Không >" });
 
             return Json(model, JsonRequestBehavior.AllowGet);

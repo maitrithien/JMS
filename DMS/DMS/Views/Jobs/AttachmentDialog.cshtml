@@ -1,4 +1,8 @@
 ﻿@model DMS.Models.AttachmentModels
+@Html.Hidden("saveUrl", Url.Action("Save", "Upload"))
+@Html.Hidden("removeUrl", Url.Action("Remove", "Upload"))
+@Html.Hidden("addAttachmentsUrl", Url.Action("AddAttachments", "Jobs"))
+@Html.Hidden("removeAttachmentsUrl", Url.Action("RemoveAttachments", "Jobs"))
 
 <script src="~/Scripts/attachments.js"></script>
 <script>
@@ -19,10 +23,6 @@
         <div>
             <div class="k-header">
                 <input name="files" id="files" type="file" />
-                @Html.Hidden("saveUrl", Url.Action("Save", "Upload"))
-                @Html.Hidden("removeUrl", Url.Action("Remove", "Upload"))
-                @Html.Hidden("addAttachmentsUrl", Url.Action("AddAttachments", "Jobs"))
-                @Html.Hidden("removeAttachmentsUrl", Url.Action("RemoveAttachments", "Jobs"))
             </div>
         </div>
     </div>

@@ -72,7 +72,10 @@
         width: 120,
         icon: "close",
         click: function () {
-            jobs.attachment.closeUpdateAttachmentDialog();
+            var win = $("#UpdateAttachmentDialog").data("kendoWindow");
+            if (win) {
+                win.close();
+            }
         }
     });
 </script>
