@@ -1043,6 +1043,18 @@ namespace DMS.Controllers
             {
                 _EntityModel.Notes.DeleteObject(finder);
                 _EntityModel.SaveChanges();
+
+                // Update feeds
+                var feeds = _EntityModel.Feeds
+                    .Where(x => x.NoteAPK == item.APK).ToList();
+                if (feeds != null)
+                {
+                    foreach (var f in feeds)
+                    {
+                        _EntityModel.Feeds.DeleteObject(f);
+                    }
+                    _EntityModel.SaveChanges();
+                }
             }
 
             return Json(new { result = true });
