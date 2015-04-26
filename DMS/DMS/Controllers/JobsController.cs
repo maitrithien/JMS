@@ -981,7 +981,7 @@ namespace DMS.Controllers
             var finder = _EntityModel.Notes.FirstOrDefault(x => x.APK == item.APK);
             if (finder != null)
             {
-                if (_EmployeeID.Equals(finder.CreatedUserID))
+                if (User.Identity.Name.Equals(finder.CreatedUserID))
                 {
                     // Xóa hồ sơ
                     allowEdit = true;
@@ -1106,7 +1106,7 @@ namespace DMS.Controllers
                 foreach (var r in reader)
                 {
                     // Không notify cho người tạo
-                    if (_EmployeeID.Equals(r)) continue;
+                    if (string.IsNullOrEmpty(r) || _EmployeeID.Equals(r)) continue;
 
                     _EntityModel.Feeds.AddObject(new Feed{ 
                         APK = Guid.NewGuid(),
