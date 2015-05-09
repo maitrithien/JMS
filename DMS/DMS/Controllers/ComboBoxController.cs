@@ -13,6 +13,22 @@ namespace DMS.Controllers
         /// JMS entities
         /// </summary>
         JMSEntities _EntityModel = new JMSEntities();
+        private string _DepartmentID
+        {
+            get
+            {
+                return (_EntityModel.Employees.FirstOrDefault(
+                    x => User.Identity.Name.Equals(x.UserName)) ?? new Employee()).DepartmentID;
+            }
+        }
+        private string _GroupID
+        {
+            get
+            {
+                return (_EntityModel.Employees.FirstOrDefault(
+                    x => User.Identity.Name.Equals(x.UserName)) ?? new Employee()).GroupID;
+            }
+        }
 
         public JsonResult EmployeeID()
         {
@@ -24,7 +40,17 @@ namespace DMS.Controllers
 
         public JsonResult RecipientID(string DepartmentID)
         {
-            List<Employee> model = _EntityModel.Employees.Where(x => x.DepartmentID == DepartmentID).ToList();
+            List<Employee> model = new List<Employee>();
+
+            if (DepartmentID != _DepartmentID && _GroupID == "0")
+            {
+                model = _EntityModel.Employees.Where(x => x.DepartmentID == DepartmentID && x.GroupID != "0").ToList();
+            }
+            else
+            {
+                model = _EntityModel.Employees.Where(x => x.DepartmentID == DepartmentID).ToList();
+            }
+
             model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "< Không >", UserName = string.Empty });
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -88,20 +114,21 @@ namespace DMS.Controllers
 
         public JsonResult DepartmentID()
         {
-            var employee = _EntityModel.Employees.FirstOrDefault(x
-                => x.UserName == User.Identity.Name && x.GroupID == "0");
+            //var employee = _EntityModel.Employees.FirstOrDefault(x
+            //    => x.UserName == User.Identity.Name && x.GroupID == "0");
 
-            List<Department> model = new List<Department>();
-            if (employee != null)
-            {
-                model = _EntityModel.Departments
-                    .Where(x => x.DepartmentID == employee.DepartmentID).ToList();
-            }
-            else
-            {
-                model = _EntityModel.Departments.ToList();
-            }
+            //List<Department> model = new List<Department>();
+            //if (employee != null)
+            //{
+            //    model = _EntityModel.Departments
+            //        .Where(x => x.DepartmentID == employee.DepartmentID).ToList();
+            //}
+            //else
+            //{
+            //    model = _EntityModel.Departments.ToList();
+            //}
 
+            List<Department> model = _EntityModel.Departments.ToList();
             model.Insert(0, new Department() { DepartmentID = string.Empty, DepartmentName = "< Không >" });
 
             return Json(model, JsonRequestBehavior.AllowGet);

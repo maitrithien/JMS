@@ -14,9 +14,11 @@ namespace DMS.Models
         public Guid? JobAPK { get; set; }
 
         [Display(Name = "Tiêu đề")]
+        [DisplayName("Tiêu đề")]
         public string Title { get; set; }
 
         [Display(Name = "Nội dung")]
+        [DisplayName("Nội dung")]
         public string Description { get; set; }
 
     }

@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.IO;
 using System.Globalization;
 using System.Threading;
+using System.Text;
 
 namespace DMS.Controllers
 {
@@ -39,6 +40,28 @@ namespace DMS.Controllers
                 return (_EntityModel.Departments.FirstOrDefault(x => x.DepartmentID == departmentId) ?? new Department()).ManagerID;
             }
         }
+        /// <summary>
+        /// Phong ban
+        /// </summary>
+        private string _DepartmentID
+        {
+            get
+            {
+                return (_EntityModel.Employees.FirstOrDefault(
+                    x => User.Identity.Name.Equals(x.UserName)) ?? new Employee()).DepartmentID;
+            }
+        }
+        /// <summary>
+        /// Nhom
+        /// </summary>
+        private string _GroupID
+        {
+            get
+            {
+                return (_EntityModel.Employees.FirstOrDefault(
+                    x => User.Identity.Name.Equals(x.UserName)) ?? new Employee()).GroupID;
+            }
+        }
 
         #region ---- Jobs ----
 
@@ -48,7 +71,7 @@ namespace DMS.Controllers
         /// <returns></returns>
         public ActionResult CountJobEmps()
         {
-            // Đếm số lượng hồ sơ (Notify menu)
+            // Đếm số lượng JOBS (Notify menu)
             var counter = _EntityModel.GetCounterJobs(User.Identity.Name).FirstOrDefault();
             var feeds = _EntityModel.Feeds
                 .Where(x => x.Reader == _EmployeeID && !x.Read)
@@ -401,7 +424,7 @@ namespace DMS.Controllers
                     if (!_EmployeeID.Equals(finder.Recipient))
                     {
                         allowEdit = false;
-                        message = string.Format("Hồ sơ {0} đã hoàn tất. Bạn không có quyền sửa hồ sơ này.", finder.JobID);
+                        message = string.Format("JOBS {0} đã hoàn tất. Bạn không có quyền sửa JOBS này.", finder.JobID);
                     }
                 }
             }
@@ -422,12 +445,12 @@ namespace DMS.Controllers
                 if (!string.IsNullOrEmpty(finder.Status) && finder.Status.Equals("0")
                     && (_EmployeeID.Equals(finder.Poster) || User.Identity.Name.Equals(finder.CreatedUserID)))
                 {
-                    // Xóa hồ sơ
+                    // Xóa JOBS
                     allowEdit = true;
                 }
                 else
                 {
-                    message = string.Format("Bạn không có quyền xóa hồ sơ {0}", finder.JobID);
+                    message = string.Format("Bạn không có quyền xóa JOBS {0}", finder.JobID);
                 }
             }
 
@@ -494,6 +517,13 @@ namespace DMS.Controllers
             var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
             if (finder != null)
             {
+                if (item.Status != finder.Status)
+                {
+                    UpdateHistories(item, finder, 0);
+                }
+
+                UpdateHistories(item, finder, 1);
+
                 // Do Update
                 finder.Complex = item.Complex;
                 finder.Confirmer = item.Confirmer;
@@ -546,6 +576,8 @@ namespace DMS.Controllers
                 _EntityModel.SaveChanges();
 
                 item.APK = job.APK;
+
+                AddHistories(job);
             }
 
             return Json(new { result = true, id = item.APK });
@@ -733,14 +765,20 @@ namespace DMS.Controllers
             JobModels item = model ?? new JobModels();
 
             var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
+            var manager = _EntityModel.Employees.FirstOrDefault(s => s.GroupID != "0" && s.DepartmentID == _DepartmentID) ?? new Employee();
             if (finder != null)
             {
                 item.ReAPK = finder.APK;
                 item.ReJobID = finder.JobID;
                 item.Sender = _EmployeeID;
+                item.DepartmentID = _DepartmentID;
+                item.Poster = finder.Poster;
+                item.Confirmer = manager.EmployeeID;
+                item.ConfirmerName = manager.FullName;
+                item.GroupID = _GroupID;
             }
 
-            return PartialView(model);
+            return PartialView(item);
         }
 
         public ActionResult SentJob(JobModels model)
@@ -750,42 +788,17 @@ namespace DMS.Controllers
             var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
             if (finder != null)
             {
-                string empUserName = (_EntityModel.Employees.FirstOrDefault(x => x.EmployeeID == item.Recipient)
-                    ?? new Employee()).UserName;
+                UpdateHistories(item, finder, 2);
 
-                GetNextJobID_Result id = _EntityModel.GetNextJobID(empUserName).FirstOrDefault()
-                                                                                        ?? new GetNextJobID_Result();
-                finder.JobID = string.Format("{0}-{1}-{2:0000}{3:00}{4:000}",
-                                    id.DepartmentID, id.EmployeeID, id.Year, id.Month, id.Next);
+                finder.Confirmer = item.Confirmer;
+                finder.DepartmentID = item.DepartmentID;
+                finder.Poster = item.Poster;
+                finder.Sender = item.Sender;
+                finder.Recipient = item.Recipient;
+                finder.StatusConfirm = "0";
+                finder.LastModifyDate = DateTime.Now;
+                finder.LastModifyUserID = User.Identity.Name;
 
-                // Do Insert
-                Job job = new Job
-                {
-                    APK = Guid.NewGuid(),
-                    Complex = finder.Complex,
-                    Confirmer = item.Confirmer,
-                    Deadline = finder.Deadline,
-                    DepartmentID = item.DepartmentID,
-                    JobID = finder.JobID,
-                    JobName = finder.JobName,
-                    Note = finder.Note,
-                    Poster = item.Sender,
-                    Priority = finder.Priority,
-                    Rate = finder.Rate,
-                    Sender = item.Sender,
-                    ReAPK = finder.APK,
-                    ReJobID = item.ReJobID,
-                    Recipient = item.Recipient,
-                    Status = finder.Status,
-                    StatusConfirm = "0",
-                    RateComment = finder.RateComment,
-                    CreatedDate = DateTime.Now,
-                    CreatedUserID = User.Identity.Name,
-                    LastModifyDate = DateTime.Now,
-                    LastModifyUserID = User.Identity.Name,
-                };
-
-                _EntityModel.Jobs.AddObject(job);
                 _EntityModel.SaveChanges();
 
                 item.APK = finder.APK;
@@ -793,6 +806,7 @@ namespace DMS.Controllers
 
             return Json(new { result = true, id = item.APK });
         }
+
 
         /// <summary>
         /// Confirm Jobs
@@ -906,6 +920,8 @@ namespace DMS.Controllers
                     LastModifyUserID = User.Identity.Name
                 };
 
+                AddHistories(att);
+
                 _EntityModel.Attachments.AddObject(att);
                 _EntityModel.SaveChanges();
             }
@@ -981,6 +997,8 @@ namespace DMS.Controllers
 
             if (finder != null)
             {
+                UpdateHistories(item, finder);
+
                 finder.AttachmentFileName = item.AttachmentFileName;
                 finder.AttachmentComment = item.AttachmentComment;
 
@@ -1046,7 +1064,7 @@ namespace DMS.Controllers
             {
                 if (User.Identity.Name.Equals(finder.CreatedUserID))
                 {
-                    // Xóa hồ sơ
+                    // Xóa JOBS
                     allowEdit = true;
                 }
                 else
@@ -1139,6 +1157,8 @@ namespace DMS.Controllers
 
             if (finder != null)
             {
+                UpdateHistories(item, finder);
+
                 finder.Title = item.Title;
                 finder.Description = item.Description;
                 finder.LastModifyUserID = User.Identity.Name;
@@ -1159,6 +1179,8 @@ namespace DMS.Controllers
                     CreatedDate = DateTime.Now,
                     CreatedUserID = User.Identity.Name
                 };
+
+                AddHistories(note);
 
                 _EntityModel.Notes.AddObject(note);
                 _EntityModel.SaveChanges();
@@ -1251,8 +1273,17 @@ namespace DMS.Controllers
         public JsonResult GridHistories(JobModels model)
         {
             JobModels item = model ?? new JobModels();
-            List<History> lst = _EntityModel.Histories.Where(x => x.JobAPK == item.APK).ToList();
-            return Json(lst, JsonRequestBehavior.AllowGet);
+            List<History> lst = _EntityModel.Histories.Where(x => x.JobAPK == item.APK)
+                .OrderByDescending(x => x.CreatedDate).ToList();
+
+            List<HistoryModels> lstModel = new List<HistoryModels>();
+            foreach (var h in lst)
+            {
+                HistoryModels modelHistory = AutoMapper.Mapper.Map<HistoryModels>(h);
+                lstModel.Add(modelHistory);
+            }
+
+            return Json(lstModel, JsonRequestBehavior.AllowGet);
         }
 
         #endregion ---- Histories ----
@@ -1274,6 +1305,268 @@ namespace DMS.Controllers
         }
 
         #endregion ---- Others ----
+
+        #region ---- Private Methods ----
+
+        private JobModels ParseToViewerJob(JobModels finder)
+        {
+            JobModels model = new JobModels();
+            if (finder != null)
+            {
+                model.Complex = finder.Complex;
+                model.Confirmer = finder.Confirmer;
+                model.CreatedDate = finder.CreatedDate;
+                model.CreatedUserID = finder.CreatedUserID;
+                model.Deadline = finder.Deadline ?? DateTime.Now;
+                model.DepartmentID = finder.DepartmentID;
+                model.JobID = finder.JobID;
+                model.JobName = finder.JobName;
+                model.LastModifyDate = finder.LastModifyDate;
+                model.LastModifyUserID = finder.LastModifyUserID;
+                model.Note = finder.Note;
+                model.Poster = finder.Poster;
+                model.Priority = finder.Priority;
+                model.Rate = finder.Rate;
+                model.Recipient = finder.Recipient;
+                model.Status = finder.Status;
+                model.StatusConfirm = finder.StatusConfirm;
+                model.RateComment = finder.RateComment;
+                model.ReAPK = finder.ReAPK;
+                model.Sender = finder.Sender;
+                model.SentMessage = finder.SentMessage;
+                model.ReJobID = finder.ReJobID;
+                model.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
+                model.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Rate && s.CodeGroupID == JobModels.RATE_CODE) ?? new Code()).CodeName;
+                model.PriorityName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Priority && s.CodeGroupID == JobModels.PRIORITY_CODE) ?? new Code()).CodeName;
+                model.StatusConfirmName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.StatusConfirm && s.CodeGroupID == JobModels.STATUS_CONFIRM_CODE) ?? new Code()).CodeName;
+                model.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
+                model.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Poster) ?? new Employee()).FullName;
+                model.SenderName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Sender) ?? new Employee()).FullName;
+                model.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Recipient) ?? new Employee()).FullName;
+                model.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Confirmer) ?? new Employee()).FullName;
+                model.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == finder.DepartmentID) ?? new Department()).DepartmentName;
+            }
+
+            return model;
+        }
+
+        private void AddHistories(Note model)
+        {
+            NoteModels newModel = AutoMapper.Mapper.Map<Note, NoteModels>(model);
+
+            History history = new History();
+            history.APK = Guid.NewGuid();
+            history.JobAPK = newModel.JobAPK ?? Guid.Empty;
+            history.ActionType = 1;
+            history.Completed = 0;
+            history.CreatedDate = DateTime.Now;
+            history.CreatedUserID = User.Identity.Name;
+
+            Dictionary<string, object> newDict = new Dictionary<string, object>();
+            foreach (var item in newModel.ToDictionary())
+            {
+                newDict.Add(item.Key, item.Value);
+            }
+
+            history.NewData = CastToString(newDict, "[Thêm mới lịch sử]");
+
+            _EntityModel.Histories.AddObject(history);
+            _EntityModel.SaveChanges();
+        }
+        private void AddHistories(Attachment model)
+        {
+            AttachmentModels newModel = AutoMapper.Mapper.Map<Attachment, AttachmentModels>(model);
+
+            History history = new History();
+            history.APK = Guid.NewGuid();
+            history.JobAPK = newModel.JobAPK ?? Guid.Empty;
+            history.ActionType = 1;
+            history.Completed = 0;
+            history.CreatedDate = DateTime.Now;
+            history.CreatedUserID = User.Identity.Name;
+
+            Dictionary<string, object> newDict = new Dictionary<string, object>();
+            foreach (var item in newModel.ToDictionary())
+            {
+                newDict.Add(item.Key, item.Value);
+            }
+
+            history.NewData = CastToString(newDict, "[Thêm mới đính kèm]");
+
+            _EntityModel.Histories.AddObject(history);
+            _EntityModel.SaveChanges();
+        }
+        private void AddHistories(Job model)
+        {
+            JobModels newModel = AutoMapper.Mapper.Map<Job, JobModels>(model);
+
+            History history = new History();
+            history.APK = Guid.NewGuid();
+            history.JobAPK = newModel.APK ?? Guid.Empty;
+            history.ActionType = 1;
+            history.Completed = 0;
+            history.CreatedDate = DateTime.Now;
+            history.CreatedUserID = User.Identity.Name;
+
+            Dictionary<string, object> newDict = new Dictionary<string, object>();
+            foreach (var item in newModel.ToDictionary())
+            {
+                newDict.Add(item.Key, item.Value);
+            }
+
+            history.NewData = CastToString(newDict, "[Thêm mới JOBS]");
+
+            _EntityModel.Histories.AddObject(history);
+            _EntityModel.SaveChanges();
+        }
+
+        private void UpdateHistories(JobModels oldModel, Job model, byte type)
+        {
+            JobModels newModel = AutoMapper.Mapper.Map<Job, JobModels>(model);
+
+            History history = new History();
+            history.APK = Guid.NewGuid();
+            history.JobAPK = newModel.APK ?? Guid.Empty;
+            history.ActionType = type;
+            history.Completed = 0;
+            history.CreatedDate = DateTime.Now;
+            history.CreatedUserID = User.Identity.Name;
+
+            string oldData = string.Empty;
+            string newData = string.Empty;
+            StringBuilder strOld = new StringBuilder();
+            strOld.AppendLine("[Cập nhật JOBS]");
+            StringBuilder strNew = new StringBuilder();
+            strOld.AppendLine("[Cập nhật JOBS]");
+
+            Dictionary<string, object> oldDict = new Dictionary<string, object>();
+            Dictionary<string, object> newDict = new Dictionary<string, object>();
+
+            switch (type)
+            {
+                case 0: // Change Status
+                    newData = (_EntityModel.Codes.FirstOrDefault(x => 
+                        x.CodeGroupID == JobModels.STATUS_CODE && x.CodeID == oldModel.Status) ?? new Code()).CodeName;
+                    oldData = (_EntityModel.Codes.FirstOrDefault(x =>
+                        x.CodeGroupID == JobModels.STATUS_CODE && x.CodeID == newModel.Status) ?? new Code()).CodeName;
+
+                    strOld.AppendLine(string.Format("Tình trạng: {0}", oldData));
+                    strNew.AppendLine(string.Format("Tình trạng: {0}", newData));
+
+                    history.OldData = strOld.ToString();
+                    history.NewData = strNew.ToString();
+                    break;
+                case 1: // Change content
+                case 2: // Change owner
+                    CompareData(ParseToViewerJob(newModel), ParseToViewerJob(oldModel), out newDict, out oldDict);
+                    history.OldData = CastToString(oldDict, "[Cập nhật JOBS]");
+                    history.NewData = CastToString(newDict, "[Cập nhật JOBS]");
+                    break;
+                default: // Others
+                    break;
+            }
+
+            _EntityModel.Histories.AddObject(history);
+            _EntityModel.SaveChanges();
+        }
+
+        private void UpdateHistories(NoteModels oldModel, Note model)
+        {
+            NoteModels newModel = AutoMapper.Mapper.Map<Note, NoteModels>(model);
+
+            History history = new History();
+            history.APK = Guid.NewGuid();
+            history.JobAPK = newModel.JobAPK ?? Guid.Empty;
+            history.ActionType = 1;
+            history.Completed = 0;
+            history.CreatedDate = DateTime.Now;
+            history.CreatedUserID = User.Identity.Name;
+
+            string newData = string.Empty;
+            string oldData = string.Empty;
+
+            Dictionary<string, object> newDict = new Dictionary<string, object>();
+            Dictionary<string, object> oldDict = new Dictionary<string, object>();
+
+            CompareData(newModel, oldModel, out newDict, out oldDict);
+            history.NewData = CastToString(newDict, "[Cập nhật ghi chú]");
+            history.OldData = CastToString(oldDict, "[Cập nhật ghi chú]");
+
+            _EntityModel.Histories.AddObject(history);
+            _EntityModel.SaveChanges();
+        }
+
+        private void UpdateHistories(AttachmentModels oldModel, Attachment model)
+        {
+            AttachmentModels newModel = AutoMapper.Mapper.Map<Attachment, AttachmentModels>(model);
+
+            History history = new History();
+            history.APK = Guid.NewGuid();
+            history.JobAPK = newModel.JobAPK ?? Guid.Empty;
+            history.ActionType = 1;
+            history.Completed = 0;
+            history.CreatedDate = DateTime.Now;
+            history.CreatedUserID = User.Identity.Name;
+
+            string newData = string.Empty;
+            string oldData = string.Empty;
+
+            Dictionary<string, object> newDict = new Dictionary<string, object>();
+            Dictionary<string, object> oldDict = new Dictionary<string, object>();
+
+            CompareData(newModel, oldModel, out newDict, out oldDict);
+            history.NewData = CastToString(newDict, "[Cập nhật đính kèm]");
+            history.OldData = CastToString(oldDict, "[Cập nhật đính kèm]");
+
+            _EntityModel.Histories.AddObject(history);
+            _EntityModel.SaveChanges();
+        }
+
+        private void CompareData(object Source, object Destination, 
+            out Dictionary<string, object> comparedSource,
+            out Dictionary<string, object> comparedDestination)
+        {
+            var source = Source.ToDictionary();
+            var destination = Destination.ToDictionary();
+            comparedSource = new Dictionary<string, object>();
+            comparedDestination = new Dictionary<string, object>();
+
+            foreach (var item in source)
+            {
+                if (item.Value.ToString() != destination[item.Key].ToString())
+                {
+                    comparedSource.Add(item.Key, item.Value);
+                    comparedDestination.Add(item.Key, destination[item.Key]);
+                }
+            }
+        }
+
+        public string CastToString(Dictionary<string, object> data, string title = "")
+        {
+            StringBuilder content = new StringBuilder();
+            if (!String.IsNullOrEmpty(title))
+            {
+                content.AppendLine(title);
+            }
+
+            if (data != null && data.Count > 0)
+            {
+                foreach (var item in data)
+                {
+                    content.AppendLine(string.Format("{0}: {1}", item.Key, item.Value));
+                }
+            }
+
+            return content.ToString();
+        }
+
+        
+        #endregion ---- Private Methods ----
 
     }
 }

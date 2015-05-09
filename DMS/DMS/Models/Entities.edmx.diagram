@@ -6,13 +6,13 @@
     <edmx:Diagrams>
       <Diagram DiagramId="571c9af936e544e08f7e118f2c52cc6b" Name="Diagram1" >
         <EntityTypeShape EntityType="JMSModel.Attachment" Width="1.5" PointX="5" PointY="1" IsExpanded="false" />
-        <EntityTypeShape EntityType="JMSModel.History" Width="1.5" PointX="3.5" PointY="0.5" IsExpanded="false" />
         <EntityTypeShape EntityType="JMSModel.Note" Width="1.5" PointX="5" PointY="0.5" IsExpanded="false" />
         <EntityTypeShape EntityType="JMSModel.Code" Width="1.5" PointX="2" PointY="0.5" IsExpanded="false" />
         <EntityTypeShape EntityType="JMSModel.Employee" Width="1.5" PointX="2" PointY="1" IsExpanded="false" />
         <EntityTypeShape EntityType="JMSModel.Department" Width="1.5" PointX="3.5" PointY="1" IsExpanded="false" />
         <EntityTypeShape EntityType="JMSModel.Feed" Width="1.5" PointX="0.5" PointY="1" IsExpanded="false" />
         <EntityTypeShape EntityType="JMSModel.Job" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="JMSModel.History" Width="1.5" PointX="8.6052945743339571" PointY="14.882627941147717" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -259,6 +259,10 @@
                                 contentType: 'application/json; charset=utf-8',
                                 success: function (data) {
                                     jobs.job.closeJobDialog();
+                                    var history = $("#gridHistories").data("KendoGrid");
+                                    if (history) {
+                                        history.dataSource.read();
+                                    }
                                     if (data.result) {
                                         $.ajax({
                                             type: 'GET',

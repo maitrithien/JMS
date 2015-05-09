@@ -225,6 +225,10 @@
                                 contentType: 'application/json; charset=utf-8',
                                 success: function () {
                                     refreshGrid();
+                                    var history = $("#gridHistories").data("KendoGrid");
+                                    if (history) {
+                                        history.dataSource.read();
+                                    }
                                     var win = $("#NoteDialog").data("kendoWindow");
                                     if (win) {
                                         win.close();

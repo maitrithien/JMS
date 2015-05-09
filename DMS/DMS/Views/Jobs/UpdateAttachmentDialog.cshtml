@@ -64,6 +64,10 @@
                 success: function () {
                     jobs.attachment.refreshAttachmentGrid();
                     jobs.attachment.closeUpdateAttachmentDialog();
+                    var history = $("#gridHistories").data("KendoGrid");
+                    if (history) {
+                        history.dataSource.read();
+                    }
                 }
             });
         }

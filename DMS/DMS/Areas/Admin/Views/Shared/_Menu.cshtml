@@ -1,0 +1,49 @@
+﻿<!-- http://tech.pro/tutorial/1491/chat-application-with-signalr-and-aspnet-mvc-4 -->
+<script>
+    angular.module("KendoMenu", ["kendo.directives"])
+      .controller("main-menu", function ($scope) {
+          $scope.menuOrientation = "horizontal";
+      })
+</script>
+
+@{ 
+    string controller = ViewContext.RouteData.Values["controller"].ToString();
+    string action = ViewContext.RouteData.Values["action"].ToString();
+}
+
+<div id="context-menu" ng-app="KendoMenu">
+    <div class="menu-section k-content" ng-controller="main-menu">
+        <div class="box-col">
+            <ul kendo-menu style="display: inline-block; min-width: 150px; border: none !important;"
+                k-orientation="menuOrientation"
+                k-rebind="menuOrientation">
+                <li class="@(controller == "Employee" && action == "Index" ? "k-state-selected selected" : string.Empty)">
+                    <a href="@Url.Action("Index", "Employee", new { area = "Admin" })">Nhân viên</a>
+                </li>
+                <li class="@(controller == "Department" && action == "Index" ? "k-state-selected selected" : string.Empty)">
+                    <a href="@Url.Action("Index", "Department", new { area = "Admin" })">Phòng ban</a>
+                </li>
+                <li class="@(controller == "User" && action == "Index" ? "k-state-selected selected" : string.Empty)">
+                    <a href="@Url.Action("Index", "User", new { area = "Admin" })">Người dùng</a>
+                </li>
+                <li class="@(controller == "Role" && action == "Index" ? "k-state-selected selected" : string.Empty)">
+                    <a href="@Url.Action("Index", "Role", new { area = "Admin" })">Nhóm người dùng</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <style>
+        .k-menu .k-item, .k-widget.k-menu-horizontal > .k-item {
+            border: none !important;
+        }
+
+        .menu-section {
+            padding: 0 20px;
+        }
+
+            .menu-section .box-col li {
+                margin: 0;
+                border: none;
+            }
+    </style>
+</div>

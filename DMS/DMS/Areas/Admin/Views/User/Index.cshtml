@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "Danh sách người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section featured {
+    @Html.Partial("Filter")
+    <div class="content-wrapper">
+        <div class="toolbar-search">
+            <button id="btnSearch" title="Tìm kiếm" type="button" class="btn-right">Tìm kiếm</button>
+        </div>
+    </div>
+    <div class="content-wrapper">
+        <div class="toolbar">
+            <button id="btnAddNew" title="Thêm mới" type="button"></button>
+        </div>
+        <div id="userConfirmDialog"></div>
+        <script type="text/x-kendo-template" id="userConfirmTemplate">
+            <div class="content-wrapper">
+                <p>Bạn có muốn xóa JOBS <strong>#= UserID #</strong> ?</p>
+                <div class="content-wrapper bottom-toolbar">
+                    <button class="k-button" id="yesButton">Đồng ý</button>
+                    <button class="k-button" id="noButton">Hủy</button>
+                </div>
+            </div>
+        </script>
+        <div id="userMessageDialog"></div>
+        <script type="text/x-kendo-template" id="userMessageTemplate">
+            <div class="content-wrapper">
+                <p>#= message #</p>
+                <div class="content-wrapper bottom-toolbar">
+                    <button class="k-button" id="okButton">Đồng ý</button>
+                </div>
+            </div>
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#userDialog").kendoWindow({
+                    iframe: false,
+                    modal: true,
+                    height: 480,
+                    width: 900,
+                    title: "Cập nhật thông tin JOBS",
+                    visible: false
+                }).data("kendoWindow");
+
+                $("#btnAddNew").kendoButton({
+                    icon: "plus",
+                    click: function (e) {
+                        var win = $("#userDialog").data("kendoWindow");
+                        if (win) {
+                            win.center();
+                            win.refresh({
+                                url: $('#userDialogUrl').val(),
+                                data: {
+                                    APK: null,
+                                    Action: 1
+                                },
+                                type: 'POST'
+                            });
+                            win.open();
+                        }
+                    }
+                });
+
+                $("#btnSearch").kendoButton({
+                    icon: "search",
+                    click: function (e) {
+                        //console.log("search");
+                        var grid = $("#grid").data("kendoGrid");
+                        var x = kendo.parseDate($('#DeadlineFilter').val());
+                        var data = common.getFormDataTypeJson("frm-main-filter");
+                        data["IsFilter"] = 1;
+                        data["DeadlineFilter"] = kendo.toString(x, "u");
+
+                        grid.dataSource.read(data);
+                    }
+                });
+
+
+            });
+
+            //function gridSendData() {
+            //    var data = common.getFormDataTypeJson("frm-main-filter");
+            //    data['IsFilter'] = 1;
+            //    return data;
+            //}
+        </script>
+    </div>
+}
+
+@section scripts{
+    <script src="~/Scripts/Users.js"></script>
+}
+
+@Html.Partial("Grid")
+
+@Html.Hidden("userDialogUrl", Url.Action("UserDialog", "Users", new { area = "" }))
+@Html.Hidden("removeUserUrl", Url.Action("Delete", "Users", new { area = "" }))
+@Html.Hidden("checkDeleteUserUrl", Url.Action("CheckDelete", "Users", new { area = "" }))
+<div id="userDialog"></div>

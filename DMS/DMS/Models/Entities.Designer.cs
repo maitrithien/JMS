@@ -84,22 +84,6 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<History> Histories
-        {
-            get
-            {
-                if ((_Histories == null))
-                {
-                    _Histories = base.CreateObjectSet<History>("Histories");
-                }
-                return _Histories;
-            }
-        }
-        private ObjectSet<History> _Histories;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<Note> Notes
         {
             get
@@ -192,6 +176,22 @@ namespace DMS.Models
             }
         }
         private ObjectSet<Job> _Jobs;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<History> Histories
+        {
+            get
+            {
+                if ((_Histories == null))
+                {
+                    _Histories = base.CreateObjectSet<History>("Histories");
+                }
+                return _Histories;
+            }
+        }
+        private ObjectSet<History> _Histories;
 
         #endregion
 
@@ -203,14 +203,6 @@ namespace DMS.Models
         public void AddToAttachments(Attachment attachment)
         {
             base.AddObject("Attachments", attachment);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Histories EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToHistories(History history)
-        {
-            base.AddObject("Histories", history);
         }
     
         /// <summary>
@@ -259,6 +251,14 @@ namespace DMS.Models
         public void AddToJobs(Job job)
         {
             base.AddObject("Jobs", job);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Histories EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToHistories(History history)
+        {
+            base.AddObject("Histories", history);
         }
 
         #endregion
@@ -1743,13 +1743,15 @@ namespace DMS.Models
         /// <param name="aPK">Initial value of the APK property.</param>
         /// <param name="jobAPK">Initial value of the JobAPK property.</param>
         /// <param name="actionType">Initial value of the ActionType property.</param>
+        /// <param name="completed">Initial value of the Completed property.</param>
         /// <param name="createdDate">Initial value of the CreatedDate property.</param>
-        public static History CreateHistory(global::System.Guid aPK, global::System.Guid jobAPK, global::System.Byte actionType, global::System.DateTime createdDate)
+        public static History CreateHistory(global::System.Guid aPK, global::System.Guid jobAPK, global::System.Byte actionType, global::System.Byte completed, global::System.DateTime createdDate)
         {
             History history = new History();
             history.APK = aPK;
             history.JobAPK = jobAPK;
             history.ActionType = actionType;
+            history.Completed = completed;
             history.CreatedDate = createdDate;
             return history;
         }
@@ -1838,24 +1840,72 @@ namespace DMS.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String Description
+        public global::System.String OldData
         {
             get
             {
-                return _Description;
+                return _OldData;
             }
             set
             {
-                OnDescriptionChanging(value);
-                ReportPropertyChanging("Description");
-                _Description = StructuralObject.SetValidValue(value, true, "Description");
-                ReportPropertyChanged("Description");
-                OnDescriptionChanged();
+                OnOldDataChanging(value);
+                ReportPropertyChanging("OldData");
+                _OldData = StructuralObject.SetValidValue(value, true, "OldData");
+                ReportPropertyChanged("OldData");
+                OnOldDataChanged();
             }
         }
-        private global::System.String _Description;
-        partial void OnDescriptionChanging(global::System.String value);
-        partial void OnDescriptionChanged();
+        private global::System.String _OldData;
+        partial void OnOldDataChanging(global::System.String value);
+        partial void OnOldDataChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String NewData
+        {
+            get
+            {
+                return _NewData;
+            }
+            set
+            {
+                OnNewDataChanging(value);
+                ReportPropertyChanging("NewData");
+                _NewData = StructuralObject.SetValidValue(value, true, "NewData");
+                ReportPropertyChanged("NewData");
+                OnNewDataChanged();
+            }
+        }
+        private global::System.String _NewData;
+        partial void OnNewDataChanging(global::System.String value);
+        partial void OnNewDataChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Byte Completed
+        {
+            get
+            {
+                return _Completed;
+            }
+            set
+            {
+                OnCompletedChanging(value);
+                ReportPropertyChanging("Completed");
+                _Completed = StructuralObject.SetValidValue(value, "Completed");
+                ReportPropertyChanged("Completed");
+                OnCompletedChanged();
+            }
+        }
+        private global::System.Byte _Completed;
+        partial void OnCompletedChanging(global::System.Byte value);
+        partial void OnCompletedChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

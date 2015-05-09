@@ -1,0 +1,49 @@
+﻿@model DMS.Models.JobModels
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-main-filter" }))
+{
+    <div class="content-wrapper filter">
+            <div class="title-info">
+                <span>Bộ lọc dữ liệu</span>
+            </div>
+            <div class="filter-content">
+                <div class="content-column-filter-3">
+                    <div class="content-row-filter">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.JobIDFilter, new { style = "font-weight: normal; font-size: small;" })
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.JobIDFilter, new { style = "width: calc(calc(100% - 10px) - 10px); font-weight: normal; font-size: small;" })
+                        </div>
+                    </div>
+                </div>
+                <div class="content-column-filter-3">
+                    <div class="content-row-filter">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.JobNameFilter, new { style = "font-weight: normal; font-size: small;" })
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.JobNameFilter, new { style = "width: calc(calc(100% - 10px) - 10px); font-weight: normal; font-size: small;" })
+                        </div>
+                    </div>
+                </div>
+                <div class="content-column-filter-3">
+                    <div class="content-row-filter">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.DepartmentIDFilter, new { style = "font-weight: normal; font-size: small;" })
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.DepartmentIDFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
+                        </div>
+                        <script type="text/javascript">
+                            $("#DepartmentIDFilter").dropdownlist({
+                                url: '@Url.Action("DepartmentID", "ComboBox")',
+                                dataTextField: 'DepartmentName',
+                                dataValueField: 'DepartmentID'
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+}

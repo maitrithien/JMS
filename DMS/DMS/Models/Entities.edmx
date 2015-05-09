@@ -105,7 +105,9 @@
           <Property Name="APK" Type="uniqueidentifier" Nullable="false" />
           <Property Name="JobAPK" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ActionType" Type="tinyint" Nullable="false" />
-          <Property Name="Description" Type="nvarchar" MaxLength="300" />
+          <Property Name="OldData" Type="nvarchar(max)" />
+          <Property Name="NewData" Type="nvarchar(max)" />
+          <Property Name="Completed" Type="tinyint" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedUserID" Type="nvarchar" MaxLength="50" />
         </EntityType>
@@ -187,7 +189,6 @@
       <Schema Namespace="JMSModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="JMSEntities" p1:LazyLoadingEnabled="true" >
           <EntitySet Name="Attachments" EntityType="JMSModel.Attachment" />
-          <EntitySet Name="Histories" EntityType="JMSModel.History" />
           <EntitySet Name="Notes" EntityType="JMSModel.Note" />
           <EntitySet Name="Codes" EntityType="JMSModel.Code" />
           <FunctionImport Name="GetEmployeeByManager" ReturnType="Collection(JMSModel.GetEmployeeByManager_Result)">
@@ -222,6 +223,7 @@
           </FunctionImport>
           <EntitySet Name="Feeds" EntityType="JMSModel.Feed" />
           <EntitySet Name="Jobs" EntityType="JMSModel.Job" />
+          <EntitySet Name="Histories" EntityType="JMSModel.History" />
         </EntityContainer>
         <EntityType Name="Attachment">
           <Key>
@@ -239,17 +241,6 @@
           <Property Type="String" Name="CreatedUserID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="LastModifyUserID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="AttachmentFileExtension" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="History">
-          <Key>
-            <PropertyRef Name="APK" />
-          </Key>
-          <Property Type="Guid" Name="APK" Nullable="false" />
-          <Property Type="Guid" Name="JobAPK" Nullable="false" />
-          <Property Type="Byte" Name="ActionType" Nullable="false" />
-          <Property Type="String" Name="Description" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
-          <Property Type="String" Name="CreatedUserID" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Note">
           <Key>
@@ -400,6 +391,19 @@
           <Property Type="String" Name="SentMessage" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Guid" Name="ReAPK" />
         </EntityType>
+        <EntityType Name="History">
+          <Key>
+            <PropertyRef Name="APK" />
+          </Key>
+          <Property Type="Guid" Name="APK" Nullable="false" />
+          <Property Type="Guid" Name="JobAPK" Nullable="false" />
+          <Property Type="Byte" Name="ActionType" Nullable="false" />
+          <Property Type="String" Name="OldData" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="NewData" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Byte" Name="Completed" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="CreatedUserID" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -419,18 +423,6 @@
                 <ScalarProperty Name="AttachmentFileType" ColumnName="AttachmentFileType" />
                 <ScalarProperty Name="AttachmentFileSize" ColumnName="AttachmentFileSize" />
                 <ScalarProperty Name="AttachmentFileName" ColumnName="AttachmentFileName" />
-                <ScalarProperty Name="JobAPK" ColumnName="JobAPK" />
-                <ScalarProperty Name="APK" ColumnName="APK" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Histories">
-            <EntityTypeMapping TypeName="JMSModel.History">
-              <MappingFragment StoreEntitySet="Histories">
-                <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="ActionType" ColumnName="ActionType" />
                 <ScalarProperty Name="JobAPK" ColumnName="JobAPK" />
                 <ScalarProperty Name="APK" ColumnName="APK" />
               </MappingFragment>
@@ -600,6 +592,20 @@
                 <ScalarProperty Name="Priority" ColumnName="Priority" />
                 <ScalarProperty Name="StatusConfirm" ColumnName="StatusConfirm" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="APK" ColumnName="APK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Histories">
+            <EntityTypeMapping TypeName="JMSModel.History">
+              <MappingFragment StoreEntitySet="Histories">
+                <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Completed" ColumnName="Completed" />
+                <ScalarProperty Name="NewData" ColumnName="NewData" />
+                <ScalarProperty Name="OldData" ColumnName="OldData" />
+                <ScalarProperty Name="ActionType" ColumnName="ActionType" />
+                <ScalarProperty Name="JobAPK" ColumnName="JobAPK" />
                 <ScalarProperty Name="APK" ColumnName="APK" />
               </MappingFragment>
             </EntityTypeMapping>

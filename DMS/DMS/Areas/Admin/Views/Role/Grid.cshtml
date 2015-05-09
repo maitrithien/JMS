@@ -1,0 +1,11 @@
+﻿<div id="main-grid">
+    <script>
+        $(document).ready(function () {
+            users.user.initUserGrid();
+            users.user.initUserConfirmDialog();
+        });
+    </script>
+
+    <div id="grid"></div>
+    @Html.Hidden("gridUsersUrl", Url.Action("GridUser", "Users", new { area = "Admin" }))
+</div>

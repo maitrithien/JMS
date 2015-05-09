@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Danh sách hồ sơ";
+    ViewBag.Title = "Danh sách JOBS";
 }
 @section featured {
     @Html.Partial("Filter")
@@ -15,7 +15,7 @@
         <div id="jobConfirmDialog"></div>
         <script type="text/x-kendo-template" id="jobConfirmTemplate">
             <div class="content-wrapper">
-                <p>Bạn có muốn xóa hồ sơ <strong>#= JobID #</strong> ?</p>
+                <p>Bạn có muốn xóa JOBS <strong>#= JobID #</strong> ?</p>
                 <div class="content-wrapper bottom-toolbar">
                     <button class="k-button" id="yesButton">Đồng ý</button>
                     <button class="k-button" id="noButton">Hủy</button>
@@ -39,7 +39,7 @@
                     height: 480,
                     width: 900,
                     actions: [ "Minimize", "Maximize" ],
-                    title: "Cập nhật thông tin hồ sơ",
+                    title: "Cập nhật thông tin JOBS",
                     visible: false
                 }).data("kendoWindow");
 

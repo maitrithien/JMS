@@ -10,12 +10,16 @@
                 dataSource: {
                     type: "json",
                     transport: {
-                        read: '@Url.Action("GridHistories", "Jobs")'
+                        read: '@Url.Action("GridHistories", "Jobs")' + '?apk=' + $('#JobAPK').val()
                     },
                     pageSize: 20
                 },
                 height: 500,
-                groupable: true,
+                groupable: {
+                    messages: {
+                        empty: "Kéo một tiêu đề cột và thả nó vào đây để nhóm theo cột đó"
+                    }
+                },
                 //sortable: true,
                 selectable: true,
                 //filterable: true,
@@ -26,12 +30,12 @@
                 },
                 columns: [{
                     field: "APK",
-                    title: "<input type='checkbox' id='chkAll' />",
-                    width: 30,
-                    template: "<input type='checkbox' />"
+                    title: "",
+                    hidden: true,
+                    width: 30
                 }, {
                     field: "CreatedDate",
-                    title: "CreatedDate",
+                    title: "Ngày tạo",
                     type: "date",
                     width: 200,
                     template: '#= kendo.toString(data.CreatedDate, "dd/MM/yyyy HH.mm.ss") #'
@@ -44,8 +48,11 @@
                     title: "Hành động",
                     width: 200
                 }, {
-                    field: "Description",
-                    title: "Mô tả"
+                    field: "OldData",
+                    title: "Nội dung cũ"
+                }, {
+                    field: "NewData",
+                    title: "Nội dung mới"
                 }]
             });
         });

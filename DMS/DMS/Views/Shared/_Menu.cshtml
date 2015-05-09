@@ -62,19 +62,19 @@
                     k-rebind="menuOrientation"  
                     ng-controller="timeCtrl">
                 <li class="@(controller == "Jobs" && action == "Index" ? "k-state-selected selected" : string.Empty)">
-                     <a href="@Url.Action("Index", "Jobs")">Hồ sơ cá nhân <span id="notify{{countP}}" class="red-notify">{{countP}}</span></a>
+                     <a href="@Url.Action("Index", "Jobs")">JOBS cá nhân <span id="notify{{countP}}" class="red-notify">{{countP}}</span></a>
                 </li>
                 <li class="@(controller == "Jobs" && action == "JobsEmployee" ? "k-state-selected selected" : string.Empty)">
-                    <a href="@Url.Action("JobsEmployee", "Jobs")">Hồ sơ từ nhân viên <span id="notify{{countE}}" class="red-notify">{{countE}}</span></a>
+                    <a href="@Url.Action("JobsEmployee", "Jobs")">JOBS từ nhân viên <span id="notify{{countE}}" class="red-notify">{{countE}}</span></a>
                 </li>
                 <li class="@(controller == "Jobs" && action == "JobsReceived" ? "k-state-selected selected" : string.Empty)">
-                    <a href="@Url.Action("JobsReceived", "Jobs")">Hồ sơ đã nhận <span id="notify{{countR}}" class="red-notify">{{countR}}</span></a>
+                    <a href="@Url.Action("JobsReceived", "Jobs")">JOBS đã nhận <span id="notify{{countR}}" class="red-notify">{{countR}}</span></a>
                 </li>
                 <li class="@(controller == "Jobs" && action == "JobsSent" ? "k-state-selected selected" : string.Empty)">
-                    <a href="@Url.Action("JobsSent", "Jobs")">Hồ sơ đã gửi <span id="notify{{countS}}" class="red-notify">{{countS}}</span></a>
+                    <a href="@Url.Action("JobsSent", "Jobs")">JOBS đã gửi <span id="notify{{countS}}" class="red-notify">{{countS}}</span></a>
                 </li>
                 <li class="@(controller == "Jobs" && action == "JobsOverdue" ? "k-state-selected selected" : string.Empty)">
-                    <a href="@Url.Action("JobsOverdue", "Jobs")">Hồ sơ quá hạn <span id="notify{{countO}}" class="red-notify">{{countO}}</span></a>
+                    <a href="@Url.Action("JobsOverdue", "Jobs")">JOBS quá hạn <span id="notify{{countO}}" class="red-notify">{{countO}}</span></a>
                 </li>
                 <li>
                     <a href="javascript:void(0);" ng-click="openFeedDialog()">Ghi chú <span id="notify{{countM}}" class="red-notify">{{countM}}</span></a>

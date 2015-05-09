@@ -311,12 +311,12 @@ var jobs = new function () {
                         hidden: true
                     }, {
                         field: "JobID",
-                        title: "Mã hồ sơ",
+                        title: "Mã JOBS",
                         width: 120,
-                        template: "<a href='/Jobs/JobView/#: data.APK #' target='_blank' title='Xem chi tiết hồ sơ #: data.JobID #'>#: data.JobID #</a>"
+                        template: "<a href='/Jobs/JobView/#: data.APK #' target='_blank' title='Xem chi tiết JOBS #: data.JobID #'>#: data.JobID #</a>"
                     }, {
                         field: "JobName",
-                        title: "Tên hồ sơ",
+                        title: "Tên JOBS",
                         width: 200
                     }, {
                         field: "StatusName",
@@ -406,12 +406,12 @@ var jobs = new function () {
                         hidden: true
                     }, {
                         field: "JobID",
-                        title: "Mã hồ sơ",
+                        title: "Mã JOBS",
                         width: 120,
-                        template: "<a href='/Jobs/JobView/#: data.APK #' target='_blank' title='Xem chi tiết hồ sơ #: data.JobID #'>#: data.JobID #</a>"
+                        template: "<a href='/Jobs/JobView/#: data.APK #' target='_blank' title='Xem chi tiết JOBS #: data.JobID #'>#: data.JobID #</a>"
                     }, {
                         field: "JobName",
-                        title: "Tên hồ sơ",
+                        title: "Tên JOBS",
                         width: 200
                     }, {
                         field: "StatusName",
@@ -491,12 +491,12 @@ var jobs = new function () {
                         hidden: true
                     }, {
                         field: "JobID",
-                        title: "Mã hồ sơ",
+                        title: "Mã JOBS",
                         width: 120,
-                        template: "<a href='/Jobs/JobView/#: data.APK #' target='_blank' title='Xem chi tiết hồ sơ #: data.JobID #'>#: data.JobID #</a>"
+                        template: "<a href='/Jobs/JobView/#: data.APK #' target='_blank' title='Xem chi tiết JOBS #: data.JobID #'>#: data.JobID #</a>"
                     }, {
                         field: "JobName",
-                        title: "Tên hồ sơ",
+                        title: "Tên JOBS",
                         width: 200
                     },  {
                         field: "StatusName",

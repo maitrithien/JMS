@@ -12,9 +12,11 @@ namespace DMS.Models
         public Guid? APK { get; set; }
 
         [Display(Name = "Hành động")]
-        public int ActionType { get; set; }
+        [DisplayName("Hành động")]
+        public byte ActionType { get; set; }
 
         [Display(Name = "Hành động")]
+        [DisplayName("Hành động")]
         public string ActionName {
             get
             {
@@ -22,16 +24,16 @@ namespace DMS.Models
                 switch (ActionType)
                 {
                     case 0:
-                        name = "Tạo mới";
+                        name = "Thay đổi trạng thái";
                         break;
                     case 1:
-                        name = "Cập nhật";
+                        name = "Thay đổi nội dung";
                         break;
                     case 2:
-                        name = "Xóa";
+                        name = "Thay đổi người thực hiện";
                         break;
-                    case 9:
-                        name = "Kế thừa";
+                    default:
+                        name = "Thay đổi khác";
                         break;
                 }
 
@@ -39,8 +41,12 @@ namespace DMS.Models
             }
         }
 
-        [Display(Name = "Ghi chú")]
-        public string Description { get; set; }
+        [Display(Name = "Nội dung trước")]
+        [DisplayName("Nội dung trước")]
+        public string OldData { get; set; }
 
+        [Display(Name = "Nội dung thay đổi")]
+        [DisplayName("Nội dung thay đổi")]
+        public string NewData { get; set; }
     }
 }

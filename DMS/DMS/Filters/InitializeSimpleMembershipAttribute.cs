@@ -8,6 +8,8 @@ using DMS.Models;
 using System.Web;
 using System.Security;
 using System.Web.Routing;
+using System.Web.Security;
+using System.Linq;
 
 namespace DMS.Filters
 {
@@ -27,6 +29,18 @@ namespace DMS.Filters
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             base.OnActionExecuted(filterContext);
+
+            if (!Roles.RoleExists("Administrator"))
+            {
+                Roles.CreateRole("Administrator");
+            }
+
+            string accountName = "Admin";
+            if (!WebSecurity.UserExists(accountName.ToLower()))
+            {
+                WebSecurity.CreateUserAndAccount(accountName, "123456");
+                Roles.AddUserToRole(accountName, "Administrator");
+            }
         }
 
         private class SimpleMembershipInitializer
@@ -48,6 +62,8 @@ namespace DMS.Filters
 
                     WebSecurity.InitializeDatabaseConnection("DefaultConnection", "UserProfile", "UserId", "UserName", 
                         autoCreateTables: true);
+
+                    
                 }
                 catch (Exception ex)
                 {

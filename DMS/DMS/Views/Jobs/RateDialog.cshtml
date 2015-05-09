@@ -75,7 +75,10 @@
                                     }
                                 });
                             }
-
+                            var history = $("#gridHistories").data("KendoGrid");
+                            if (history) {
+                                history.dataSource.read();
+                            }
                             var rateDialog = $("#RateDialog").data('kendoWindow');
                             rateDialog.close();
                         }
