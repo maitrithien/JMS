@@ -551,6 +551,36 @@ namespace DMS.Controllers
                 finder.LastModifyUserID = User.Identity.Name;
 
                 _EntityModel.SaveChanges();
+
+                if (item.Status != finder.Status && item.Status == "2")
+                {
+                    var job = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK)
+                    ?? new Job();
+
+                    List<string> reader = new List<string>(){
+                                job.Recipient,
+                                job.Sender,
+                                job.Confirmer,
+                                job.Poster
+                            }.Distinct().ToList();
+
+                    foreach (var r in reader)
+                    {
+                        // Không notify cho người tạo
+                        if (string.IsNullOrEmpty(r) || _EmployeeID.Equals(r)) continue;
+
+                        _EntityModel.CompletedFeeds.AddObject(new CompletedFeed
+                        {
+                            APK = Guid.NewGuid(),
+                            JobAPK = job.APK,
+                            JobID = job.JobID,
+                            Completed = job.Completed,
+                            Read = false,
+                            Reader = r
+                        });
+                        _EntityModel.SaveChanges();
+                    }
+                }
             }
             else
             {
@@ -584,7 +614,36 @@ namespace DMS.Controllers
 
                 item.APK = job.APK;
 
+                // Ghi lịch sử
                 AddHistories(job);
+
+                // Notify
+                if (job.Status == "2")
+                {
+                    List<string> reader = new List<string>(){
+                                job.Recipient,
+                                job.Sender,
+                                job.Confirmer,
+                                job.Poster
+                            }.Distinct().ToList();
+
+                    foreach (var r in reader)
+                    {
+                        // Không notify cho người tạo
+                        if (string.IsNullOrEmpty(r) || _EmployeeID.Equals(r)) continue;
+
+                        _EntityModel.CompletedFeeds.AddObject(new CompletedFeed
+                        {
+                            APK = Guid.NewGuid(),
+                            JobAPK = job.APK,
+                            JobID = job.JobID,
+                            Completed = job.Completed,
+                            Read = false,
+                            Reader = r
+                        });
+                        _EntityModel.SaveChanges();
+                    }
+                }
             }
 
             return Json(new { result = true, id = item.APK });
@@ -1295,14 +1354,19 @@ namespace DMS.Controllers
             {
                 foreach (var f in feeds)
                 {
+                    var status = (_EntityModel.Jobs.FirstOrDefault(x => x.APK == f.JobAPK)
+                        ?? new Job()).Status;
+
                     completedFeeds.Add(new CompletedFeedModels()
                     {
                         APK = f.APK,
                         JobAPK = f.JobAPK,
                         JobID = f.JobID,
                         Completed = f.Completed,
-                        CompletedName =  model.CompletedName = (_EntityModel.Codes.FirstOrDefault(s =>
+                        CompletedName = model.CompletedName = (_EntityModel.Codes.FirstOrDefault(s =>
                                 s.CodeID == f.Completed && s.CodeGroupID == JobModels.STATUS_COMPLETED) ?? new Code()).CodeName,
+                        JobStatusName =  model.CompletedName = (_EntityModel.Codes.FirstOrDefault(s =>
+                                s.CodeID == status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName,
                         Status = f.Read ? 1 : 0,
                         StatusName = f.Read ? "Đã đọc" : "Chưa đọc",
                     });

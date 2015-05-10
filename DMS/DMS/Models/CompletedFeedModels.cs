@@ -22,11 +22,15 @@ namespace DMS.Models
         [Display(Name = "Mã JOBS")]
         public string JobID { get; set; }
 
+        [Display(Name = "Tình trạng JOBS")]
+        public string JobStatusName { get; set; }
+
         [Display(Name = "Tình trạng")]
         public int Status { get; set; }
 
         [Display(Name = "Tình trạng")]
         public string StatusName { get; set; }
+
 
     }
 }
