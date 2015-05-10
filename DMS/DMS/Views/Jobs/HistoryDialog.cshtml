@@ -1,0 +1,90 @@
+﻿@model DMS.Models.HistoryModels
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-viewer-history" }))
+{
+    @Html.HiddenFor(model => model.APK)
+    <div class="content-wrapper">
+        <div class="title-info">
+            <span>@Html.DisplayNameFor(x => x.ActionName) : @Html.DisplayFor(x => x.ActionName)</span>
+        </div>
+        <div class="tab-content">
+            <div class="content-column-full">
+                @{
+                    if(!string.IsNullOrEmpty(Model.OldData))
+                    {
+                        <div class="content-row">
+                            <div class="editor-label">
+                                @Html.DisplayNameFor(model => model.OldData)
+                            </div>
+                            <div  class="display-field" style="max-height: 200px; width: 100%; background: antiquewhite; overflow: auto">
+                                <pre>
+                                    @Html.DisplayFor(model => model.OldData)
+                                </pre>
+                            </div>
+                        </div>
+                    }
+                }
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.DisplayNameFor(model => model.NewData)
+                    </div>
+                    <div  class="display-field" style="max-height: 200px; width: 100%; background: aliceblue; overflow: auto">
+                        <pre>
+                            @Html.DisplayFor(model => model.NewData)
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="title-info">
+            <span>Thông tin hệ thống</span>
+        </div>
+        <div class="tab-content">
+            <div class="content-column">
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.DisplayNameFor(model => model.CreatedDate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.DisplayFor(model => model.CreatedDate)
+                    </div>
+                </div>
+            </div>
+            <div class="content-column">
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.DisplayNameFor(model => model.CreatedUserID)
+                    </div>
+                    <div class="editor-field">
+                        @Html.DisplayFor(model => model.CreatedUserID)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-wrapper bottom-toolbar">
+        <button id="btnHistoryCancel" type="button">Đóng</button>
+        <script>
+            $("#btnHistoryCancel").kendoButton({
+                width: 120,
+                icon: "close",
+                click: function () {
+                    var win = $("#HistoryDialog").data("kendoWindow");
+                    if (win) {
+                        win.close();
+                    }
+                }
+            });
+        </script>
+    </div>
+}
+
+<script type="text/javascript">
+    kendo.init($("input"));
+    refreshGrid = function () {
+        var historyGrid = $('#gridHistory').data('kendoGrid');
+        if (historyGrid) {
+            historyGrid.dataSource.read({ JobAPK: $('#JobAPK').val() });
+        }
+    }
+</script>

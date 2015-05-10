@@ -41,7 +41,7 @@ var uploader = new function () {
             data = { JobAPK: $("#JobAPK").val() };
             gridAttachment.dataSource.read(data);
 
-            var history = $("#gridHistories").data("KendoGrid");
+            var history = $("#gridHistories").data("kendoGrid");
             if (history) {
                 history.dataSource.read();
             }

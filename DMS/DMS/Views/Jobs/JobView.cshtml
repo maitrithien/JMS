@@ -209,6 +209,16 @@
                 visible: false
             }).data("kendoWindow");
 
+            $("#HistoryDialog").kendoWindow({
+                iframe: false,
+                modal: true,
+                height: 530,
+                width: 800,
+                title: "Xem thông tin lịch sử",
+                actions: ["Maximize", "Close"],
+                visible: false
+            }).data("kendoWindow");
+
             $("#AttachmentDialog").kendoWindow({
                 iframe: false,
                 modal: true,
@@ -434,6 +444,7 @@
 @Html.Hidden("viewJobPartialUrl", Url.Action("JobViewPartial", "Jobs"))
 <div id="sentDialog"></div>
 <div id="jobDialog"></div>
+<div id="HistoryDialog"></div>
 <div id="NoteDialog"></div>
 <div id="AttachmentDialog"></div>
 <div id="RateDialog"></div>

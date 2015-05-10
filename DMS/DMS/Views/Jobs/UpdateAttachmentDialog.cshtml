@@ -64,7 +64,7 @@
                 success: function () {
                     jobs.attachment.refreshAttachmentGrid();
                     jobs.attachment.closeUpdateAttachmentDialog();
-                    var history = $("#gridHistories").data("KendoGrid");
+                    var history = $("#gridHistories").data("kendoGrid");
                     if (history) {
                         history.dataSource.read();
                     }

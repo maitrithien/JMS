@@ -150,7 +150,14 @@
             width: calc(70% - 11px);
             float: left;
             padding: 0 5px;
+            font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
         }
+            .tab-content .content-column .display-field > pre,
+            .tab-content .content-column-full .display-field > pre {
+                font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+                line-height: 18px;
+                font-size: smaller;
+            }
         
 .k-tabstrip-wrapper .k-header, 
 .k-panelbar .k-tabstrip-items .k-item {

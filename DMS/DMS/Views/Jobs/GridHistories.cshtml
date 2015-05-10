@@ -2,6 +2,22 @@
     <div id="gridHistories"></div>
     <script>
         $(document).ready(function () {
+            function viewHistory_Click(e) {
+                e.preventDefault();
+
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+                var win = $("#HistoryDialog").data("kendoWindow");
+                win.center();
+                win.maximize();
+                win.refresh({
+                    url: $('#HistoryDialogUrl').val(),
+                    data: { APK: dataItem.APK, Action: 3 },
+                    type: 'POST'
+                });
+                win.open();
+            }
+
             $("#gridHistories").kendoGrid({
                 toolbar: ['excel'],
                 excel: {
@@ -21,6 +37,7 @@
                     }
                 },
                 //sortable: true,
+                resizable: true,
                 selectable: true,
                 //filterable: true,
                 pageable: {
@@ -37,25 +54,39 @@
                     field: "CreatedDate",
                     title: "Ngày tạo",
                     type: "date",
-                    width: 200,
+                    width: 150,
                     template: '#= kendo.toString(data.CreatedDate, "dd/MM/yyyy HH.mm.ss") #'
                 }, {
                     field: "CreatedUserID",
                     title: "Người thực hiện",
-                    width: 200
+                    width: 150
                 }, {
                     field: "ActionName",
                     title: "Hành động",
-                    width: 200
+                    width: 130
                 }, {
                     field: "OldData",
-                    title: "Nội dung cũ"
+                    title: "Nội dung cũ",
+                    width: 200,
                 }, {
                     field: "NewData",
-                    title: "Nội dung mới"
+                    title: "Nội dung mới",
+                    width: 200,
+                }, {
+                    command: [
+                            {
+                                text: 'Xem',
+                                imageClass: 'k-icon k-i-restore ob-icon-only',
+                                title: 'Xem',
+                                click: viewHistory_Click
+                            }
+                    ],
+                    width: 80
                 }]
             });
         });
     </script>
 
 </div>
+
+@Html.Hidden("HistoryDialogUrl", Url.Action("HistoryDialog", "Jobs"))

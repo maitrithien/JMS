@@ -16,7 +16,7 @@ namespace DMS.Models
         public byte ActionType { get; set; }
 
         [Display(Name = "Hành động")]
-        [DisplayName("Hành động")]
+        [DisplayName("Tên hành động")]
         public string ActionName {
             get
             {
@@ -32,6 +32,9 @@ namespace DMS.Models
                     case 2:
                         name = "Thay đổi người thực hiện";
                         break;
+                    case 9:
+                        name = "Xóa nội dung";
+                        break;
                     default:
                         name = "Thay đổi khác";
                         break;
@@ -42,11 +45,11 @@ namespace DMS.Models
         }
 
         [Display(Name = "Nội dung trước")]
-        [DisplayName("Nội dung trước")]
+        [DisplayName("Nội dung cũ")]
         public string OldData { get; set; }
 
         [Display(Name = "Nội dung thay đổi")]
-        [DisplayName("Nội dung thay đổi")]
+        [DisplayName("Nội dung mới")]
         public string NewData { get; set; }
     }
 }

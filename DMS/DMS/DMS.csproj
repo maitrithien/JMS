@@ -485,6 +485,7 @@
     <Content Include="Views\Jobs\GridFeeds.cshtml" />
     <Content Include="Views\Jobs\FeedDialog.cshtml" />
     <Content Include="Views\Jobs\RateDialog.cshtml" />
+    <Content Include="Views\Jobs\HistoryDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

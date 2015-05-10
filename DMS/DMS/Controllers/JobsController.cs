@@ -946,6 +946,9 @@ namespace DMS.Controllers
 
                 if (finder != null)
                 {
+                    // Lịch sử xóa đính kèm
+                    AddHistories(finder, true);
+
                     _EntityModel.Attachments.DeleteObject(finder);
                     _EntityModel.SaveChanges();
                 }
@@ -968,6 +971,9 @@ namespace DMS.Controllers
 
             if (finder != null)
             {
+                // Xóa đính kèm
+                AddHistories(finder, true);
+
                 _EntityModel.Attachments.DeleteObject(finder);
                 _EntityModel.SaveChanges();
 
@@ -1122,6 +1128,9 @@ namespace DMS.Controllers
 
             if (finder != null)
             {
+                // Xóa ghi chú
+                AddHistories(finder, true);
+
                 _EntityModel.Notes.DeleteObject(finder);
                 _EntityModel.SaveChanges();
 
@@ -1270,6 +1279,12 @@ namespace DMS.Controllers
 
         #region ---- Histories ----
 
+
+        /// <summary>
+        /// Grid history
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public JsonResult GridHistories(JobModels model)
         {
             JobModels item = model ?? new JobModels();
@@ -1284,6 +1299,24 @@ namespace DMS.Controllers
             }
 
             return Json(lstModel, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// View history
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public ActionResult HistoryDialog(HistoryModels model)
+        {
+            HistoryModels item = model ?? new HistoryModels();
+
+            History finder = _EntityModel.Histories.FirstOrDefault(x => x.APK == item.APK);
+            if (finder != null)
+            {
+                item = AutoMapper.Mapper.Map<HistoryModels>(finder);
+            }
+
+            return PartialView(item);
         }
 
         #endregion ---- Histories ----
@@ -1355,14 +1388,14 @@ namespace DMS.Controllers
             return model;
         }
 
-        private void AddHistories(Note model)
+        private void AddHistories(Note model, bool deleted = false)
         {
             NoteModels newModel = AutoMapper.Mapper.Map<Note, NoteModels>(model);
 
             History history = new History();
             history.APK = Guid.NewGuid();
             history.JobAPK = newModel.JobAPK ?? Guid.Empty;
-            history.ActionType = 1;
+            history.ActionType = (byte) (deleted ? 9 : 1);
             history.Completed = 0;
             history.CreatedDate = DateTime.Now;
             history.CreatedUserID = User.Identity.Name;
@@ -1373,19 +1406,19 @@ namespace DMS.Controllers
                 newDict.Add(item.Key, item.Value);
             }
 
-            history.NewData = CastToString(newDict, "[Thêm mới lịch sử]");
+            history.NewData = CastToString(newDict, deleted ? "[Xóa lịch sử]" : "[Thêm mới lịch sử]");
 
             _EntityModel.Histories.AddObject(history);
             _EntityModel.SaveChanges();
         }
-        private void AddHistories(Attachment model)
+        private void AddHistories(Attachment model, bool deleted = false)
         {
             AttachmentModels newModel = AutoMapper.Mapper.Map<Attachment, AttachmentModels>(model);
 
             History history = new History();
             history.APK = Guid.NewGuid();
             history.JobAPK = newModel.JobAPK ?? Guid.Empty;
-            history.ActionType = 1;
+            history.ActionType = (byte)(deleted ? 9 : 1); ;
             history.Completed = 0;
             history.CreatedDate = DateTime.Now;
             history.CreatedUserID = User.Identity.Name;
@@ -1396,7 +1429,7 @@ namespace DMS.Controllers
                 newDict.Add(item.Key, item.Value);
             }
 
-            history.NewData = CastToString(newDict, "[Thêm mới đính kèm]");
+            history.NewData = CastToString(newDict, deleted ? "[Xóa đính kèm]" : "[Thêm mới đính kèm]");
 
             _EntityModel.Histories.AddObject(history);
             _EntityModel.SaveChanges();
@@ -1425,9 +1458,10 @@ namespace DMS.Controllers
             _EntityModel.SaveChanges();
         }
 
-        private void UpdateHistories(JobModels oldModel, Job model, byte type)
+
+        private void UpdateHistories(JobModels newModel, Job model, byte type)
         {
-            JobModels newModel = AutoMapper.Mapper.Map<Job, JobModels>(model);
+            JobModels oldModel = AutoMapper.Mapper.Map<Job, JobModels>(model);
 
             History history = new History();
             history.APK = Guid.NewGuid();
@@ -1475,9 +1509,9 @@ namespace DMS.Controllers
             _EntityModel.SaveChanges();
         }
 
-        private void UpdateHistories(NoteModels oldModel, Note model)
+        private void UpdateHistories(NoteModels newModel, Note model)
         {
-            NoteModels newModel = AutoMapper.Mapper.Map<Note, NoteModels>(model);
+            NoteModels oldModel = AutoMapper.Mapper.Map<Note, NoteModels>(model);
 
             History history = new History();
             history.APK = Guid.NewGuid();
@@ -1501,9 +1535,9 @@ namespace DMS.Controllers
             _EntityModel.SaveChanges();
         }
 
-        private void UpdateHistories(AttachmentModels oldModel, Attachment model)
+        private void UpdateHistories(AttachmentModels newModel, Attachment model)
         {
-            AttachmentModels newModel = AutoMapper.Mapper.Map<Attachment, AttachmentModels>(model);
+            AttachmentModels oldModel = AutoMapper.Mapper.Map<Attachment, AttachmentModels>(model);
 
             History history = new History();
             history.APK = Guid.NewGuid();
@@ -1538,7 +1572,8 @@ namespace DMS.Controllers
 
             foreach (var item in source)
             {
-                if (item.Value.ToString() != destination[item.Key].ToString())
+                if (destination.ContainsKey(item.Key) 
+                    && item.Value.ToString() != destination[item.Key].ToString())
                 {
                     comparedSource.Add(item.Key, item.Value);
                     comparedDestination.Add(item.Key, destination[item.Key]);
