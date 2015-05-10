@@ -13,6 +13,16 @@
                 });
               win.open();
           }
+          $scope.openCompletedFeedDialog = function () {
+              var win = $("#feedCompletedDialog").data("kendoWindow");
+              win.center();
+              win.refresh({
+                  url: '@Url.Action("CompletedFeedDialog", "Jobs")',
+                  data: {},
+                  type: 'POST'
+              });
+               win.open();
+           }
       })
 
     function timeCtrl($scope, $timeout) {
@@ -22,6 +32,7 @@
         $scope.countP = "00";
         $scope.countO = "00";
         $scope.countM = "00";
+        $scope.countC = "00";
 
         updateTime();
 
@@ -38,6 +49,7 @@
                     $scope.countP = dataResult.countP;
                     $scope.countO = dataResult.countO;
                     $scope.countM = dataResult.countM;
+                    $scope.countC = dataResult.countC;
                 }
             });
             
@@ -79,6 +91,9 @@
                 <li>
                     <a href="javascript:void(0);" ng-click="openFeedDialog()">Ghi chú <span id="notify{{countM}}" class="red-notify">{{countM}}</span></a>
                 </li>
+                <li>
+                    <a href="javascript:void(0);" ng-click="openCompletedFeedDialog()">Duyệt và đánh giá <span id="notify{{countC}}" class="red-notify">{{countC}}</span></a>
+                </li>
             </ul>
         </div>
     </div>
@@ -98,6 +113,7 @@
 </div>
 
 <div id="feedDialog"></div>
+<div id="feedCompletedDialog"></div>
 <script>
     var feedWindow = $("#feedDialog").kendoWindow({
         title: "Ghi chú mới",
@@ -106,6 +122,12 @@
         width: 900,
         height: 500,
     }).data("kendoWindow");
-
+    var feedCompletedWindow = $("#feedCompletedDialog").kendoWindow({
+        title: "Duyệt và đánh giá",
+        visible: false,
+        modal: true,
+        width: 900,
+        height: 500,
+    }).data("kendoWindow");
     
 </script>

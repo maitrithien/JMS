@@ -74,10 +74,6 @@
             $("#btnSent").kendoButton({
                 icon: "redo",
                 click: function () {
-                    var data = {
-                        APK: $('#JobAPK').val(),
-                    };
-
                     var win = $("#sentDialog").data("kendoWindow");
                     win.center();
                     win.refresh({
@@ -269,7 +265,9 @@
                     <button id="btnEdit" title="Cập nhật" type="button">Sửa</button>
                     @{
                         string visibleConfirmer = Model.CurrentEmployeeID == Model.Confirmer
-                            ? "visible" : "hidden";   
+                            ? "visible" : "hidden";
+                        string visibleCompleted = Model.Completed == "0"
+                           ? "visible" : "hidden";  
                     }
                     <button id="btnRate" style="visibility: @visibleConfirmer" title="Đánh giá" type="button">Đánh giá</button>
 
@@ -277,7 +275,7 @@
                     @{
                         if (Model.Confirmer == Model.CurrentEmployeeID)
                         {
-                        <button id="btnLock" title="Không duyệt" type="button" class="btn-right">Không duyệt</button>
+                        <button id="btnLock" title="Không duyệt" type="button" class="btn-right">Không duyệt chuyển JOBS</button>
                         <script>
                             $("#btnLock").kendoButton({
                                 icon: "lock",
@@ -312,7 +310,7 @@
                                 }
                             });
                         </script>
-                        <button id="btnUnlock" title="Duyệt" type="button" class="btn-right">Duyệt</button>
+                        <button id="btnUnlock" title="Duyệt" type="button" class="btn-right">Duyệt chuyển JOBS</button>
                         <script>
                             $("#btnUnlock").kendoButton({
                                 icon: "unlock",
@@ -351,7 +349,7 @@
 
                         @Html.Hidden("confirmJobUrl", Url.Action("ConfirmJob", "Jobs"))
                     }
-                    <button id="btnSent" title="Chuyển công việc" type="button" class="btn-right">Chuyển công việc</button>
+                    <button id="btnSent" title="Chuyển công việc" style="visibility: @visibleCompleted" type="button" class="btn-right">Chuyển JOBS</button>
                 </div>
                 <div class="title-info">
                     <span>Thông tin mặc định</span>

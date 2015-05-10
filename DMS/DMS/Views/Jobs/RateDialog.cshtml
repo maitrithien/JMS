@@ -28,6 +28,21 @@
                         </script>
                     </div>
                 </div>
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Completed, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Completed, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            $("#Completed").dropdownlist({
+                                url: '@Url.Action("CompletedID", "ComboBox")',
+                                dataTextField: 'CodeName',
+                                dataValueField: 'CodeID'
+                            });
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="title-info">
@@ -40,7 +55,7 @@
                         @Html.LabelFor(model => model.RateComment, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
-                        @Html.TextAreaFor(model => model.RateComment, new { style = "width: 100%; height: 200px; font-weight: normal; font-size: small;" })
+                        @Html.TextAreaFor(model => model.RateComment, new { style = "width: 100%; height: 100px; font-weight: normal; font-size: small;" })
                     </div>
                 </div>
             </div>

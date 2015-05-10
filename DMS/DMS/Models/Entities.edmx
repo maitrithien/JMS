@@ -17,6 +17,7 @@
       [Codes].[CreatedUserID] AS [CreatedUserID]
       FROM [dbo].[Codes] AS [Codes]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="CompletedFeeds" EntityType="JMSModel.Store.CompletedFeeds" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Departments" EntityType="JMSModel.Store.Departments" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Employees" EntityType="JMSModel.Store.Employees" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Feeds" EntityType="JMSModel.Store.Feeds" store:Type="Tables" Schema="dbo" />
@@ -58,6 +59,17 @@
           <Property Name="CodeGroupID" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedUserID" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CompletedFeeds">
+          <Key>
+            <PropertyRef Name="APK" />
+          </Key>
+          <Property Name="APK" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="JobAPK" Type="uniqueidentifier" />
+          <Property Name="JobID" Type="nvarchar" MaxLength="50" />
+          <Property Name="Completed" Type="nvarchar" MaxLength="50" />
+          <Property Name="Reader" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Read" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Departments">
           <Key>
@@ -141,6 +153,7 @@
           <Property Name="ReJobID" Type="nvarchar" MaxLength="50" />
           <Property Name="SentMessage" Type="nvarchar(max)" />
           <Property Name="ReAPK" Type="uniqueidentifier" />
+          <Property Name="Completed" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Notes">
           <Key>
@@ -222,8 +235,9 @@
           <Parameter Name="UserName" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="Feeds" EntityType="JMSModel.Feed" />
-          <EntitySet Name="Jobs" EntityType="JMSModel.Job" />
           <EntitySet Name="Histories" EntityType="JMSModel.History" />
+          <EntitySet Name="Jobs" EntityType="JMSModel.Job" />
+          <EntitySet Name="CompletedFeeds" EntityType="JMSModel.CompletedFeed" />
         </EntityContainer>
         <EntityType Name="Attachment">
           <Key>
@@ -360,6 +374,19 @@
           <Property Type="String" Name="Reader" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="Read" Nullable="false" />
         </EntityType>
+        <EntityType Name="History">
+          <Key>
+            <PropertyRef Name="APK" />
+          </Key>
+          <Property Type="Guid" Name="APK" Nullable="false" />
+          <Property Type="Guid" Name="JobAPK" Nullable="false" />
+          <Property Type="Byte" Name="ActionType" Nullable="false" />
+          <Property Type="String" Name="OldData" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="NewData" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Byte" Name="Completed" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="CreatedUserID" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="Job">
           <Key>
             <PropertyRef Name="APK" />
@@ -390,19 +417,18 @@
           <Property Type="String" Name="ReJobID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="SentMessage" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Guid" Name="ReAPK" />
+          <Property Type="String" Name="Completed" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="History">
+        <EntityType Name="CompletedFeed">
           <Key>
             <PropertyRef Name="APK" />
           </Key>
           <Property Type="Guid" Name="APK" Nullable="false" />
-          <Property Type="Guid" Name="JobAPK" Nullable="false" />
-          <Property Type="Byte" Name="ActionType" Nullable="false" />
-          <Property Type="String" Name="OldData" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="NewData" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Byte" Name="Completed" Nullable="false" />
-          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
-          <Property Type="String" Name="CreatedUserID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Guid" Name="JobAPK" />
+          <Property Type="String" Name="JobID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Completed" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Reader" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Read" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -564,9 +590,24 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Histories">
+            <EntityTypeMapping TypeName="JMSModel.History">
+              <MappingFragment StoreEntitySet="Histories">
+                <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Completed" ColumnName="Completed" />
+                <ScalarProperty Name="NewData" ColumnName="NewData" />
+                <ScalarProperty Name="OldData" ColumnName="OldData" />
+                <ScalarProperty Name="ActionType" ColumnName="ActionType" />
+                <ScalarProperty Name="JobAPK" ColumnName="JobAPK" />
+                <ScalarProperty Name="APK" ColumnName="APK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Jobs">
             <EntityTypeMapping TypeName="JMSModel.Job">
               <MappingFragment StoreEntitySet="Jobs">
+                <ScalarProperty Name="Completed" ColumnName="Completed" />
                 <ScalarProperty Name="ReAPK" ColumnName="ReAPK" />
                 <ScalarProperty Name="SentMessage" ColumnName="SentMessage" />
                 <ScalarProperty Name="ReJobID" ColumnName="ReJobID" />
@@ -596,15 +637,13 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Histories">
-            <EntityTypeMapping TypeName="JMSModel.History">
-              <MappingFragment StoreEntitySet="Histories">
-                <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <EntitySetMapping Name="CompletedFeeds">
+            <EntityTypeMapping TypeName="JMSModel.CompletedFeed">
+              <MappingFragment StoreEntitySet="CompletedFeeds">
+                <ScalarProperty Name="Read" ColumnName="Read" />
+                <ScalarProperty Name="Reader" ColumnName="Reader" />
                 <ScalarProperty Name="Completed" ColumnName="Completed" />
-                <ScalarProperty Name="NewData" ColumnName="NewData" />
-                <ScalarProperty Name="OldData" ColumnName="OldData" />
-                <ScalarProperty Name="ActionType" ColumnName="ActionType" />
+                <ScalarProperty Name="JobID" ColumnName="JobID" />
                 <ScalarProperty Name="JobAPK" ColumnName="JobAPK" />
                 <ScalarProperty Name="APK" ColumnName="APK" />
               </MappingFragment>

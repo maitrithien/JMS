@@ -192,6 +192,7 @@
     <Compile Include="Controllers\JobsController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Models\BaseModels.cs" />
+    <Compile Include="Models\CompletedFeedModels.cs" />
     <Compile Include="Models\ObjectToDisplayDictionaryHelper.cs" />
     <Compile Include="Models\FeedModels.cs" />
     <Compile Include="Models\Entities.Designer.cs">
@@ -486,6 +487,8 @@
     <Content Include="Views\Jobs\FeedDialog.cshtml" />
     <Content Include="Views\Jobs\RateDialog.cshtml" />
     <Content Include="Views\Jobs\HistoryDialog.cshtml" />
+    <Content Include="Views\Jobs\GridCompletedFeeds.cshtml" />
+    <Content Include="Views\Jobs\CompletedFeedDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -44,11 +44,11 @@ namespace DMS.Models
             }
         }
 
-        [Display(Name = "Nội dung trước")]
+        [Display(Name = "Nội dung cũ")]
         [DisplayName("Nội dung cũ")]
         public string OldData { get; set; }
 
-        [Display(Name = "Nội dung thay đổi")]
+        [Display(Name = "Nội dung mới")]
         [DisplayName("Nội dung mới")]
         public string NewData { get; set; }
     }

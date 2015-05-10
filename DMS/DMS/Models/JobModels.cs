@@ -11,6 +11,7 @@ namespace DMS.Models
     {
         #region ---- Constants & Member variables ----
 
+        public const string STATUS_COMPLETED = "STATUS_COMPLETED";
         public const string STATUS_CODE = "STATUS";
         public const string STATUS_CONFIRM_CODE = "CONFIRM_STATUS";
         public const string COMPLEX_CODE = "COMPLEX";
@@ -228,6 +229,14 @@ namespace DMS.Models
         [Display(Name = "Người gửi")]
         [DisplayName("Tên người gửi")]
         public string SenderName { get; set; }
+
+        [Display(Name = "Trạng thái duyệt")]
+        [DisplayName("Trạng thái duyệt")]
+        public string Completed { get; set; }
+
+        [Display(Name = "Trạng thái duyệt")]
+        [DisplayName("Tên trạng thái duyệt")]
+        public string CompletedName { get; set; }
 
         public int ReadStatus { get; set; }
         public string GroupID { get; set; }

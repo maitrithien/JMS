@@ -112,6 +112,14 @@ namespace DMS.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult CompletedID()
+        {
+            List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.STATUS_COMPLETED).ToList();
+            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.STATUS_COMPLETED, CodeName = "< Không >" });
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult DepartmentID()
         {
             //var employee = _EntityModel.Employees.FirstOrDefault(x

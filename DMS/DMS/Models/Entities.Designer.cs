@@ -164,6 +164,22 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        public ObjectSet<History> Histories
+        {
+            get
+            {
+                if ((_Histories == null))
+                {
+                    _Histories = base.CreateObjectSet<History>("Histories");
+                }
+                return _Histories;
+            }
+        }
+        private ObjectSet<History> _Histories;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         public ObjectSet<Job> Jobs
         {
             get
@@ -180,18 +196,18 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<History> Histories
+        public ObjectSet<CompletedFeed> CompletedFeeds
         {
             get
             {
-                if ((_Histories == null))
+                if ((_CompletedFeeds == null))
                 {
-                    _Histories = base.CreateObjectSet<History>("Histories");
+                    _CompletedFeeds = base.CreateObjectSet<CompletedFeed>("CompletedFeeds");
                 }
-                return _Histories;
+                return _CompletedFeeds;
             }
         }
-        private ObjectSet<History> _Histories;
+        private ObjectSet<CompletedFeed> _CompletedFeeds;
 
         #endregion
 
@@ -246,6 +262,14 @@ namespace DMS.Models
         }
     
         /// <summary>
+        /// Deprecated Method for adding a new object to the Histories EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToHistories(History history)
+        {
+            base.AddObject("Histories", history);
+        }
+    
+        /// <summary>
         /// Deprecated Method for adding a new object to the Jobs EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToJobs(Job job)
@@ -254,11 +278,11 @@ namespace DMS.Models
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the Histories EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the CompletedFeeds EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToHistories(History history)
+        public void AddToCompletedFeeds(CompletedFeed completedFeed)
         {
-            base.AddObject("Histories", history);
+            base.AddObject("CompletedFeeds", completedFeed);
         }
 
         #endregion
@@ -1030,6 +1054,186 @@ namespace DMS.Models
         private global::System.String _CreatedUserID;
         partial void OnCreatedUserIDChanging(global::System.String value);
         partial void OnCreatedUserIDChanged();
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="JMSModel", Name="CompletedFeed")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class CompletedFeed : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new CompletedFeed object.
+        /// </summary>
+        /// <param name="aPK">Initial value of the APK property.</param>
+        /// <param name="reader">Initial value of the Reader property.</param>
+        /// <param name="read">Initial value of the Read property.</param>
+        public static CompletedFeed CreateCompletedFeed(global::System.Guid aPK, global::System.String reader, global::System.Boolean read)
+        {
+            CompletedFeed completedFeed = new CompletedFeed();
+            completedFeed.APK = aPK;
+            completedFeed.Reader = reader;
+            completedFeed.Read = read;
+            return completedFeed;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Guid APK
+        {
+            get
+            {
+                return _APK;
+            }
+            set
+            {
+                if (_APK != value)
+                {
+                    OnAPKChanging(value);
+                    ReportPropertyChanging("APK");
+                    _APK = StructuralObject.SetValidValue(value, "APK");
+                    ReportPropertyChanged("APK");
+                    OnAPKChanged();
+                }
+            }
+        }
+        private global::System.Guid _APK;
+        partial void OnAPKChanging(global::System.Guid value);
+        partial void OnAPKChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Guid> JobAPK
+        {
+            get
+            {
+                return _JobAPK;
+            }
+            set
+            {
+                OnJobAPKChanging(value);
+                ReportPropertyChanging("JobAPK");
+                _JobAPK = StructuralObject.SetValidValue(value, "JobAPK");
+                ReportPropertyChanged("JobAPK");
+                OnJobAPKChanged();
+            }
+        }
+        private Nullable<global::System.Guid> _JobAPK;
+        partial void OnJobAPKChanging(Nullable<global::System.Guid> value);
+        partial void OnJobAPKChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String JobID
+        {
+            get
+            {
+                return _JobID;
+            }
+            set
+            {
+                OnJobIDChanging(value);
+                ReportPropertyChanging("JobID");
+                _JobID = StructuralObject.SetValidValue(value, true, "JobID");
+                ReportPropertyChanged("JobID");
+                OnJobIDChanged();
+            }
+        }
+        private global::System.String _JobID;
+        partial void OnJobIDChanging(global::System.String value);
+        partial void OnJobIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Completed
+        {
+            get
+            {
+                return _Completed;
+            }
+            set
+            {
+                OnCompletedChanging(value);
+                ReportPropertyChanging("Completed");
+                _Completed = StructuralObject.SetValidValue(value, true, "Completed");
+                ReportPropertyChanged("Completed");
+                OnCompletedChanged();
+            }
+        }
+        private global::System.String _Completed;
+        partial void OnCompletedChanging(global::System.String value);
+        partial void OnCompletedChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Reader
+        {
+            get
+            {
+                return _Reader;
+            }
+            set
+            {
+                OnReaderChanging(value);
+                ReportPropertyChanging("Reader");
+                _Reader = StructuralObject.SetValidValue(value, false, "Reader");
+                ReportPropertyChanged("Reader");
+                OnReaderChanged();
+            }
+        }
+        private global::System.String _Reader;
+        partial void OnReaderChanging(global::System.String value);
+        partial void OnReaderChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean Read
+        {
+            get
+            {
+                return _Read;
+            }
+            set
+            {
+                OnReadChanging(value);
+                ReportPropertyChanging("Read");
+                _Read = StructuralObject.SetValidValue(value, "Read");
+                ReportPropertyChanged("Read");
+                OnReadChanged();
+            }
+        }
+        private global::System.Boolean _Read;
+        partial void OnReadChanging(global::System.Boolean value);
+        partial void OnReadChanged();
 
         #endregion
 
@@ -2620,6 +2824,30 @@ namespace DMS.Models
         private Nullable<global::System.Guid> _ReAPK;
         partial void OnReAPKChanging(Nullable<global::System.Guid> value);
         partial void OnReAPKChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Completed
+        {
+            get
+            {
+                return _Completed;
+            }
+            set
+            {
+                OnCompletedChanging(value);
+                ReportPropertyChanging("Completed");
+                _Completed = StructuralObject.SetValidValue(value, true, "Completed");
+                ReportPropertyChanged("Completed");
+                OnCompletedChanged();
+            }
+        }
+        private global::System.String _Completed;
+        partial void OnCompletedChanging(global::System.String value);
+        partial void OnCompletedChanged();
 
         #endregion
 

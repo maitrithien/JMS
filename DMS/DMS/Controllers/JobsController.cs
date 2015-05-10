@@ -77,6 +77,10 @@ namespace DMS.Controllers
                 .Where(x => x.Reader == _EmployeeID && !x.Read)
                 .Count();
 
+            var completedFeeds = _EntityModel.CompletedFeeds
+                .Where(x => x.Reader == _EmployeeID && !x.Read)
+                .Count();
+
             return Json(new
             {
                 countE = string.Format("{0:00}", counter.CountE ?? 0),
@@ -84,7 +88,8 @@ namespace DMS.Controllers
                 countR = string.Format("{0:00}", counter.CountR ?? 0),
                 countP = string.Format("{0:00}", counter.CountP ?? 0),
                 countO = string.Format("{0:00}", counter.CountO ?? 0),
-                countM = string.Format("{0:00}", feeds)
+                countM = string.Format("{0:00}", feeds),
+                countC = string.Format("{0:00}", completedFeeds)
             });
         }
 
@@ -526,8 +531,9 @@ namespace DMS.Controllers
 
                 // Do Update
                 finder.Complex = item.Complex;
+                finder.Completed = item.Completed;
                 finder.Confirmer = item.Confirmer;
-                finder.Deadline = item.Deadline;
+                finder.Deadline = (item.Deadline ?? DateTime.Now).Date;
                 finder.DepartmentID = item.DepartmentID;
                 finder.JobName = item.JobName;
                 finder.Note = item.Note;
@@ -554,7 +560,7 @@ namespace DMS.Controllers
                     APK = Guid.NewGuid(),
                     Complex = item.Complex,
                     Confirmer = item.Confirmer,
-                    Deadline = item.Deadline,
+                    Deadline = (item.Deadline ?? DateTime.Now).Date,
                     DepartmentID = item.DepartmentID,
                     JobID = item.JobID,
                     JobName = item.JobName,
@@ -563,6 +569,7 @@ namespace DMS.Controllers
                     Priority = item.Priority,
                     Rate = item.Rate,
                     Recipient = item.Recipient,
+                    Completed = "0",
                     Status = item.Status,
                     StatusConfirm = item.StatusConfirm ?? "0",
                     RateComment = item.RateComment,
@@ -607,7 +614,7 @@ namespace DMS.Controllers
                 item.Confirmer = finder.Confirmer;
                 item.CreatedDate = finder.CreatedDate;
                 item.CreatedUserID = finder.CreatedUserID;
-                item.Deadline = finder.Deadline ?? DateTime.Now;
+                item.Deadline = (finder.Deadline ?? DateTime.Now).Date;
                 item.DepartmentID = finder.DepartmentID;
                 item.JobID = finder.JobID;
                 item.JobName = finder.JobName;
@@ -642,43 +649,9 @@ namespace DMS.Controllers
 
             if (finder != null)
             {
-                model.Complex = finder.Complex;
-                model.Confirmer = finder.Confirmer;
-                model.CreatedDate = finder.CreatedDate;
-                model.CreatedUserID = finder.CreatedUserID;
-                model.Deadline = finder.Deadline ?? DateTime.Now;
-                model.DepartmentID = finder.DepartmentID;
-                model.JobID = finder.JobID;
-                model.JobName = finder.JobName;
-                model.LastModifyDate = finder.LastModifyDate;
-                model.LastModifyUserID = finder.LastModifyUserID;
-                model.Note = finder.Note;
-                model.Poster = finder.Poster;
-                model.Priority = finder.Priority;
-                model.Rate = finder.Rate;
-                model.Recipient = finder.Recipient;
-                model.Status = finder.Status;
-                model.StatusConfirm = finder.StatusConfirm;
-                model.RateComment = finder.RateComment;
-                model.ReAPK = finder.ReAPK;
-                model.Sender = finder.Sender;
-                model.SentMessage = finder.SentMessage;
-                model.ReJobID = finder.ReJobID;
-                model.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
-                model.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Rate && s.CodeGroupID == JobModels.RATE_CODE) ?? new Code()).CodeName;
-                model.PriorityName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Priority && s.CodeGroupID == JobModels.PRIORITY_CODE) ?? new Code()).CodeName;
-                model.StatusConfirmName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.StatusConfirm && s.CodeGroupID == JobModels.STATUS_CONFIRM_CODE) ?? new Code()).CodeName;
-                model.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
-                model.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Poster) ?? new Employee()).FullName;
-                model.SenderName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Sender) ?? new Employee()).FullName;
-                model.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Recipient) ?? new Employee()).FullName;
-                model.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Confirmer) ?? new Employee()).FullName;
-                model.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == finder.DepartmentID) ?? new Department()).DepartmentName;
+                JobModels finderModel = AutoMapper.Mapper.Map<JobModels>(finder);
+
+                model = ParseToViewerJob(finderModel);
 
                 // Make as read
                 if (_EmployeeID == finder.Poster)
@@ -702,6 +675,19 @@ namespace DMS.Controllers
                     }
                     _EntityModel.SaveChanges();
                 }
+
+                // Update completed feeds as read
+                var completedFeeds = _EntityModel.CompletedFeeds
+                    .Where(x => x.JobAPK == finder.APK
+                        && x.Reader == _EmployeeID).ToList();
+                if (completedFeeds != null)
+                {
+                    foreach (var f in completedFeeds)
+                    {
+                        f.Read = true;
+                    }
+                    _EntityModel.SaveChanges();
+                }
             }
 
             model.CurrentEmployeeID = _EmployeeID;
@@ -716,43 +702,8 @@ namespace DMS.Controllers
             var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == model.APK);
             if (finder != null)
             {
-                model.Complex = finder.Complex;
-                model.Confirmer = finder.Confirmer;
-                model.CreatedDate = finder.CreatedDate;
-                model.CreatedUserID = finder.CreatedUserID;
-                model.Deadline = finder.Deadline ?? DateTime.Now;
-                model.DepartmentID = finder.DepartmentID;
-                model.JobID = finder.JobID;
-                model.JobName = finder.JobName;
-                model.LastModifyDate = finder.LastModifyDate;
-                model.LastModifyUserID = finder.LastModifyUserID;
-                model.Note = finder.Note;
-                model.Poster = finder.Poster;
-                model.Priority = finder.Priority;
-                model.Rate = finder.Rate;
-                model.Recipient = finder.Recipient;
-                model.Status = finder.Status;
-                model.StatusConfirm = finder.StatusConfirm;
-                model.RateComment = finder.RateComment;
-                model.ReAPK = finder.ReAPK;
-                model.SentMessage = finder.SentMessage;
-                model.ReJobID = finder.ReJobID;
-                model.Sender = finder.Sender;
-                model.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
-                model.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Rate && s.CodeGroupID == JobModels.RATE_CODE) ?? new Code()).CodeName;
-                model.PriorityName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Priority && s.CodeGroupID == JobModels.PRIORITY_CODE) ?? new Code()).CodeName;
-                model.StatusConfirmName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.StatusConfirm && s.CodeGroupID == JobModels.STATUS_CONFIRM_CODE) ?? new Code()).CodeName;
-                model.ComplexName = (_EntityModel.Codes.FirstOrDefault(s =>
-                    s.CodeID == finder.Complex && s.CodeGroupID == JobModels.COMPLEX_CODE) ?? new Code()).CodeName;
-                model.PosterName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Poster) ?? new Employee()).FullName;
-                model.SenderName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Sender) ?? new Employee()).FullName;
-                model.RecipientName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Recipient) ?? new Employee()).FullName;
-                model.ConfirmerName = (_EntityModel.Employees.FirstOrDefault(s => s.EmployeeID == finder.Confirmer) ?? new Employee()).FullName;
-                model.DepartmentName = (_EntityModel.Departments.FirstOrDefault(s => s.DepartmentID == finder.DepartmentID) ?? new Department()).DepartmentName;
+                JobModels finderModel = AutoMapper.Mapper.Map<JobModels>(finder);
+                model = ParseToViewerJob(finderModel);
             }
 
             model.CurrentEmployeeID = _EmployeeID;
@@ -763,6 +714,7 @@ namespace DMS.Controllers
         public ActionResult SentDialog(JobModels model)
         {
             JobModels item = model ?? new JobModels();
+            item.GroupID = _GroupID;
 
             var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
             var manager = _EntityModel.Employees.FirstOrDefault(s => s.GroupID != "0" && s.DepartmentID == _DepartmentID) ?? new Employee();
@@ -791,10 +743,13 @@ namespace DMS.Controllers
                 UpdateHistories(item, finder, 2);
 
                 finder.Confirmer = item.Confirmer;
+                finder.ConfirmerRead = false;
                 finder.DepartmentID = item.DepartmentID;
                 finder.Poster = item.Poster;
+                finder.PosterRead = false;
                 finder.Sender = item.Sender;
                 finder.Recipient = item.Recipient;
+                finder.RecipientRead = false;
                 finder.StatusConfirm = "0";
                 finder.LastModifyDate = DateTime.Now;
                 finder.LastModifyUserID = User.Identity.Name;
@@ -821,7 +776,9 @@ namespace DMS.Controllers
             var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
             if (finder != null)
             {
-                finder.StatusConfirm = model.StatusConfirm;
+                UpdateHistories(item, finder, 1);
+
+                finder.StatusConfirm = item.StatusConfirm;
                 _EntityModel.SaveChanges();
                 result = true;
             }
@@ -838,6 +795,7 @@ namespace DMS.Controllers
             if (finder != null)
             {
                 item.Rate = finder.Rate;
+                item.Completed = finder.Completed;
                 item.RateComment = finder.RateComment;
             }
             
@@ -856,13 +814,46 @@ namespace DMS.Controllers
             var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
             if (finder != null)
             {
+                UpdateHistories(item, finder, 1);
+
                 // Do Update
                 finder.Rate = string.IsNullOrEmpty(item.Rate) ? finder.Rate : item.Rate;
+                finder.Completed = string.IsNullOrEmpty(item.Completed) ? finder.Completed : item.Completed;
                 finder.RateComment = string.IsNullOrEmpty(item.RateComment) ? finder.RateComment : item.RateComment;
                 finder.LastModifyDate = DateTime.Now;
                 finder.LastModifyUserID = User.Identity.Name;
 
                 _EntityModel.SaveChanges();
+
+                if (finder.Completed != "0")
+                {
+                    var job = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK)
+                    ?? new Job();
+
+                    List<string> reader = new List<string>(){
+                                job.Recipient,
+                                job.Sender,
+                                job.Confirmer,
+                                job.Poster
+                            }.Distinct().ToList();
+
+                    foreach (var r in reader)
+                    {
+                        // Không notify cho người tạo
+                        if (string.IsNullOrEmpty(r) || _EmployeeID.Equals(r)) continue;
+
+                        _EntityModel.CompletedFeeds.AddObject(new CompletedFeed
+                        {
+                            APK = Guid.NewGuid(),
+                            JobAPK = job.APK,
+                            JobID = job.JobID,
+                            Completed = job.Completed,
+                            Read = false,
+                            Reader = r
+                        });
+                        _EntityModel.SaveChanges();
+                    }
+                }
             }
 
             return Json(new { result = true, id = item.APK });
@@ -1236,10 +1227,29 @@ namespace DMS.Controllers
         }
 
         [Authorize]
+        public ActionResult CompletedFeedDialog()
+        {
+            return PartialView();
+        }
+
+        [Authorize]
         public ActionResult MakeAsReadFeed(Feed model)
         {
             Feed feed = model ?? new Feed();
             var finder = _EntityModel.Feeds.FirstOrDefault(x => x.APK == feed.APK);
+            if (finder != null)
+            {
+                finder.Read = true;
+                _EntityModel.SaveChanges();
+            }
+            return Json(new { result = true });
+        }
+
+        [Authorize]
+        public ActionResult MakeAsReadCompletedFeed(CompletedFeed model)
+        {
+            CompletedFeed feed = model ?? new CompletedFeed();
+            var finder = _EntityModel.CompletedFeeds.FirstOrDefault(x => x.APK == feed.APK);
             if (finder != null)
             {
                 finder.Read = true;
@@ -1273,6 +1283,33 @@ namespace DMS.Controllers
             }
 
             return Json(feedNotes, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GridCompletedFeeds(JobModels model)
+        {
+            var item = model ?? new JobModels();
+
+            var feeds = _EntityModel.CompletedFeeds.Where(x => x.Reader == _EmployeeID && !x.Read);
+            List<CompletedFeedModels> completedFeeds = new List<CompletedFeedModels>();
+            if (feeds != null)
+            {
+                foreach (var f in feeds)
+                {
+                    completedFeeds.Add(new CompletedFeedModels()
+                    {
+                        APK = f.APK,
+                        JobAPK = f.JobAPK,
+                        JobID = f.JobID,
+                        Completed = f.Completed,
+                        CompletedName =  model.CompletedName = (_EntityModel.Codes.FirstOrDefault(s =>
+                                s.CodeID == f.Completed && s.CodeGroupID == JobModels.STATUS_COMPLETED) ?? new Code()).CodeName,
+                        Status = f.Read ? 1 : 0,
+                        StatusName = f.Read ? "Đã đọc" : "Chưa đọc",
+                    });
+                }
+            }
+
+            return Json(completedFeeds, JsonRequestBehavior.AllowGet);
         }
 
         #endregion ---- Notes ----
@@ -1346,11 +1383,12 @@ namespace DMS.Controllers
             JobModels model = new JobModels();
             if (finder != null)
             {
+                model.APK = finder.APK;
                 model.Complex = finder.Complex;
                 model.Confirmer = finder.Confirmer;
                 model.CreatedDate = finder.CreatedDate;
                 model.CreatedUserID = finder.CreatedUserID;
-                model.Deadline = finder.Deadline ?? DateTime.Now;
+                model.Deadline = (finder.Deadline ?? DateTime.Now).Date;
                 model.DepartmentID = finder.DepartmentID;
                 model.JobID = finder.JobID;
                 model.JobName = finder.JobName;
@@ -1364,10 +1402,13 @@ namespace DMS.Controllers
                 model.Status = finder.Status;
                 model.StatusConfirm = finder.StatusConfirm;
                 model.RateComment = finder.RateComment;
+                model.Completed = finder.Completed;
                 model.ReAPK = finder.ReAPK;
                 model.Sender = finder.Sender;
                 model.SentMessage = finder.SentMessage;
                 model.ReJobID = finder.ReJobID;
+                model.CompletedName = (_EntityModel.Codes.FirstOrDefault(s =>
+                    s.CodeID == finder.Completed && s.CodeGroupID == JobModels.STATUS_COMPLETED) ?? new Code()).CodeName;
                 model.StatusName = (_EntityModel.Codes.FirstOrDefault(s =>
                     s.CodeID == finder.Status && s.CodeGroupID == JobModels.STATUS_CODE) ?? new Code()).CodeName;
                 model.RateName = (_EntityModel.Codes.FirstOrDefault(s =>
@@ -1484,9 +1525,9 @@ namespace DMS.Controllers
             switch (type)
             {
                 case 0: // Change Status
-                    newData = (_EntityModel.Codes.FirstOrDefault(x => 
+                    oldData = (_EntityModel.Codes.FirstOrDefault(x => 
                         x.CodeGroupID == JobModels.STATUS_CODE && x.CodeID == oldModel.Status) ?? new Code()).CodeName;
-                    oldData = (_EntityModel.Codes.FirstOrDefault(x =>
+                    newData = (_EntityModel.Codes.FirstOrDefault(x =>
                         x.CodeGroupID == JobModels.STATUS_CODE && x.CodeID == newModel.Status) ?? new Code()).CodeName;
 
                     strOld.AppendLine(string.Format("Tình trạng: {0}", oldData));

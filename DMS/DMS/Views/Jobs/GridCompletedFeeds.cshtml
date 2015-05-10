@@ -1,0 +1,72 @@
+﻿<div id="feed-grid">
+    <script>
+        var makeAsReadFeed_Click = function (e) {
+            e.preventDefault();
+            var tr = $(e.target).closest("tr"); //get the row for deletion
+            var data = this.dataItem(tr); //get the row data so it can be referred later
+
+            $.ajax({
+                type: 'POST',
+                url: $('#makeAsReadFeedUrl').val(),
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                success: function () {
+                    var grid = $('#gridCompletedFeeds').data('kendoGrid');
+                    if (grid) {
+                        grid.dataSource.read();
+                    }
+                }
+            });
+        }
+
+        $("#gridCompletedFeeds").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: '@Url.Action("GridCompletedFeeds", "Jobs")'
+                    },
+                    pageSize: 20
+                },
+                height: 400,
+                //sortable: true,
+                selectable: true,
+                resizable: true,
+                //filterable: true,
+                pageable: {
+                    refresh: true,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                columns: [
+                    {
+                        field: "APK",
+                        title: "",
+                        hidden: true,
+                        template: "<span class='feed-status-#= Status #-ico'>&nbsp;<span>",
+                        width: 30
+                    }, {
+                        field: "JobID",
+                        title: 'Mã JOBS',
+                        width: 200,
+                        template: "<a href='/Jobs/JobView/#: data.JobAPK #' target='_blank' title='Xem chi tiết JOBS #: data.JobID #'>#: data.JobID #</a>"
+                    }, {
+                        field: "CompletedName",
+                        title: "Trạng thái"
+                    },  {
+                        command: [
+                            {
+                                text: 'Đã đọc',
+                                imageClass: 'k-icon k-i-tick ob-icon-only',
+                                title: 'Đã đọc',
+                                click: makeAsReadFeed_Click
+                            }
+                        ],
+                        width: 90
+                    }
+                ]
+            });
+    </script>
+    <div id="gridCompletedFeeds"></div>
+</div>
+
+@Html.Hidden("makeAsReadFeedUrl", Url.Action("MakeAsReadCompletedFeed", "Jobs"))
