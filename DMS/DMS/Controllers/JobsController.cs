@@ -518,6 +518,7 @@ namespace DMS.Controllers
         public ActionResult Update(JobModels model)
         {
             JobModels item = model ?? new JobModels();
+            string oldStatus = string.Empty;
 
             var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
             if (finder != null)
@@ -528,6 +529,9 @@ namespace DMS.Controllers
                 }
 
                 UpdateHistories(item, finder, 1);
+
+                // Save old status
+                oldStatus = finder.Status;
 
                 // Do Update
                 finder.Complex = item.Complex;
@@ -552,7 +556,7 @@ namespace DMS.Controllers
 
                 _EntityModel.SaveChanges();
 
-                if (item.Status != finder.Status && item.Status == "2")
+                if (item.Status != oldStatus && item.Status == "2")
                 {
                     var job = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK)
                     ?? new Job();
