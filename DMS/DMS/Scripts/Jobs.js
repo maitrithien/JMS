@@ -324,10 +324,10 @@ var jobs = new function () {
                         width: 100,
                         template: "<span class='status-#= Status #-ico'>#= StatusName #<span>"
                     }, {
-                        field: "CompletedName",
+                        field: "StatusConfirmName",
                         title: "Duyệt chuyển JOBS",
                         width: 100,
-                        template: "<span class='completed-#= Completed #-ico'>#= CompletedName #<span>"
+                        template: "<span class='completed-#= StatusConfirm #-ico'>#= StatusConfirmName #<span>"
                     }, {
                         field: "PosterName",
                         title: "Người lập",
@@ -424,10 +424,10 @@ var jobs = new function () {
                         width: 100,
                         template: "<span class='status-#= Status #-ico'>#= StatusName #<span>"
                     }, {
-                        field: "CompletedName",
+                        field: "StatusConfirmName",
                         title: "Duyệt chuyển JOBS",
                         width: 100,
-                        template: "<span class='completed-#= Completed #-ico'>#= CompletedName #<span>"
+                        template: "<span class='completed-#= StatusConfirm#-ico'>#= StatusConfirmName #<span>"
                     }, {
                         field: "RecipientName",
                         title: "Người thực hiện",
@@ -514,10 +514,10 @@ var jobs = new function () {
                         width: 100,
                         template: "<span class='status-#= Status #-ico'>#= StatusName #<span>"
                     }, {
-                        field: "CompletedName",
+                        field: "StatusConfirmName",
                         title: "Duyệt chuyển JOBS",
                         width: 100,
-                        template: "<span class='completed-#= Completed #-ico'>#= CompletedName #<span>"
+                        template: "<span class='completed-#= StatusConfirm#-ico'>#= StatusConfirmName #<span>"
                     }, {
                         field: "OverDeadlineNumber",
                         title: "Số ngày quá hạn",
