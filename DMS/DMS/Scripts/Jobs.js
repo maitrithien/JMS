@@ -324,6 +324,11 @@ var jobs = new function () {
                         width: 100,
                         template: "<span class='status-#= Status #-ico'>#= StatusName #<span>"
                     }, {
+                        field: "CompletedName",
+                        title: "Duyệt chuyển JOBS",
+                        width: 100,
+                        template: "<span class='completed-#= Completed #-ico'>#= CompletedName #<span>"
+                    }, {
                         field: "PosterName",
                         title: "Người lập",
                         width: 150
@@ -419,6 +424,11 @@ var jobs = new function () {
                         width: 100,
                         template: "<span class='status-#= Status #-ico'>#= StatusName #<span>"
                     }, {
+                        field: "CompletedName",
+                        title: "Duyệt chuyển JOBS",
+                        width: 100,
+                        template: "<span class='completed-#= Completed #-ico'>#= CompletedName #<span>"
+                    }, {
                         field: "RecipientName",
                         title: "Người thực hiện",
                         width: 150
@@ -503,6 +513,11 @@ var jobs = new function () {
                         title: "Tình trạng",
                         width: 100,
                         template: "<span class='status-#= Status #-ico'>#= StatusName #<span>"
+                    }, {
+                        field: "CompletedName",
+                        title: "Duyệt chuyển JOBS",
+                        width: 100,
+                        template: "<span class='completed-#= Completed #-ico'>#= CompletedName #<span>"
                     }, {
                         field: "OverDeadlineNumber",
                         title: "Số ngày quá hạn",

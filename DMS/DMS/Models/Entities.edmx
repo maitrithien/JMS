@@ -43,19 +43,20 @@
           <Property Name="LastModifyUserID" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'DMS.dbo.Codes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'JMS.dbo.Codes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="Codes">
           <Key>
             <PropertyRef Name="CodeID" />
             <PropertyRef Name="CodeName" />
+            
             <PropertyRef Name="CodeGroupID" />
             <PropertyRef Name="CreatedDate" />
             <PropertyRef Name="CreatedUserID" />
           </Key>
           <Property Name="CodeID" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="CodeName" Type="nvarchar" Nullable="false" MaxLength="100" />
-          <Property Name="CodeDescription" Type="nvarchar" MaxLength="250" />
+          <Property Name="CodeDescription" Type="nvarchar" Nullable="false" MaxLength="250" />
           <Property Name="CodeGroupID" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedUserID" Type="nvarchar" Nullable="false" MaxLength="50" />
@@ -78,11 +79,11 @@
           <Property Name="APK" Type="uniqueidentifier" Nullable="false" />
           <Property Name="DepartmentID" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="DepartmentName" Type="nvarchar" MaxLength="250" />
+          <Property Name="ManagerID" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="LastModifyDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedUserID" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifyUserID" Type="nvarchar" MaxLength="50" />
-          <Property Name="ManagerID" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Employees">
           <Key>
@@ -138,11 +139,11 @@
           <Property Name="JobID" Type="nvarchar" MaxLength="50" />
           <Property Name="JobName" Type="nvarchar" MaxLength="250" />
           <Property Name="Poster" Type="nvarchar" MaxLength="50" />
-          <Property Name="PosterRead" Type="bit" Nullable="false" />
+          <Property Name="PosterRead" Type="bit" />
           <Property Name="Recipient" Type="nvarchar" MaxLength="50" />
-          <Property Name="RecipientRead" Type="bit" Nullable="false" />
+          <Property Name="RecipientRead" Type="bit" />
           <Property Name="Confirmer" Type="nvarchar" MaxLength="50" />
-          <Property Name="ConfirmerRead" Type="bit" Nullable="false" />
+          <Property Name="ConfirmerRead" Type="bit" />
           <Property Name="Sender" Type="nvarchar" MaxLength="50" />
           <Property Name="Note" Type="nvarchar(max)" />
           <Property Name="DepartmentID" Type="nvarchar" MaxLength="50" />
@@ -209,6 +210,19 @@
           </FunctionImport>
           <EntitySet Name="Employees" EntityType="JMSModel.Employee" />
           <EntitySet Name="Departments" EntityType="JMSModel.Department" />
+          <FunctionImport Name="GetCounterJobs" ReturnType="Collection(JMSModel.GetCounterJobs_Result)">
+          <Parameter Name="UserName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetManager" ReturnType="Collection(String)">
+          <Parameter Name="EmployeeID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetNextJobID" ReturnType="Collection(JMSModel.GetNextJobID_Result)">
+          <Parameter Name="UserName" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="Feeds" EntityType="JMSModel.Feed" />
+          <EntitySet Name="Histories" EntityType="JMSModel.History" />
+          <EntitySet Name="Jobs" EntityType="JMSModel.Job" />
+          <EntitySet Name="CompletedFeeds" EntityType="JMSModel.CompletedFeed" />
           <FunctionImport Name="GetJobs" ReturnType="Collection(JMSModel.GetJobs_Result)">
             <Parameter Name="IsFilter" Mode="In" Type="Int32" />
             <Parameter Name="JobID" Mode="In" Type="String" />
@@ -225,19 +239,6 @@
             <Parameter Name="UserName" Mode="In" Type="String" />
             <Parameter Name="Type" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="GetCounterJobs" ReturnType="Collection(JMSModel.GetCounterJobs_Result)">
-          <Parameter Name="UserName" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="GetManager" ReturnType="Collection(String)">
-          <Parameter Name="EmployeeID" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="GetNextJobID" ReturnType="Collection(JMSModel.GetNextJobID_Result)">
-          <Parameter Name="UserName" Mode="In" Type="String" />
-          </FunctionImport>
-          <EntitySet Name="Feeds" EntityType="JMSModel.Feed" />
-          <EntitySet Name="Histories" EntityType="JMSModel.History" />
-          <EntitySet Name="Jobs" EntityType="JMSModel.Job" />
-          <EntitySet Name="CompletedFeeds" EntityType="JMSModel.CompletedFeed" />
         </EntityContainer>
         <EntityType Name="Attachment">
           <Key>
@@ -279,7 +280,7 @@
           </Key>
           <Property Type="String" Name="CodeID" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="CodeName" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="CodeDescription" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CodeDescription" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Type="String" Name="CodeGroupID" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
           <Property Type="String" Name="CreatedUserID" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -316,39 +317,6 @@
           <Property Type="String" Name="LastModifyUserID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="ManagerID" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
-        <ComplexType Name="GetJobs_Result">
-          <Property Type="Guid" Name="APK" Nullable="false" />
-          <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="StatusName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="StatusConfirm" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="StatusConfirmName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="Priority" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="PriorityName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="Complex" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="ComplexName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="Rate" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="RateName" Nullable="true" MaxLength="100" />
-          <Property Type="DateTime" Name="Deadline" Nullable="true" Precision="23" />
-          <Property Type="String" Name="JobID" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="JobName" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="Poster" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="PosterName" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="Recipient" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="RecipientName" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="Confirmer" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="ConfirmerName" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="Sender" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="SenderName" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="Note" Nullable="true" />
-          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
-          <Property Type="DateTime" Name="LastModifyDate" Nullable="false" Precision="23" />
-          <Property Type="String" Name="CreatedUserID" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="LastModifyUserID" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="DepartmentID" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="DepartmentName" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="RateComment" Nullable="true" />
-          <Property Type="Int32" Name="OverDeadlineNumber" Nullable="true" />
-        </ComplexType>
         <ComplexType Name="GetCounterJobs_Result">
           <Property Type="Int32" Name="CountP" Nullable="true" />
           <Property Type="Int32" Name="CountE" Nullable="true" />
@@ -402,11 +370,11 @@
           <Property Type="String" Name="JobID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="JobName" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Poster" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="PosterRead" Nullable="false" />
+          <Property Type="Boolean" Name="PosterRead" />
           <Property Type="String" Name="Recipient" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="RecipientRead" Nullable="false" />
+          <Property Type="Boolean" Name="RecipientRead" />
           <Property Type="String" Name="Confirmer" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="ConfirmerRead" Nullable="false" />
+          <Property Type="Boolean" Name="ConfirmerRead" />
           <Property Type="String" Name="Sender" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Note" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="DepartmentID" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -430,6 +398,44 @@
           <Property Type="String" Name="Reader" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="Read" Nullable="false" />
         </EntityType>
+        <ComplexType Name="GetJobs_Result">
+          <Property Type="Guid" Name="APK" Nullable="false" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="StatusName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="StatusConfirm" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="StatusConfirmName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Priority" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PriorityName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Complex" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ComplexName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Rate" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="RateName" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="Deadline" Nullable="true" Precision="23" />
+          <Property Type="String" Name="JobID" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="JobName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Poster" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PosterName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Recipient" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="RecipientName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Confirmer" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ConfirmerName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Sender" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="SenderName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Completed" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CompletedName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Note" Nullable="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="LastModifyDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="CreatedUserID" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="LastModifyUserID" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DepartmentID" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DepartmentName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="RateComment" Nullable="true" />
+          <Property Type="Boolean" Name="PosterRead" Nullable="true" />
+          <Property Type="Boolean" Name="RecipientRead" Nullable="true" />
+          <Property Type="Boolean" Name="ConfirmerRead" Nullable="true" />
+          <Property Type="Int32" Name="OverDeadlineNumber" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -518,43 +524,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetJobs" FunctionName="JMSModel.Store.GetJobs">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="JMSModel.GetJobs_Result">
-                <ScalarProperty Name="APK" ColumnName="APK" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
-                <ScalarProperty Name="StatusConfirm" ColumnName="StatusConfirm" />
-                <ScalarProperty Name="StatusConfirmName" ColumnName="StatusConfirmName" />
-                <ScalarProperty Name="Priority" ColumnName="Priority" />
-                <ScalarProperty Name="PriorityName" ColumnName="PriorityName" />
-                <ScalarProperty Name="Complex" ColumnName="Complex" />
-                <ScalarProperty Name="ComplexName" ColumnName="ComplexName" />
-                <ScalarProperty Name="Rate" ColumnName="Rate" />
-                <ScalarProperty Name="RateName" ColumnName="RateName" />
-                <ScalarProperty Name="Deadline" ColumnName="Deadline" />
-                <ScalarProperty Name="JobID" ColumnName="JobID" />
-                <ScalarProperty Name="JobName" ColumnName="JobName" />
-                <ScalarProperty Name="Poster" ColumnName="Poster" />
-                <ScalarProperty Name="PosterName" ColumnName="PosterName" />
-                <ScalarProperty Name="Recipient" ColumnName="Recipient" />
-                <ScalarProperty Name="RecipientName" ColumnName="RecipientName" />
-                <ScalarProperty Name="Confirmer" ColumnName="Confirmer" />
-                <ScalarProperty Name="ConfirmerName" ColumnName="ConfirmerName" />
-                <ScalarProperty Name="Sender" ColumnName="Sender" />
-                <ScalarProperty Name="SenderName" ColumnName="SenderName" />
-                <ScalarProperty Name="Note" ColumnName="Note" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="LastModifyDate" ColumnName="LastModifyDate" />
-                <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
-                <ScalarProperty Name="LastModifyUserID" ColumnName="LastModifyUserID" />
-                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
-                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
-                <ScalarProperty Name="RateComment" ColumnName="RateComment" />
-                <ScalarProperty Name="OverDeadlineNumber" ColumnName="OverDeadlineNumber" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetCounterJobs" FunctionName="JMSModel.Store.GetCounterJobs">
             <ResultMapping>
               <ComplexTypeMapping TypeName="JMSModel.GetCounterJobs_Result">
@@ -649,6 +618,48 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetJobs" FunctionName="JMSModel.Store.GetJobs">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JMSModel.GetJobs_Result">
+                <ScalarProperty Name="APK" ColumnName="APK" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+                <ScalarProperty Name="StatusConfirm" ColumnName="StatusConfirm" />
+                <ScalarProperty Name="StatusConfirmName" ColumnName="StatusConfirmName" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="PriorityName" ColumnName="PriorityName" />
+                <ScalarProperty Name="Complex" ColumnName="Complex" />
+                <ScalarProperty Name="ComplexName" ColumnName="ComplexName" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="RateName" ColumnName="RateName" />
+                <ScalarProperty Name="Deadline" ColumnName="Deadline" />
+                <ScalarProperty Name="JobID" ColumnName="JobID" />
+                <ScalarProperty Name="JobName" ColumnName="JobName" />
+                <ScalarProperty Name="Poster" ColumnName="Poster" />
+                <ScalarProperty Name="PosterName" ColumnName="PosterName" />
+                <ScalarProperty Name="Recipient" ColumnName="Recipient" />
+                <ScalarProperty Name="RecipientName" ColumnName="RecipientName" />
+                <ScalarProperty Name="Confirmer" ColumnName="Confirmer" />
+                <ScalarProperty Name="ConfirmerName" ColumnName="ConfirmerName" />
+                <ScalarProperty Name="Sender" ColumnName="Sender" />
+                <ScalarProperty Name="SenderName" ColumnName="SenderName" />
+                <ScalarProperty Name="Completed" ColumnName="Completed" />
+                <ScalarProperty Name="CompletedName" ColumnName="CompletedName" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="LastModifyDate" ColumnName="LastModifyDate" />
+                <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+                <ScalarProperty Name="LastModifyUserID" ColumnName="LastModifyUserID" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+                <ScalarProperty Name="RateComment" ColumnName="RateComment" />
+                <ScalarProperty Name="PosterRead" ColumnName="PosterRead" />
+                <ScalarProperty Name="RecipientRead" ColumnName="RecipientRead" />
+                <ScalarProperty Name="ConfirmerRead" ColumnName="ConfirmerRead" />
+                <ScalarProperty Name="OverDeadlineNumber" ColumnName="OverDeadlineNumber" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -176,7 +176,9 @@ namespace DMS.Controllers
                     StatusConfirmName = x.StatusConfirmName,
                     StatusName = x.StatusName,
                     Sender = x.Sender,
-                    SenderName = x.SenderName
+                    SenderName = x.SenderName,
+                    Completed = x.Completed,
+                    CompletedName = x.CompletedName,
                 }).OrderByDescending(x => x.CreatedDate).ToList();
             }
 
@@ -232,7 +234,9 @@ namespace DMS.Controllers
                     StatusConfirmName = x.StatusConfirmName,
                     StatusName = x.StatusName,
                     Sender = x.Sender,
-                    SenderName = x.SenderName
+                    SenderName = x.SenderName,
+                    Completed = x.Completed,
+                    CompletedName = x.CompletedName
                 }).OrderByDescending(x => x.CreatedDate).ToList();
             }
 
@@ -288,7 +292,9 @@ namespace DMS.Controllers
                     StatusConfirmName = x.StatusConfirmName,
                     StatusName = x.StatusName,
                     Sender = x.Sender,
-                    SenderName = x.SenderName
+                    SenderName = x.SenderName,
+                    Completed = x.Completed,
+                    CompletedName = x.CompletedName,
                 }).ToList();
             }
 
@@ -349,7 +355,9 @@ namespace DMS.Controllers
                     StatusConfirmName = x.StatusConfirmName,
                     StatusName = x.StatusName,
                     Sender = x.Sender,
-                    SenderName = x.SenderName
+                    SenderName = x.SenderName,
+                    Completed = x.Completed,
+                    CompletedName = x.CompletedName
                 }).ToList();
             }
 
@@ -405,7 +413,9 @@ namespace DMS.Controllers
                     StatusConfirmName = x.StatusConfirmName,
                     StatusName = x.StatusName,
                     Sender = x.Sender,
-                    SenderName = x.SenderName
+                    SenderName = x.SenderName,
+                    Completed = x.Completed,
+                    CompletedName = x.CompletedName
                 }).ToList();
             }
 
@@ -660,6 +670,7 @@ namespace DMS.Controllers
 
             item.Poster = _EmployeeID;
             item.Status = "0";
+            item.Completed = "0";
             item.Complex = "1";
             item.Priority = "1";
             item.Deadline = DateTime.Now.Date;
@@ -684,6 +695,7 @@ namespace DMS.Controllers
                 item.LastModifyDate = finder.LastModifyDate;
                 item.LastModifyUserID = finder.LastModifyUserID;
                 item.Note = finder.Note;
+                item.Completed = finder.Completed;
                 item.Poster = finder.Poster;
                 item.Priority = finder.Priority;
                 item.Rate = finder.Rate;

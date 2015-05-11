@@ -311,6 +311,63 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        /// <param name="userName">No Metadata Documentation available.</param>
+        public ObjectResult<GetCounterJobs_Result> GetCounterJobs(global::System.String userName)
+        {
+            ObjectParameter userNameParameter;
+            if (userName != null)
+            {
+                userNameParameter = new ObjectParameter("UserName", userName);
+            }
+            else
+            {
+                userNameParameter = new ObjectParameter("UserName", typeof(global::System.String));
+            }
+    
+            return base.ExecuteFunction<GetCounterJobs_Result>("GetCounterJobs", userNameParameter);
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        /// <param name="employeeID">No Metadata Documentation available.</param>
+        public ObjectResult<global::System.String> GetManager(global::System.String employeeID)
+        {
+            ObjectParameter employeeIDParameter;
+            if (employeeID != null)
+            {
+                employeeIDParameter = new ObjectParameter("EmployeeID", employeeID);
+            }
+            else
+            {
+                employeeIDParameter = new ObjectParameter("EmployeeID", typeof(global::System.String));
+            }
+    
+            return base.ExecuteFunction<global::System.String>("GetManager", employeeIDParameter);
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        /// <param name="userName">No Metadata Documentation available.</param>
+        public ObjectResult<GetNextJobID_Result> GetNextJobID(global::System.String userName)
+        {
+            ObjectParameter userNameParameter;
+            if (userName != null)
+            {
+                userNameParameter = new ObjectParameter("UserName", userName);
+            }
+            else
+            {
+                userNameParameter = new ObjectParameter("UserName", typeof(global::System.String));
+            }
+    
+            return base.ExecuteFunction<GetNextJobID_Result>("GetNextJobID", userNameParameter);
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         /// <param name="isFilter">No Metadata Documentation available.</param>
         /// <param name="jobID">No Metadata Documentation available.</param>
         /// <param name="jobName">No Metadata Documentation available.</param>
@@ -468,63 +525,6 @@ namespace DMS.Models
             }
     
             return base.ExecuteFunction<GetJobs_Result>("GetJobs", isFilterParameter, jobIDParameter, jobNameParameter, statusParameter, posterParameter, recipientParameter, confirmerParameter, deadlineParameter, priorityParameter, rateParameter, complexParameter, departmentIDParameter, userNameParameter, typeParameter);
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        /// <param name="userName">No Metadata Documentation available.</param>
-        public ObjectResult<GetCounterJobs_Result> GetCounterJobs(global::System.String userName)
-        {
-            ObjectParameter userNameParameter;
-            if (userName != null)
-            {
-                userNameParameter = new ObjectParameter("UserName", userName);
-            }
-            else
-            {
-                userNameParameter = new ObjectParameter("UserName", typeof(global::System.String));
-            }
-    
-            return base.ExecuteFunction<GetCounterJobs_Result>("GetCounterJobs", userNameParameter);
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        /// <param name="employeeID">No Metadata Documentation available.</param>
-        public ObjectResult<global::System.String> GetManager(global::System.String employeeID)
-        {
-            ObjectParameter employeeIDParameter;
-            if (employeeID != null)
-            {
-                employeeIDParameter = new ObjectParameter("EmployeeID", employeeID);
-            }
-            else
-            {
-                employeeIDParameter = new ObjectParameter("EmployeeID", typeof(global::System.String));
-            }
-    
-            return base.ExecuteFunction<global::System.String>("GetManager", employeeIDParameter);
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        /// <param name="userName">No Metadata Documentation available.</param>
-        public ObjectResult<GetNextJobID_Result> GetNextJobID(global::System.String userName)
-        {
-            ObjectParameter userNameParameter;
-            if (userName != null)
-            {
-                userNameParameter = new ObjectParameter("UserName", userName);
-            }
-            else
-            {
-                userNameParameter = new ObjectParameter("UserName", typeof(global::System.String));
-            }
-    
-            return base.ExecuteFunction<GetNextJobID_Result>("GetNextJobID", userNameParameter);
         }
 
         #endregion
@@ -878,14 +878,16 @@ namespace DMS.Models
         /// </summary>
         /// <param name="codeID">Initial value of the CodeID property.</param>
         /// <param name="codeName">Initial value of the CodeName property.</param>
+        /// <param name="codeDescription">Initial value of the CodeDescription property.</param>
         /// <param name="codeGroupID">Initial value of the CodeGroupID property.</param>
         /// <param name="createdDate">Initial value of the CreatedDate property.</param>
         /// <param name="createdUserID">Initial value of the CreatedUserID property.</param>
-        public static Code CreateCode(global::System.String codeID, global::System.String codeName, global::System.String codeGroupID, global::System.DateTime createdDate, global::System.String createdUserID)
+        public static Code CreateCode(global::System.String codeID, global::System.String codeName, global::System.String codeDescription, global::System.String codeGroupID, global::System.DateTime createdDate, global::System.String createdUserID)
         {
             Code code = new Code();
             code.CodeID = codeID;
             code.CodeName = codeName;
+            code.CodeDescription = codeDescription;
             code.CodeGroupID = codeGroupID;
             code.CreatedDate = createdDate;
             code.CreatedUserID = createdUserID;
@@ -953,7 +955,7 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.String CodeDescription
         {
@@ -965,7 +967,7 @@ namespace DMS.Models
             {
                 OnCodeDescriptionChanging(value);
                 ReportPropertyChanging("CodeDescription");
-                _CodeDescription = StructuralObject.SetValidValue(value, true, "CodeDescription");
+                _CodeDescription = StructuralObject.SetValidValue(value, false, "CodeDescription");
                 ReportPropertyChanged("CodeDescription");
                 OnCodeDescriptionChanged();
             }
@@ -2177,18 +2179,12 @@ namespace DMS.Models
         /// Create a new Job object.
         /// </summary>
         /// <param name="aPK">Initial value of the APK property.</param>
-        /// <param name="posterRead">Initial value of the PosterRead property.</param>
-        /// <param name="recipientRead">Initial value of the RecipientRead property.</param>
-        /// <param name="confirmerRead">Initial value of the ConfirmerRead property.</param>
         /// <param name="createdDate">Initial value of the CreatedDate property.</param>
         /// <param name="lastModifyDate">Initial value of the LastModifyDate property.</param>
-        public static Job CreateJob(global::System.Guid aPK, global::System.Boolean posterRead, global::System.Boolean recipientRead, global::System.Boolean confirmerRead, global::System.DateTime createdDate, global::System.DateTime lastModifyDate)
+        public static Job CreateJob(global::System.Guid aPK, global::System.DateTime createdDate, global::System.DateTime lastModifyDate)
         {
             Job job = new Job();
             job.APK = aPK;
-            job.PosterRead = posterRead;
-            job.RecipientRead = recipientRead;
-            job.ConfirmerRead = confirmerRead;
             job.CreatedDate = createdDate;
             job.LastModifyDate = lastModifyDate;
             return job;
@@ -2468,9 +2464,9 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.Boolean PosterRead
+        public Nullable<global::System.Boolean> PosterRead
         {
             get
             {
@@ -2485,8 +2481,8 @@ namespace DMS.Models
                 OnPosterReadChanged();
             }
         }
-        private global::System.Boolean _PosterRead;
-        partial void OnPosterReadChanging(global::System.Boolean value);
+        private Nullable<global::System.Boolean> _PosterRead;
+        partial void OnPosterReadChanging(Nullable<global::System.Boolean> value);
         partial void OnPosterReadChanged();
     
         /// <summary>
@@ -2516,9 +2512,9 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.Boolean RecipientRead
+        public Nullable<global::System.Boolean> RecipientRead
         {
             get
             {
@@ -2533,8 +2529,8 @@ namespace DMS.Models
                 OnRecipientReadChanged();
             }
         }
-        private global::System.Boolean _RecipientRead;
-        partial void OnRecipientReadChanging(global::System.Boolean value);
+        private Nullable<global::System.Boolean> _RecipientRead;
+        partial void OnRecipientReadChanging(Nullable<global::System.Boolean> value);
         partial void OnRecipientReadChanged();
     
         /// <summary>
@@ -2564,9 +2560,9 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.Boolean ConfirmerRead
+        public Nullable<global::System.Boolean> ConfirmerRead
         {
             get
             {
@@ -2581,8 +2577,8 @@ namespace DMS.Models
                 OnConfirmerReadChanged();
             }
         }
-        private global::System.Boolean _ConfirmerRead;
-        partial void OnConfirmerReadChanging(global::System.Boolean value);
+        private Nullable<global::System.Boolean> _ConfirmerRead;
+        partial void OnConfirmerReadChanging(Nullable<global::System.Boolean> value);
         partial void OnConfirmerReadChanged();
     
         /// <summary>
@@ -3862,6 +3858,54 @@ namespace DMS.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
+        public global::System.String Completed
+        {
+            get
+            {
+                return _Completed;
+            }
+            set
+            {
+                OnCompletedChanging(value);
+                ReportPropertyChanging("Completed");
+                _Completed = StructuralObject.SetValidValue(value, true, "Completed");
+                ReportPropertyChanged("Completed");
+                OnCompletedChanged();
+            }
+        }
+        private global::System.String _Completed;
+        partial void OnCompletedChanging(global::System.String value);
+        partial void OnCompletedChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String CompletedName
+        {
+            get
+            {
+                return _CompletedName;
+            }
+            set
+            {
+                OnCompletedNameChanging(value);
+                ReportPropertyChanging("CompletedName");
+                _CompletedName = StructuralObject.SetValidValue(value, true, "CompletedName");
+                ReportPropertyChanged("CompletedName");
+                OnCompletedNameChanged();
+            }
+        }
+        private global::System.String _CompletedName;
+        partial void OnCompletedNameChanging(global::System.String value);
+        partial void OnCompletedNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
         public global::System.String Note
         {
             get
@@ -4048,6 +4092,78 @@ namespace DMS.Models
         private global::System.String _RateComment;
         partial void OnRateCommentChanging(global::System.String value);
         partial void OnRateCommentChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> PosterRead
+        {
+            get
+            {
+                return _PosterRead;
+            }
+            set
+            {
+                OnPosterReadChanging(value);
+                ReportPropertyChanging("PosterRead");
+                _PosterRead = StructuralObject.SetValidValue(value, "PosterRead");
+                ReportPropertyChanged("PosterRead");
+                OnPosterReadChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _PosterRead;
+        partial void OnPosterReadChanging(Nullable<global::System.Boolean> value);
+        partial void OnPosterReadChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> RecipientRead
+        {
+            get
+            {
+                return _RecipientRead;
+            }
+            set
+            {
+                OnRecipientReadChanging(value);
+                ReportPropertyChanging("RecipientRead");
+                _RecipientRead = StructuralObject.SetValidValue(value, "RecipientRead");
+                ReportPropertyChanged("RecipientRead");
+                OnRecipientReadChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _RecipientRead;
+        partial void OnRecipientReadChanging(Nullable<global::System.Boolean> value);
+        partial void OnRecipientReadChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> ConfirmerRead
+        {
+            get
+            {
+                return _ConfirmerRead;
+            }
+            set
+            {
+                OnConfirmerReadChanging(value);
+                ReportPropertyChanging("ConfirmerRead");
+                _ConfirmerRead = StructuralObject.SetValidValue(value, "ConfirmerRead");
+                ReportPropertyChanged("ConfirmerRead");
+                OnConfirmerReadChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _ConfirmerRead;
+        partial void OnConfirmerReadChanging(Nullable<global::System.Boolean> value);
+        partial void OnConfirmerReadChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
