@@ -215,6 +215,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="System\Environments.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Controls.css" />
