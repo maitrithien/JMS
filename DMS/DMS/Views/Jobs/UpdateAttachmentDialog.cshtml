@@ -41,8 +41,8 @@
         </div>
     </div>
     <div class="content-wrapper bottom-toolbar">
-        <button id="btnAttachmentSave" type="button">Lưu</button>
-        <button id="btnAttachmentCancel" type="button">Đóng</button>
+        <button id="btnUpdateAttachmentSave" type="button">Lưu</button>
+        <button id="btnUpdateAttachmentCancel" type="button">Đóng</button>
     </div>
         
 }
@@ -51,7 +51,7 @@
 <script type="text/javascript">
     kendo.init($("input"));
     
-    $("#btnAttachmentSave").kendoButton({
+    $("#btnUpdateAttachmentSave").kendoButton({
         width: 120,
         icon: "tick",
         click: function () {
@@ -72,7 +72,7 @@
             });
         }
     });
-    $("#btnAttachmentCancel").kendoButton({
+    $("#btnUpdateAttachmentCancel").kendoButton({
         width: 120,
         icon: "close",
         click: function () {

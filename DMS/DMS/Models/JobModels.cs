@@ -67,6 +67,13 @@ namespace DMS.Models
         public DateTime? DeadlineFilter { get; set; }
 
         /// <summary>
+        /// Ngày tạo
+        /// </summary>
+        [Display(Name = "Ngày tạo")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "dd/MM/yyyy")]
+        public DateTime? CreatedDateFilter { get; set; }
+
+        /// <summary>
         /// Người lập
         /// </summary>
         [Display(Name = "Người lập")]

@@ -67,10 +67,13 @@
                     click: function (e) {
                         //console.log("search");
                         var grid = $("#grid").data("kendoGrid");
-                        var x = kendo.parseDate($('#DeadlineFilter').val());
+                        var deadline = $('#DeadlineFilter').data('kendoDatePicker');
+                        var createdDate = $('#CreatedDateFilter').data('kendoDatePicker');
+
                         var data = common.getFormDataTypeJson("frm-main-filter");
                         data["IsFilter"] = 1;
-                        data["DeadlineFilter"] = kendo.toString(x, "u");
+                        data["DeadlineFilter"] = kendo.toString(deadline.value(), 'u');
+                        data["CreatedDateFilter"] = kendo.toString(createdDate.value(), 'u');
 
                         grid.dataSource.read(data);
                     }

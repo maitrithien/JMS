@@ -8,11 +8,14 @@ using System.IO;
 using System.Globalization;
 using System.Threading;
 using System.Text;
+using DMS.Filters;
 
 namespace DMS.Controllers
 {
+    [Authorize]
     public class JobsController : Controller
     {
+
         /// <summary>
         /// JMS entities
         /// </summary>
@@ -96,6 +99,7 @@ namespace DMS.Controllers
         [Authorize]
         public ActionResult Index()
         {
+            SystemEnvironments.SetEmployeeInfo(User.Identity.Name);
             return View();
         }
 
@@ -140,7 +144,7 @@ namespace DMS.Controllers
             var result = _EntityModel.GetJobs(model.IsFilter,
                 model.JobIDFilter, model.JobNameFilter, model.StatusFilter, model.PosterFilter,
                 model.RecipientFilter, model.ConfirmerFilter, model.DeadlineFilter, model.PriorityFilter,
-                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, JobModels.JOBS_R_TYPE).ToList();
+                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, model.CreatedDateFilter, JobModels.JOBS_R_TYPE).ToList();
 
             if (result != null && result.Count() > 0)
             {
@@ -198,7 +202,7 @@ namespace DMS.Controllers
             List<GetJobs_Result> result = _EntityModel.GetJobs(model.IsFilter,
                 model.JobIDFilter, model.JobNameFilter, model.StatusFilter, model.PosterFilter,
                 model.RecipientFilter, model.ConfirmerFilter, model.DeadlineFilter, model.PriorityFilter,
-                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, JobModels.JOBS_S_TYPE).ToList();
+                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, model.CreatedDateFilter, JobModels.JOBS_S_TYPE).ToList();
 
             if (result != null && result.Count() > 0)
             {
@@ -256,7 +260,7 @@ namespace DMS.Controllers
             var result = _EntityModel.GetJobs(model.IsFilter,
                 model.JobIDFilter, model.JobNameFilter, model.StatusFilter, model.PosterFilter,
                 model.RecipientFilter, model.ConfirmerFilter, model.DeadlineFilter, model.PriorityFilter,
-                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, JobModels.JOBS_O_TYPE).ToList();
+                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, model.CreatedDateFilter, JobModels.JOBS_O_TYPE).ToList();
 
             if (result != null && result.Count() > 0)
             {
@@ -306,10 +310,6 @@ namespace DMS.Controllers
         public JsonResult GridPersonal(JobModels model)
         {
             // Xử lý đa ngôn ngữ
-            CultureInfo cultureInfo = CultureInfo.GetCultureInfo("vi-VN");
-            Thread.CurrentThread.CurrentUICulture = cultureInfo;
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB");
-
             var item = model ?? new JobModels();
 
             List<JobModels> lst = new List<JobModels>();
@@ -319,7 +319,7 @@ namespace DMS.Controllers
             var result = _EntityModel.GetJobs(model.IsFilter,
                 model.JobIDFilter, model.JobNameFilter, model.StatusFilter, model.PosterFilter,
                 model.RecipientFilter, model.ConfirmerFilter, model.DeadlineFilter, model.PriorityFilter,
-                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, JobModels.JOBS_P_TYPE).ToList();
+                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, model.CreatedDateFilter, JobModels.JOBS_P_TYPE).ToList();
 
             if (result != null && result.Count() > 0)
             {
@@ -377,7 +377,7 @@ namespace DMS.Controllers
             var result = _EntityModel.GetJobs(model.IsFilter,
                 model.JobIDFilter, model.JobNameFilter, model.StatusFilter, model.PosterFilter,
                 model.RecipientFilter, model.ConfirmerFilter, model.DeadlineFilter, model.PriorityFilter,
-                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, JobModels.JOBS_E_TYPE).ToList();
+                model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, model.CreatedDateFilter, JobModels.JOBS_E_TYPE).ToList();
 
             if (result != null && result.Count() > 0)
             {

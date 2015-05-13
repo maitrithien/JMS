@@ -26,6 +26,7 @@ namespace DMS.Controllers
             ViewBag.ReturnUrl = returnUrl;
             if (Request.IsAuthenticated)
             {
+                SystemEnvironments.SetEmployeeInfo(User.Identity.Name);
                 return RedirectToAction("Index", "Jobs");
             }
 
@@ -87,6 +88,7 @@ namespace DMS.Controllers
                 {
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
                     WebSecurity.Login(model.UserName, model.Password);
+                    SystemEnvironments.SetEmployeeInfo(model.UserName);
                     return RedirectToAction("Index", "Jobs");
                 }
                 catch (MembershipCreateUserException e)

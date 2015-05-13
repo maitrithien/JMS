@@ -267,13 +267,13 @@
                         string visibleConfirmer = Model.CurrentEmployeeID == Model.Confirmer
                             ? "visible" : "hidden";
                         string visibleCompleted = Model.Completed == "0"
-                           ? "visible" : "hidden";  
+                           ? "visible" : "hidden";
                     }
                     <button id="btnRate" style="visibility: @visibleConfirmer" title="Đánh giá" type="button">Đánh giá</button>
 
                     <button id="btnDelete" style="visibility: hidden" title="Xóa" type="button"></button>
                     @{
-                        if (Model.Confirmer == Model.CurrentEmployeeID)
+                        if (Model.Confirmer == Model.CurrentEmployeeID && !string.IsNullOrEmpty(Model.Sender))
                         {
                         <button id="btnLock" title="Không duyệt" type="button" class="btn-right">Không duyệt chuyển JOBS</button>
                         <script>

@@ -381,8 +381,9 @@ namespace DMS.Models
         /// <param name="complex">No Metadata Documentation available.</param>
         /// <param name="departmentID">No Metadata Documentation available.</param>
         /// <param name="userName">No Metadata Documentation available.</param>
+        /// <param name="createdDate">No Metadata Documentation available.</param>
         /// <param name="type">No Metadata Documentation available.</param>
-        public ObjectResult<GetJobs_Result> GetJobs(Nullable<global::System.Int32> isFilter, global::System.String jobID, global::System.String jobName, global::System.String status, global::System.String poster, global::System.String recipient, global::System.String confirmer, Nullable<global::System.DateTime> deadline, global::System.String priority, global::System.String rate, global::System.String complex, global::System.String departmentID, global::System.String userName, Nullable<global::System.Int32> type)
+        public ObjectResult<GetJobs_Result> GetJobs(Nullable<global::System.Int32> isFilter, global::System.String jobID, global::System.String jobName, global::System.String status, global::System.String poster, global::System.String recipient, global::System.String confirmer, Nullable<global::System.DateTime> deadline, global::System.String priority, global::System.String rate, global::System.String complex, global::System.String departmentID, global::System.String userName, Nullable<global::System.DateTime> createdDate, Nullable<global::System.Int32> type)
         {
             ObjectParameter isFilterParameter;
             if (isFilter.HasValue)
@@ -514,6 +515,16 @@ namespace DMS.Models
                 userNameParameter = new ObjectParameter("UserName", typeof(global::System.String));
             }
     
+            ObjectParameter createdDateParameter;
+            if (createdDate.HasValue)
+            {
+                createdDateParameter = new ObjectParameter("CreatedDate", createdDate);
+            }
+            else
+            {
+                createdDateParameter = new ObjectParameter("CreatedDate", typeof(global::System.DateTime));
+            }
+    
             ObjectParameter typeParameter;
             if (type.HasValue)
             {
@@ -524,7 +535,7 @@ namespace DMS.Models
                 typeParameter = new ObjectParameter("Type", typeof(global::System.Int32));
             }
     
-            return base.ExecuteFunction<GetJobs_Result>("GetJobs", isFilterParameter, jobIDParameter, jobNameParameter, statusParameter, posterParameter, recipientParameter, confirmerParameter, deadlineParameter, priorityParameter, rateParameter, complexParameter, departmentIDParameter, userNameParameter, typeParameter);
+            return base.ExecuteFunction<GetJobs_Result>("GetJobs", isFilterParameter, jobIDParameter, jobNameParameter, statusParameter, posterParameter, recipientParameter, confirmerParameter, deadlineParameter, priorityParameter, rateParameter, complexParameter, departmentIDParameter, userNameParameter, createdDateParameter, typeParameter);
         }
 
         #endregion
@@ -3310,12 +3321,14 @@ namespace DMS.Models
         /// Create a new GetJobs_Result object.
         /// </summary>
         /// <param name="aPK">Initial value of the APK property.</param>
+        /// <param name="completedName">Initial value of the CompletedName property.</param>
         /// <param name="createdDate">Initial value of the CreatedDate property.</param>
         /// <param name="lastModifyDate">Initial value of the LastModifyDate property.</param>
-        public static GetJobs_Result CreateGetJobs_Result(global::System.Guid aPK, global::System.DateTime createdDate, global::System.DateTime lastModifyDate)
+        public static GetJobs_Result CreateGetJobs_Result(global::System.Guid aPK, global::System.String completedName, global::System.DateTime createdDate, global::System.DateTime lastModifyDate)
         {
             GetJobs_Result getJobs_Result = new GetJobs_Result();
             getJobs_Result.APK = aPK;
+            getJobs_Result.CompletedName = completedName;
             getJobs_Result.CreatedDate = createdDate;
             getJobs_Result.LastModifyDate = lastModifyDate;
             return getJobs_Result;
@@ -3880,7 +3893,7 @@ namespace DMS.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.String CompletedName
         {
@@ -3892,7 +3905,7 @@ namespace DMS.Models
             {
                 OnCompletedNameChanging(value);
                 ReportPropertyChanging("CompletedName");
-                _CompletedName = StructuralObject.SetValidValue(value, true, "CompletedName");
+                _CompletedName = StructuralObject.SetValidValue(value, false, "CompletedName");
                 ReportPropertyChanged("CompletedName");
                 OnCompletedNameChanged();
             }

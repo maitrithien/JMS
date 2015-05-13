@@ -345,7 +345,7 @@ var jobs = new function () {
                         title: "Ngày tạo",
                         width: 120,
                         type: "date",
-                        template: '#= kendo.toString(data.Deadline, "dd/MM/yyyy") #'
+                        template: '#= kendo.toString(data.CreatedDate, "dd/MM/yyyy") #'
                     }, {
                         field: "Deadline",
                         title: "Ngày hết hạn",
@@ -441,7 +441,7 @@ var jobs = new function () {
                         title: "Ngày tạo",
                         width: 120,
                         type: "date",
-                        template: '#= kendo.toString(data.Deadline, "dd/MM/yyyy") #'
+                        template: '#= kendo.toString(data.CreatedDate, "dd/MM/yyyy") #'
                     }, {
                         field: "Deadline",
                         title: "Ngày hết hạn",
@@ -535,7 +535,7 @@ var jobs = new function () {
                         title: "Ngày tạo",
                         width: 120,
                         type: "date",
-                        template: '#= kendo.toString(data.Deadline, "dd/MM/yyyy") #'
+                        template: '#= kendo.toString(data.CreatedDate, "dd/MM/yyyy") #'
                     }, {
                         field: "Deadline",
                         title: "Ngày hết hạn",

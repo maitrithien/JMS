@@ -2,7 +2,7 @@
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-main-filter" }))
 {
-<div class="content-wrapper filter">
+    <div class="content-wrapper filter">
         <div class="title-info">
             <span>Bộ lọc dữ liệu</span>
         </div>
@@ -59,7 +59,7 @@
                         });
                     </script>
                 </div>
-                
+
             </div>
             <div class="content-column-filter-3">
                 <div class="content-row-filter">
@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="content-row-filter">
-                     <div class="editor-label">
+                    <div class="editor-label">
                         @Html.LabelFor(model => model.RecipientFilter, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
@@ -86,7 +86,7 @@
                     </script>
                 </div>
                 <div class="content-row-filter">
-                     <div class="editor-label">
+                    <div class="editor-label">
                         @Html.LabelFor(model => model.PriorityFilter, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
@@ -101,7 +101,7 @@
                     </script>
                 </div>
                 <div class="content-row-filter">
-                     <div class="editor-label">
+                    <div class="editor-label">
                         @Html.LabelFor(model => model.ComplexFilter, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
@@ -133,7 +133,7 @@
                     </script>
                 </div>
                 <div class="content-row-filter">
-                     <div class="editor-label">
+                    <div class="editor-label">
                         @Html.LabelFor(model => model.ConfirmerFilter, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
@@ -148,7 +148,7 @@
                     </script>
                 </div>
                 <div class="content-row-filter">
-                     <div class="editor-label">
+                    <div class="editor-label">
                         @Html.LabelFor(model => model.RateFilter, new { style = "font-weight: normal; font-size: small;" })
                     </div>
                     <div class="editor-field">
@@ -162,7 +162,19 @@
                         });
                     </script>
                 </div>
-                
+                <div class="content-row-filter">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.CreatedDateFilter, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.CreatedDateFilter, new { style = "width: calc(100% - 10px); font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            $("#CreatedDateFilter").kendoDatePicker({
+                                format: "dd/MM/yyyy"
+                            });
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

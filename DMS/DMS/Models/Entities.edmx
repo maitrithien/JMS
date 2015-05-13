@@ -189,6 +189,7 @@
           <Parameter Name="Complex" Type="nvarchar" Mode="In" />
           <Parameter Name="DepartmentID" Type="nvarchar" Mode="In" />
           <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+          <Parameter Name="CreatedDate" Type="datetime" Mode="In" />
           <Parameter Name="Type" Type="int" Mode="In" />
         </Function>
         <Function Name="GetManager" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -200,8 +201,8 @@
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="JMSModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="JMSEntities" p1:LazyLoadingEnabled="true" >
+      <Schema Namespace="JMSModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="JMSEntities" p1:LazyLoadingEnabled="true">
           <EntitySet Name="Attachments" EntityType="JMSModel.Attachment" />
           <EntitySet Name="Notes" EntityType="JMSModel.Note" />
           <EntitySet Name="Codes" EntityType="JMSModel.Code" />
@@ -237,6 +238,7 @@
             <Parameter Name="Complex" Mode="In" Type="String" />
             <Parameter Name="DepartmentID" Mode="In" Type="String" />
             <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="CreatedDate" Mode="In" Type="DateTime" />
             <Parameter Name="Type" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
@@ -422,7 +424,7 @@
           <Property Type="String" Name="Sender" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="SenderName" Nullable="true" MaxLength="250" />
           <Property Type="String" Name="Completed" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="CompletedName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CompletedName" Nullable="false" MaxLength="100" />
           <Property Type="String" Name="Note" Nullable="true" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
           <Property Type="DateTime" Name="LastModifyDate" Nullable="false" Precision="23" />
@@ -441,7 +443,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="JMSModelStoreContainer" CdmEntityContainer="JMSEntities" >
+        <EntityContainerMapping StorageEntityContainer="JMSModelStoreContainer" CdmEntityContainer="JMSEntities">
           <EntitySetMapping Name="Attachments">
             <EntityTypeMapping TypeName="JMSModel.Attachment">
               <MappingFragment StoreEntitySet="Attachments">
@@ -679,6 +681,6 @@
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
-    <Diagrams></Diagrams>
+    <Diagrams />
   </Designer>
 </edmx:Edmx>
