@@ -34,6 +34,13 @@ namespace DMS
             get { return SystemEnvironments.GetSession<string>(KEY_USERNAME); }
         }
 
+        public static string KEY_EMPLOYEEID = "EmployeeID";
+        public static string EmployeeID
+        {
+            set { SystemEnvironments.SessionState[KEY_EMPLOYEEID] = value; }
+            get { return SystemEnvironments.GetSession<string>(KEY_EMPLOYEEID); }
+        }
+
         public static string KEY_EMPLOYEENAME = "EmployeeName";
         public static string EmployeeName
         {
@@ -62,6 +69,13 @@ namespace DMS
             get { return SystemEnvironments.GetSession<string>(KEY_GROUPID); }
         }
 
+        public static string KEY_ASSIGNEDPERSON = "AssignedPerson";
+        public static string AssignedPerson
+        {
+            set { SystemEnvironments.SessionState[KEY_ASSIGNEDPERSON] = value; }
+            get { return SystemEnvironments.GetSession<string>(KEY_ASSIGNEDPERSON); }
+        }
+
         public static string DisplayUserName {
             get
             {
@@ -69,6 +83,18 @@ namespace DMS
                     ? SystemEnvironments.UserName
                     : SystemEnvironments.EmployeeName;
             } 
+        }
+
+        public static string DisplayAssignedName
+        {
+            get
+            {
+                using (JMSEntities _EntityModel = new JMSEntities())
+                {
+                    var emp =_EntityModel.Employees.FirstOrDefault(x => x.EmployeeID == SystemEnvironments.AssignedPerson);
+                    return emp != null ? string.Format("[{0}]", emp.FullName) : string.Empty;
+                }
+            }
         }
 
         public static void SetEmployeeInfo(string username)
@@ -81,13 +107,17 @@ namespace DMS
                 var employee = _EntityModel.Employees.FirstOrDefault(
                         x => username.Equals(x.UserName)) ?? new Employee();
 
+                SystemEnvironments.EmployeeID = employee.EmployeeID;
                 SystemEnvironments.EmployeeName = employee.FullName;
                 SystemEnvironments.DepartmentID = employee.DepartmentID;
                 SystemEnvironments.GroupID = employee.GroupID;
 
-                SystemEnvironments.ManagerID = (_EntityModel.Departments
+                var manager = _EntityModel.Departments
                     .FirstOrDefault(x => x.DepartmentID == SystemEnvironments.DepartmentID)
-                    ?? new Department()).ManagerID;
+                    ?? new Department();
+
+                SystemEnvironments.ManagerID = manager.ManagerID;
+                SystemEnvironments.AssignedPerson = manager.AssignedPerson;
             }
         }
 

@@ -20,6 +20,27 @@ namespace DMS.Areas.Admin.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Administrator")]
+        public JsonResult Grid()
+        {
+            List<UserModels> models = new List<UserModels>();
+            var users = Membership.GetAllUsers();
+
+            foreach (MembershipUser item in users)
+            {
+                models.Add(new UserModels {
+                    UserName = item.UserName,
+                    RoleName = string.Join(", ", Roles.GetRolesForUser(item.UserName)),
+                    CreationDate = item.CreationDate,
+                    IsApproved = item.IsApproved,
+                    IsLockedOut = item.IsLockedOut,
+                    IsOnline = item.IsOnline
+                });
+            }
+
+            return Json(users, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         [Authorize(Roles = "Administrator")]
         public ActionResult Delete(UserProfile user)

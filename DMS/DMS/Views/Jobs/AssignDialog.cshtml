@@ -1,0 +1,78 @@
+﻿@model DMS.Models.DepartmentModels
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-assign-person" }))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.DepartmentID)
+    <div class="content-wrapper">
+        <div class="error">
+            @Html.ValidationMessageFor(model => model.AssignedPerson)
+        </div>
+        <div class="title-info">
+            <span>@Model.DepartmentID - @Model.DepartmentName</span>
+        </div>
+        <div class="tab-content">
+            <div class="content-column-full">
+                <div class="content-row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.AssignedPerson, new { style = "font-weight: normal; font-size: small;" })
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.AssignedPerson, new { style = "width: 100%; font-weight: normal; font-size: small;" })
+                        <script type="text/javascript">
+                            $("#AssignedPerson").dropdownlist({
+                                url: '@Url.Action("DepartmentEmployeeID", "ComboBox")',
+                                dataTextField: 'FullName',
+                                dataValueField: 'EmployeeID'
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="content-wrapper bottom-toolbar">
+        <button id="btnAssignedSave" type="button">Lưu & đóng</button>
+        <script type="text/javascript">
+            $("#btnAssignedSave").kendoButton({
+                width: 120,
+                icon: "tick",
+                click: function () {
+                    var data = common.getFormDataTypeJson('frm-assign-person');
+                    $.ajax({
+                        type: 'POST',
+                        url: $('#assignUrl').val(),
+                        data: JSON.stringify(data),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            if (data.result) {
+                                var win = $("#assignDialog").data("kendoWindow");
+                                if (win) {
+                                    win.close();
+                                }
+                                window.location.reload();
+                            }
+                        }
+                    });
+                }
+            });
+        </script>
+        <button id="btnAssignedCancel" type="button">Đóng</button>
+        <script type="text/javascript">
+            $("#btnAssignedCancel").kendoButton({
+                width: 120,
+                icon: "close",
+                click: function () {
+                    var win = $("#assignDialog").data("kendoWindow");
+                    if (win) {
+                        win.close();
+                    }
+                }
+            });
+        </script>
+    </div>
+}
+
+@Html.Hidden("assignUrl", Url.Action("Assign", "Jobs"))

@@ -1477,6 +1477,30 @@ namespace DMS.Models
         private global::System.String _ManagerID;
         partial void OnManagerIDChanging(global::System.String value);
         partial void OnManagerIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String AssignedPerson
+        {
+            get
+            {
+                return _AssignedPerson;
+            }
+            set
+            {
+                OnAssignedPersonChanging(value);
+                ReportPropertyChanging("AssignedPerson");
+                _AssignedPerson = StructuralObject.SetValidValue(value, true, "AssignedPerson");
+                ReportPropertyChanged("AssignedPerson");
+                OnAssignedPersonChanged();
+            }
+        }
+        private global::System.String _AssignedPerson;
+        partial void OnAssignedPersonChanging(global::System.String value);
+        partial void OnAssignedPersonChanged();
 
         #endregion
 

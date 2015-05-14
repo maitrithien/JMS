@@ -84,6 +84,7 @@
           <Property Name="LastModifyDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedUserID" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifyUserID" Type="nvarchar" MaxLength="50" />
+          <Property Name="AssignedPerson" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Employees">
           <Key>
@@ -318,6 +319,7 @@
           <Property Type="String" Name="CreatedUserID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="LastModifyUserID" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="ManagerID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AssignedPerson" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <ComplexType Name="GetCounterJobs_Result">
           <Property Type="Int32" Name="CountP" Nullable="true" />
@@ -515,6 +517,7 @@
           <EntitySetMapping Name="Departments">
             <EntityTypeMapping TypeName="JMSModel.Department">
               <MappingFragment StoreEntitySet="Departments">
+                <ScalarProperty Name="AssignedPerson" ColumnName="AssignedPerson" />
                 <ScalarProperty Name="ManagerID" ColumnName="ManagerID" />
                 <ScalarProperty Name="LastModifyUserID" ColumnName="LastModifyUserID" />
                 <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />

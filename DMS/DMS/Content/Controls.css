@@ -19,6 +19,10 @@
     text-overflow: ellipsis;
 }
 
+.k-grid .k-alt {
+  background-color: #F6F6F6 !important;
+}
+
 .k-tabstrip-items .k-state-active {
   background-color: #fff !important;
   background-image: none;

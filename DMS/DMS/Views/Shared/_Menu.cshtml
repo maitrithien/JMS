@@ -22,7 +22,19 @@
                   type: 'POST'
               });
                win.open();
-           }
+          }
+
+          $scope.openAssignDialog = function () {
+              var win = $("#assignDialog").data("kendoWindow");
+              win.center();
+              win.refresh({
+                  url: '@Url.Action("AssignDialog", "Jobs")',
+                  data: {},
+                  type: 'POST'
+              });
+              win.open();
+          }
+
       })
 
     function timeCtrl($scope, $timeout) {
@@ -53,7 +65,7 @@
                 }
             });
             
-            $timeout(updateTime, 3000);
+            $timeout(updateTime, 30000);
         };
         
         
@@ -94,6 +106,12 @@
                 <li>
                     <a href="javascript:void(0);" ng-click="openCompletedFeedDialog()">Duyệt và đánh giá <span id="notify{{countC}}" class="red-notify">{{countC}}</span></a>
                 </li>
+                  @if(DMS.SystemEnvironments.ManagerID == DMS.SystemEnvironments.EmployeeID)
+                  {
+                    <li>
+                        <a href="javascript:void(0);" ng-click="openAssignDialog()">Ủy nhiệm @DMS.SystemEnvironments.DisplayAssignedName</a>
+                    </li>
+                  }
             </ul>
         </div>
     </div>
@@ -114,6 +132,7 @@
 
 <div id="feedDialog"></div>
 <div id="feedCompletedDialog"></div>
+<div id="assignDialog"></div>
 <script>
     var feedWindow = $("#feedDialog").kendoWindow({
         title: "Ghi chú mới",
@@ -129,5 +148,11 @@
         width: 900,
         height: 500,
     }).data("kendoWindow");
-    
+    var assignWindow = $("#assignDialog").kendoWindow({
+        title: "Cập nhật người ủy nhiệm",
+        visible: false,
+        modal: true,
+        width: 400,
+        height: 200,
+    }).data("kendoWindow");
 </script>

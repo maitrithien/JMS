@@ -1,11 +1,239 @@
-﻿<div id="main-grid">
+﻿<div id="user-grid">
+    <div id="gridUsers"></div>
+    <div id="userConfirmDialog"></div>
+    <script type="text/x-kendo-template" id="userConfirmTemplate">
+        <div class="content-wrapper">
+            <p>Bạn có muốn xóa ghi chú này ?</p>
+            <div class="content-wrapper bottom-toolbar">
+                <button class="k-button" id="yesButton">Đồng ý</button>
+                <button class="k-button" id="noButton">Hủy</button>
+            </div>
+        </div>
+    </script>
+    <div id="userMessageDialog"></div>
+    <script type="text/x-kendo-template" id="userMessageTemplate">
+        <div class="content-wrapper">
+            <p>#= message #</p>
+            <div class="content-wrapper bottom-toolbar">
+                <button class="k-button" id="okButton">Đồng ý</button>
+            </div>
+        </div>
+    </script>
     <script>
         $(document).ready(function () {
-            users.user.initUserGrid();
-            users.user.initUserConfirmDialog();
+            var userConfirmTemplate = kendo.template($("#userConfirmTemplate").html());
+            var userConfirmWindow = $("#userConfirmDialog").kendoWindow({
+                title: "Thông báo",
+                visible: false,
+                modal: true,
+                width: "400px",
+                height: "100px",
+            }).data("kendoWindow");
+            var userMessageTemplate = kendo.template($("#userMessageTemplate").html());
+            var userMessageWindow = $("#userMessageDialog").kendoWindow({
+                title: "Thông báo",
+                visible: false,
+                modal: true,
+                width: "400px",
+                height: "100px",
+            }).data("kendoWindow");
+
+            //function updateUser_Click(e) {
+            //    e.preventDefault();
+
+            //    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+            //    checkEditUser(dataItem);
+            //}
+
+            function viewUser_Click(e) {
+                e.preventDefault();
+
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+                var win = $("#UserDialog").data("kendoWindow");
+                win.center();
+                win.refresh({
+                    url: $('#UserDialogUrl').val(),
+                    data: { APK: dataItem.APK, Action: 3 },
+                    type: 'POST'
+                });
+                win.open();
+            }
+
+            //function checkEditUser(data) {
+            //    $.ajax({
+            //        type: 'POST',
+            //        url: $('#checkEditUserUrl').val(),
+            //        data: JSON.stringify(data),
+            //        contentType: 'application/json; charset=utf-8',
+            //        success: function (dataResult) {
+            //            if (!dataResult.result) {
+            //                userConfirmWindow.close();
+
+            //                userMessageWindow.content(userMessageTemplate(dataResult)); //send the row data object to the template and render it
+            //                userMessageWindow.open().center();
+
+            //                $("#okButton").click(function () {
+            //                    userMessageWindow.close();
+            //                });
+            //            }
+            //            else {
+            //                var win = $("#UserDialog").data("kendoWindow");
+            //                win.center();
+            //                win.refresh({
+            //                    url: $('#UserDialogUrl').val(),
+            //                    data: { APK: data.APK, Action: 2 },
+            //                    type: 'POST'
+            //                });
+            //                win.open();
+            //            }
+            //        }
+            //    });
+            //}
+
+            //function checkDeleteUser(data) {
+            //    $.ajax({
+            //        type: 'POST',
+            //        url: $('#checkEditUserUrl').val(),
+            //        data: JSON.stringify(data),
+            //        contentType: 'application/json; charset=utf-8',
+            //        success: function (dataResult) {
+            //            if (!dataResult.result) {
+            //                userConfirmWindow.close();
+
+            //                userMessageWindow.content(userMessageTemplate(dataResult)); //send the row data object to the template and render it
+            //                userMessageWindow.open().center();
+
+            //                $("#okButton").click(function () {
+            //                    userMessageWindow.close();
+            //                });
+            //            }
+            //            else {
+            //                $.ajax({
+            //                    type: 'POST',
+            //                    url: $('#removeUserUrl').val(),
+            //                    data: JSON.stringify(data),
+            //                    contentType: 'application/json; charset=utf-8',
+            //                    success: function () {
+            //                        var userGrid = $('#gridUsers').data('kendoGrid');
+            //                        if (userGrid) {
+            //                            userGrid.dataSource.read();
+            //                        }
+            //                        userConfirmWindow.close();
+            //                    }
+            //                });
+            //            }
+            //        }
+            //    });
+            //}
+
+            //function deleteUser_Click(e) {
+            //    e.preventDefault();
+
+            //    var tr = $(e.target).closest("tr"); //get the row for deletion
+            //    var data = this.dataItem(tr); //get the row data so it can be referred later
+
+            //    userConfirmWindow.content(userConfirmTemplate(data)); //send the row data object to the template and render it
+            //    userConfirmWindow.open().center();
+
+            //    $("#yesButton").click(function () {
+            //        checkDeleteUser(data);
+            //    });
+
+            //    $("#noButton").click(function () {
+            //        userConfirmWindow.close();
+            //    });
+            //}
+
+            $("#gridUsers").kendoGrid({
+                toolbar: ['excel'],
+                excel: {
+                    fileName: 'users.xlsx'
+                },
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: '@Url.Action("Grid", "User", new { area = "Admin" })'
+                    },
+                    pageSize: 20
+                },
+                height: 400,
+                groupable: {
+                    messages: {
+                        empty: "Kéo một tiêu đề cột và thả nó vào đây để nhóm theo cột đó"
+                    }
+                },
+                //sortable: true,
+                selectable: true,
+                resizable: true,
+                //filterable: true,
+                pageable: {
+                    refresh: true,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                columns: [
+                    {
+                        field: "APK",
+                        title: "",
+                        hidden: true,
+                        width: 30
+                    }, {
+                        field: "Title",
+                        title: "Tiêu đề",
+                        width: 200
+                    }, {
+                        field: "Description",
+                        title: "Nội dung"
+                    }, {
+                        field: "CreatedDate",
+                        title: "Ngày tạo",
+                        type: "date",
+                        width: 120,
+                        template: '#= kendo.toString(data.CreatedDate, "dd/MM/yyyy") #'
+                    }, {
+                        field: "CreatedUserID",
+                        title: "Người tạo",
+                        width: 120
+                    }, {
+                        field: "LastModifyDate",
+                        title: "Ngày cập nhật",
+                        type: "date",
+                        width: 120,
+                        template: '#= kendo.toString(data.LastModifyDate, "dd/MM/yyyy") #'
+                    }, {
+                        field: "LastModifyUserID",
+                        title: "Người cập nhật",
+                        width: 120
+                    }, {
+                        command: [
+                            {
+                                text: 'Xem',
+                                imageClass: 'k-icon k-i-restore ob-icon-only',
+                                title: 'Xem',
+                                click: viewUser_Click
+                            },
+                            //{
+                            //    text: 'Sửa',
+                            //    imageClass: 'k-icon k-i-pencil ob-icon-only',
+                            //    title: 'Sửa',
+                            //    click: updateUser_Click
+                            //}, {
+                            //    text: 'Xóa',
+                            //    imageClass: 'k-icon k-i-close ob-icon-only',
+                            //    title: 'Xóa',
+                            //    click: deleteUser_Click
+                            //}
+                        ],
+                        width: 80
+                    }
+                ]
+            });
         });
     </script>
 
-    <div id="grid"></div>
-    @Html.Hidden("gridUsersUrl", Url.Action("GridUser", "Users", new { area = "Admin" }))
 </div>
+@Html.Hidden("UserDialogUrl", Url.Action("UserDialog", "Jobs"))
+@Html.Hidden("removeUserUrl", Url.Action("RemoveUser", "Jobs"))
+@Html.Hidden("updateUserUrl", Url.Action("UpdateUser", "Jobs"))

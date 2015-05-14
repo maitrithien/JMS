@@ -40,7 +40,10 @@ namespace DMS.Controllers
             {
                 var departmentId = (_EntityModel.Employees.FirstOrDefault(
                     x => User.Identity.Name.Equals(x.UserName)) ?? new Employee()).DepartmentID;
-                return (_EntityModel.Departments.FirstOrDefault(x => x.DepartmentID == departmentId) ?? new Department()).ManagerID;
+
+                var manager = _EntityModel.Departments.FirstOrDefault(x => x.DepartmentID == departmentId) ?? new Department();
+
+                return string.IsNullOrEmpty(manager.AssignedPerson) ? manager.ManagerID : manager.AssignedPerson;
             }
         }
         /// <summary>
@@ -792,7 +795,6 @@ namespace DMS.Controllers
             item.GroupID = _GroupID;
 
             var finder = _EntityModel.Jobs.FirstOrDefault(x => x.APK == item.APK);
-            var manager = _EntityModel.Employees.FirstOrDefault(s => s.GroupID != "0" && s.DepartmentID == _DepartmentID) ?? new Employee();
             if (finder != null)
             {
                 item.ReAPK = finder.APK;
@@ -800,8 +802,7 @@ namespace DMS.Controllers
                 item.Sender = _EmployeeID;
                 item.DepartmentID = _DepartmentID;
                 item.Poster = finder.Poster;
-                item.Confirmer = manager.EmployeeID;
-                item.ConfirmerName = manager.FullName;
+                item.Confirmer = _ManagerID;
                 item.GroupID = _GroupID;
             }
 
@@ -1439,7 +1440,39 @@ namespace DMS.Controllers
         #endregion ---- Histories ----
 
         #region ---- Others ----
-        
+
+        public ActionResult AssignDialog()
+        {
+            DepartmentModels model = new DepartmentModels();
+            model.DepartmentID = _DepartmentID;
+
+            var finder = _EntityModel.Departments.FirstOrDefault(x => x.DepartmentID == model.DepartmentID);
+            if (finder != null)
+            {
+                model.DepartmentName = finder.DepartmentName;
+                model.AssignedPerson = finder.AssignedPerson;
+            }
+
+            return PartialView(model);
+        }
+
+        public ActionResult Assign(DepartmentModels model)
+        {
+            DepartmentModels item = model ?? new DepartmentModels();
+
+            var finder = _EntityModel.Departments.FirstOrDefault(x => x.DepartmentID == item.DepartmentID);
+            if (finder != null)
+            {
+                finder.AssignedPerson = item.AssignedPerson;
+                _EntityModel.SaveChanges();
+
+                // Gán người ủy nhiệm
+                SystemEnvironments.AssignedPerson = item.AssignedPerson;
+            }
+
+            return Json(new { result = true });
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your app description page.";

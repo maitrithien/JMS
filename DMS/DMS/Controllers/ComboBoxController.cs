@@ -38,6 +38,14 @@ namespace DMS.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult DepartmentEmployeeID()
+        {
+            List<Employee> model = _EntityModel.Employees.Where(x => x.DepartmentID == SystemEnvironments.DepartmentID && x.EmployeeID != SystemEnvironments.EmployeeID).ToList();
+            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "< Không >", UserName = string.Empty });
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult RecipientID(string DepartmentID)
         {
             List<Employee> model = new List<Employee>();
@@ -66,7 +74,13 @@ namespace DMS.Controllers
 
         public JsonResult ManagerID(string DepartmentID)
         {
-            List<Employee> model = _EntityModel.Employees.Where(x => x.GroupID != "0" && x.DepartmentID == DepartmentID).ToList();
+            var departmentInfo = _EntityModel.Departments.FirstOrDefault(x => x.DepartmentID == DepartmentID) ?? new Department();
+            
+            // Chỉ load người trực tiếp hoặc đang được ủy nhiệm
+            string currentPerson = string.IsNullOrEmpty(departmentInfo.AssignedPerson) ? departmentInfo.ManagerID : departmentInfo.AssignedPerson;
+
+            List<Employee> model = _EntityModel.Employees.Where(x => x.EmployeeID == currentPerson).ToList();
+
             model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "< Không >", UserName = string.Empty });
 
             return Json(model, JsonRequestBehavior.AllowGet);
