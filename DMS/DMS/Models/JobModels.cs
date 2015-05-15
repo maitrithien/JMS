@@ -153,7 +153,7 @@ namespace DMS.Models
         [DisplayName("Tên tình trạng")]
         public string StatusName { get; set; }
 
-        [Display(Name = "Duyệt JOBS")]
+        [Display(Name = "Duyệt chuyển JOBS")]
         [DisplayName("Tình trạng duyệt JOBS")]
         public string StatusConfirm { get; set; }
 
@@ -237,7 +237,7 @@ namespace DMS.Models
         [DisplayName("Tên người gửi")]
         public string SenderName { get; set; }
 
-        [Display(Name = "Trạng thái duyệt")]
+        [Display(Name = "Trạng thái duyệt JOBS")]
         [DisplayName("Trạng thái duyệt")]
         public string Completed { get; set; }
 
