@@ -29,7 +29,7 @@ namespace DMS.Models
 
     public class RegisterExternalLoginModel
     {
-        [Required]
+        [Required(ErrorMessage="Bạn phải nhập vào tên đăng nhập")]
         [Display(Name = "Tên đăng nhập")]
         public string UserName { get; set; }
 
@@ -38,12 +38,12 @@ namespace DMS.Models
 
     public class LocalPasswordModel
     {
-        [Required]
+        [Required(ErrorMessage="Bạn phải nhập vào mật khẩu hiện tại")]
         [DataType(DataType.Password)]
         [Display(Name = "Mật khẩu hiện tại")]
         public string OldPassword { get; set; }
 
-        [Required]
+        [Required(ErrorMessage="Bạn phải nhập vào mật khẩu mới")]
         [StringLength(100, ErrorMessage = "{0} phải có độ dài tối thiểu {2} ký tự.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Mật khẩu mới")]
@@ -57,11 +57,11 @@ namespace DMS.Models
 
     public class LoginModel
     {
-        [Required]
+        [Required(ErrorMessage = "Bạn phải nhập vào tên đăng nhập")]
         [Display(Name = "Tên đăng nhập")]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Bạn phải nhập vào mật khẩu")]
         [DataType(DataType.Password)]
         [Display(Name = "Mật khẩu")]
         public string Password { get; set; }
@@ -72,11 +72,11 @@ namespace DMS.Models
 
     public class RegisterModel
     {
-        [Required]
+        [Required(ErrorMessage="Bạn phải nhập vào tên đăng nhập")]
         [Display(Name = "Tên đăng nhập")]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage="Bạn phải nhập vào mật khẩu")]
         [StringLength(100, ErrorMessage = "{0} phải có độ dài tối thiểu {2} ký tự.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Mật khẩu")]

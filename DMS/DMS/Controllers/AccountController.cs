@@ -48,7 +48,7 @@ namespace DMS.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            ModelState.AddModelError("", "The user name or password provided is incorrect.");
+            ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không đúng");
             return View(model);
         }
 
@@ -136,9 +136,9 @@ namespace DMS.Controllers
         public ActionResult Manage(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
+                message == ManageMessageId.ChangePasswordSuccess ? "Đã đổi mật khẩu thành công."
+                : message == ManageMessageId.SetPasswordSuccess ? "Đã đặt mật khẩu thành công."
+                : message == ManageMessageId.RemoveLoginSuccess ? "Bạn đã đăng xuất tài khoản khác."
                 : "";
             ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
             ViewBag.ReturnUrl = Url.Action("Manage");
@@ -176,7 +176,7 @@ namespace DMS.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                        ModelState.AddModelError("", "Mật khẩu hiện tại không đúng hoặc mật khẩu mới không hợp lệ.");
                     }
                 }
             }
@@ -288,7 +288,7 @@ namespace DMS.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
+                        ModelState.AddModelError("UserName", "Tên đăng nhập đã tồn tại, vui lòng nhập tên khác.");
                     }
                 }
             }
@@ -380,25 +380,25 @@ namespace DMS.Controllers
             switch (createStatus)
             {
                 case MembershipCreateStatus.DuplicateUserName:
-                    return "User name already exists. Please enter a different user name.";
+                    return "Tên đăng nhập đã tồn tại, vui lòng nhập lại tên khác.";
 
                 case MembershipCreateStatus.DuplicateEmail:
-                    return "A user name for that e-mail address already exists. Please enter a different e-mail address.";
+                    return "Địa chỉ email này đã được sử dụng, vui lòng nhập địa chỉ email khác.";
 
                 case MembershipCreateStatus.InvalidPassword:
-                    return "The password provided is invalid. Please enter a valid password value.";
+                    return "Mật khẩu cung cấp không hợp lệ, vui lòng nhập vào mật khẩu hợp lệ.";
 
                 case MembershipCreateStatus.InvalidEmail:
-                    return "The e-mail address provided is invalid. Please check the value and try again.";
+                    return "Địa chỉ email cung cấp không hợp lệ, vui lòng kiểm tra và thử lại.";
 
                 case MembershipCreateStatus.InvalidAnswer:
-                    return "The password retrieval answer provided is invalid. Please check the value and try again.";
+                    return "Mật khẩu cho câu trả lời bí mật không đúng. vui lòng kiểm tra và thử lại.";
 
                 case MembershipCreateStatus.InvalidQuestion:
-                    return "The password retrieval question provided is invalid. Please check the value and try again.";
+                    return "Mật khẩu cho câu hỏi bí mật không đúng, vui lòng kiểm tra và thử lại.";
 
                 case MembershipCreateStatus.InvalidUserName:
-                    return "The user name provided is invalid. Please check the value and try again.";
+                    return "Tên đăng nhập không hợp lệ, vui lòng kiểm tra và thử lại.";
 
                 case MembershipCreateStatus.ProviderError:
                     return "The authentication provider returned an error. Please verify your entry and try again. If the problem persists, please contact your system administrator.";

@@ -428,6 +428,10 @@ aside {
         width: auto;
     }
 
+        .bottom-toolbar input[type="submit"]:hover {
+            background-color: #a6dbed !important;
+        }
+
 #socialLoginForm {
     margin-left: 40px;
     float: left;
@@ -519,13 +523,14 @@ textarea {
     input[type="button"],
     button {
         background-color: #d3dce0;
-        border: 1px solid #787878;
+        /* border: 1px solid #787878; */
         cursor: pointer;
         font-size: 1.2em;
         font-weight: 600;
-        padding: 7px;
-        margin-right: 8px;
-        width: auto;
+        /* padding: 7px; */
+        /* margin-right: 8px; */
+        /* width: 110%; */
+        margin-bottom: 0px;
     }
 
     td input[type="submit"],
@@ -564,8 +569,13 @@ textarea {
 
 /* styles for validation helpers */
 .field-validation-error {
-    color: #e80c4d;
-    font-weight: bold;
+    color: #f00;
+    font-weight: normal;
+    width: calc(100% - 20px);
+    float: left;
+    background: #f7d4d4;
+    padding: 5px 10px;
+    line-height: 15px;
 }
 
 .field-validation-valid {
@@ -581,9 +591,11 @@ input[type="checkbox"].input-validation-error {
 }
 
 .validation-summary-errors {
-    color: #e80c4d;
-    font-weight: bold;
-    font-size: 1.1em;
+    color: #f00;
+    font-weight: normal;
+    font-size: 0.9em;
+    background: #f8d9d9;
+    padding: 10px;
 }
 
 .validation-summary-valid {
