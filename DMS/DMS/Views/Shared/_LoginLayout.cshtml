@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en" style="background-color: #efeeef;">
+<html lang="en" style="background: #fff;">
 <head>
     <meta charset="utf-8" />
     <title>@ViewBag.Title - DMS</title>
@@ -23,10 +23,21 @@
 
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-
+    <style>
+        html
+        {
+            background-image: url(Content/images/contentbg30.png);
+            background-color: #fff !important;
+            background-repeat: repeat-y;
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            background-color: transparent !important;
+        }
+    </style>
 </head>
 <body id="login-main-page">
-    <div id="body" style="background-color: #efeeef;">
+    <div id="body" style="background-color: transparent; height: 100%;">
         @RenderSection("featured", required: false)
         @RenderBody()
     </div>

@@ -187,3 +187,23 @@
     .k-dropzone {
         background-color: #EBF2FC !important;
     }
+
+.k-widget.k-dropdown span.k-dropdown-wrap.k-state-default,
+.k-widget.k-datepicker .k-picker-wrap.k-state-default
+{
+	border: none;
+}
+.k-widget.k-dropdown span.k-input,
+.k-widget.k-datepicker .k-picker-wrap .k-input
+{
+	background: #fff !important;
+	border: none;
+	border-bottom: 1px solid #ddd !important;
+}
+.k-widget.k-dropdown span.k-select,
+.k-widget.k-datepicker .k-picker-wrap .k-select
+{
+	background: #fff;
+	border-bottom: 1px solid #ddd;
+	margin-top: -1px;
+}

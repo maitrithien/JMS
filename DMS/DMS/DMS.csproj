@@ -222,6 +222,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Controls.css" />
+    <Content Include="Content\images\contentbg30.png" />
+    <Content Include="Content\images\logo30.png" />
+    <Content Include="Content\images\topbg30.png" />
     <Content Include="Content\kendoUI\Default\editor.png" />
     <Content Include="Content\kendoUI\Default\imagebrowser.png" />
     <Content Include="Content\kendoUI\Default\indeterminate.gif" />
@@ -495,6 +498,7 @@
     <Content Include="Views\Jobs\HistoryDialog.cshtml" />
     <Content Include="Views\Jobs\GridCompletedFeeds.cshtml" />
     <Content Include="Views\Jobs\CompletedFeedDialog.cshtml" />
+    <Content Include="Views\Jobs\AssignDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

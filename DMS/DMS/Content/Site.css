@@ -11,7 +11,7 @@
 }
 
 html {
-    background-color: #e2e2e2;
+    background-color: #fff;
     margin: 0;
     padding: 0;
 }
@@ -28,9 +28,9 @@ body {
 
 	body#login-main-page
 	{
-		background-color:#efeeef;
-		background-image: url(images/bg.png);
-		background-size: cover;
+		background-color: #fff;
+		background-image: url(images/contentbg30.png);
+		background-repeat:repeat-x;
 	}
 
 a {
@@ -153,7 +153,7 @@ header .content-wrapper {
 
 footer {
     clear: both;
-    background-color: #e2e2e2;
+    background-color: #fff;
     font-size: .8em;
     height: 20px;
 }
