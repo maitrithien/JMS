@@ -245,7 +245,14 @@ namespace DMS.Models
         [DisplayName("Tên trạng thái duyệt")]
         public string CompletedName { get; set; }
 
-        public int ReadStatus { get; set; }
+        public int ReadStatus
+        {
+            get { return _ReadStatus; }
+            set { _ReadStatus = value; }
+        }
+
+        private int _ReadStatus = 1;
+
         public string GroupID { get; set; }
 
     }

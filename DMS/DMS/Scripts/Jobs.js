@@ -413,7 +413,7 @@ var jobs = new function () {
                         field: "JobID",
                         title: "Mã JOBS",
                         width: 120,
-                        template: "<a href='/Jobs/JobView/#: data.APK #' target='_blank' title='Xem chi tiết JOBS #: data.JobID #'>#: data.JobID #</a>"
+                        template: "<a class='read-status-#: data.ReadStatus #' href='/Jobs/JobView/#: data.APK #' target='_blank' title='Xem chi tiết JOBS #: data.JobID #'>#: data.JobID #</a>"
                     }, {
                         field: "JobName",
                         title: "Tên JOBS",

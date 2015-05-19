@@ -156,6 +156,7 @@ var common = new function () {
     }
 };
 
-//$(document).ready(function () {
-//    kendo.culture("en-GB");
-//});
+$(document).ready(function () {
+    kendo.culture("en-GB");
+    //$("textarea").kendoEditor({ resizable: true });
+});

@@ -149,6 +149,8 @@ namespace DMS.Controllers
                 model.RecipientFilter, model.ConfirmerFilter, model.DeadlineFilter, model.PriorityFilter,
                 model.RateFilter, model.ComplexFilter, model.DepartmentIDFilter, User.Identity.Name, model.CreatedDateFilter, JobModels.JOBS_R_TYPE).ToList();
 
+            string emp = _EmployeeID;
+
             if (result != null && result.Count() > 0)
             {
                 lst = result.Select(x => new JobModels()
@@ -186,6 +188,7 @@ namespace DMS.Controllers
                     SenderName = x.SenderName,
                     Completed = x.Completed,
                     CompletedName = x.CompletedName,
+                    ReadStatus = ((bool) x.ConfirmerRead && x.Confirmer == _EmployeeID) || ((bool) x.RecipientRead && x.Recipient == _EmployeeID) ? 1 : 0
                 }).OrderByDescending(x => x.CreatedDate).ToList();
             }
 
@@ -618,8 +621,11 @@ namespace DMS.Controllers
                     Recipient = item.Recipient,
                     Completed = "0",
                     Status = item.Status,
-                    StatusConfirm = item.StatusConfirm ?? "0",
+                    StatusConfirm = item.StatusConfirm ?? "9",
                     RateComment = item.RateComment,
+                    PosterRead = false,
+                    RecipientRead = false,
+                    ConfirmerRead = false,
                     CreatedDate = DateTime.Now,
                     CreatedUserID = User.Identity.Name,
                     LastModifyDate = DateTime.Now,
@@ -826,7 +832,7 @@ namespace DMS.Controllers
                 finder.Sender = item.Sender;
                 finder.Recipient = item.Recipient;
                 finder.RecipientRead = false;
-                finder.StatusConfirm = "0";
+                finder.StatusConfirm = item.Poster == item.Recipient ? "9" : "0";
                 finder.LastModifyDate = DateTime.Now;
                 finder.LastModifyUserID = User.Identity.Name;
 

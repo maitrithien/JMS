@@ -33,7 +33,7 @@ namespace DMS.Controllers
         public JsonResult EmployeeID()
         {
             List<Employee> model = _EntityModel.Employees.ToList();
-            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "< Không >", UserName = string.Empty });
+            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "", UserName = string.Empty });
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -41,7 +41,7 @@ namespace DMS.Controllers
         public JsonResult DepartmentEmployeeID()
         {
             List<Employee> model = _EntityModel.Employees.Where(x => x.DepartmentID == SystemEnvironments.DepartmentID && x.EmployeeID != SystemEnvironments.EmployeeID).ToList();
-            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "< Không >", UserName = string.Empty });
+            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "", UserName = string.Empty });
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -59,7 +59,7 @@ namespace DMS.Controllers
                 model = _EntityModel.Employees.Where(x => x.DepartmentID == DepartmentID).ToList();
             }
 
-            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "< Không >", UserName = string.Empty });
+            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "", UserName = string.Empty });
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -67,7 +67,7 @@ namespace DMS.Controllers
         public JsonResult ConfirmerID()
         {
             List<Employee> model = _EntityModel.Employees.Where(x => x.GroupID != "0").ToList();
-            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "< Không >", UserName = string.Empty });
+            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "", UserName = string.Empty });
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -81,7 +81,7 @@ namespace DMS.Controllers
 
             List<Employee> model = _EntityModel.Employees.Where(x => x.EmployeeID == currentPerson).ToList();
 
-            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "< Không >", UserName = string.Empty });
+            model.Insert(0, new Employee() { EmployeeID = string.Empty, FullName = "", UserName = string.Empty });
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -89,7 +89,7 @@ namespace DMS.Controllers
         public JsonResult StatusID()
         {
             List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.STATUS_CODE).ToList();
-            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.STATUS_CODE, CodeName = "< Không >"});
+            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.STATUS_CODE, CodeName = ""});
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -97,7 +97,7 @@ namespace DMS.Controllers
         public JsonResult StatusConfirmID()
         {
             List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.STATUS_CONFIRM_CODE).ToList();
-            //model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.STATUS_CODE, CodeName = "< Không >" });
+            //model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.STATUS_CODE, CodeName = "" });
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -105,7 +105,7 @@ namespace DMS.Controllers
         public JsonResult ComplexID()
         {
             List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.COMPLEX_CODE).ToList();
-            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.COMPLEX_CODE, CodeName = "< Không >" });
+            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.COMPLEX_CODE, CodeName = "" });
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -113,7 +113,7 @@ namespace DMS.Controllers
         public JsonResult PriorityID()
         {
             List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.PRIORITY_CODE).ToList();
-            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.PRIORITY_CODE, CodeName = "< Không >" });
+            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.PRIORITY_CODE, CodeName = "" });
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -121,7 +121,7 @@ namespace DMS.Controllers
         public JsonResult RateID()
         {
             List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.RATE_CODE).ToList();
-            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.RATE_CODE, CodeName = "< Không >" });
+            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.RATE_CODE, CodeName = "" });
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -129,7 +129,7 @@ namespace DMS.Controllers
         public JsonResult CompletedID()
         {
             List<Code> model = _EntityModel.Codes.Where(x => x.CodeGroupID == JobModels.STATUS_COMPLETED).ToList();
-            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.STATUS_COMPLETED, CodeName = "< Không >" });
+            model.Insert(0, new Code() { CodeID = string.Empty, CodeGroupID = JobModels.STATUS_COMPLETED, CodeName = "" });
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -151,7 +151,7 @@ namespace DMS.Controllers
             //}
 
             List<Department> model = _EntityModel.Departments.ToList();
-            model.Insert(0, new Department() { DepartmentID = string.Empty, DepartmentName = "< Không >" });
+            model.Insert(0, new Department() { DepartmentID = string.Empty, DepartmentName = "" });
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
